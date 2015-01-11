@@ -7,13 +7,13 @@ apt-get install mariadb-server python-mysqldb
 if [ $? -eq 0 ]
 	then
 		echo "Updating MySQL Config File..."
-		sed -i  's/127.0.0.1/'$' /g' /etc/mysql/my.cnf
-		sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
-		innodb_file_per_table\\
-		collation-server = utf8_general_ci\\
-		init-connect = 'SET NAMES utf8'\\
-		character-set-server = utf8\\
-		" /etc/mysql/my.cnf
+		crudini --set /etc/mysql/my.cnf mysqld bind-address $1
+		crudini --set /etc/mysql/my.cnf mysqld default-storage-engine innodb
+		crudini --set /etc/mysql/my.cnf mysqld innodb_file_per_table 1
+		crudini --set /etc/mysql/my.cnf mysqld collation-server utf8_general_ci
+		crudini --set /etc/mysql/my.cnf mysqld character-set-server utf8
+		crudini --set /etc/mysql/my.cnf mysqld init-connect 'SET NAMES utf8'
+
 		echo "Restarting MySQL and securing installation..."
 		service mysql restart;
 		mysql_secure_installation;
