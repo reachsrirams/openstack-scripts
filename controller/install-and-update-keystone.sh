@@ -9,12 +9,14 @@ apt-get install keystone python-keystoneclient -y
 if [ $? eq 0 ]
 	then
 		echo "Configuring MySQL for Keystone..."
-		mysql -u "$2" -p"$1" <<EOF
+		mysql -u "$2" -p"$3" <<EOF
 		CREATE DATABASE keystone;
 		GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1';
 		GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';
 		EOF
-		echo "Configuring Keystone - setting admin-token..."
-		sed -e "/^#admin_token=.*$/s/^.*$/admin_token = $1/" -i /etc/keystone/keystone.conf
-		echo "Configuring Keystone - setting DB Connection..."
-		sed -e "/^connection =.*$/s/^.*$/connection = mysql:\/\/keystone:$1@$4\/keystone/" -i /etc/keystone/keystone.conf
+		echo "Configuring Keystone..."
+		crudini --set /etc/keystone/keystone.conf DEFAULT admin_token $1
+		crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
+		crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
+		crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.sql.Token
+fi
