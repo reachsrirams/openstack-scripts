@@ -7,7 +7,7 @@ fi
 echo "Configuring MySQL for Glance..."
 mysql_command="CREATE DATABASE glance; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '$1';"
 echo "MySQL Command is:: "$mysql_command
-mysql -u "$2" -p"$3"-e $mysql_command
+mysql -u "$2" -p"$3"-e "$mysql_command"
 
 export OS_TENANT_NAME=admin
 export OS_USERNAME=admin
@@ -52,7 +52,7 @@ if [ $? -eq 0 ]
 		crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
 
 		echo "Populate Image Service Database..."
-		su -s /bin/sh -c "glance-manage db_sync" glance
+		glance-manage db_sync
 
 		echo "Restarting Glance Service..."
 		service glance-registry restart

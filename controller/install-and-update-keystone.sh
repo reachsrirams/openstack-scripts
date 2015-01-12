@@ -11,17 +11,17 @@ if [ $? -eq 0 ]
 		echo "Configuring MySQL for Keystone..."
 		mysql_command="CREATE DATABASE keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
 		echo "MySQL DB Command is: "$mysql_command
-		mysql -u "$2" -p"$3" -e $mysql_command
+		mysql -u "$2" -p"$3" -e "$mysql_command"
 
 		echo "Configuring Keystone..."
-		ADMIN-TOKEN=`openssl rand -hex 10`
-		crudini --set /etc/keystone/keystone.conf DEFAULT admin_token $ADMIN-TOKEN
+		admin_token_parameter=`openssl rand -hex 10`
+		crudini --set /etc/keystone/keystone.conf DEFAULT admin_token $admin_token_parameter
 		crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
 		crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
 		crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.sql.Token
 
 		echo "Populate Identity Service Database..."
-		su -s /bin/sh -c "keystone-manage db_sync" keystone
+		keystone-manage db_sync
 
 		echo "Restarting KeyStone Service..."
 		service keystone restart
@@ -34,8 +34,9 @@ if [ $? -eq 0 ]
 keystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone	
 
 		echo "Setting environment variables"
-		export OS_SERVICE_TOKEN=$ADMIN_TOKEN
+		export OS_SERVICE_TOKEN=$admin_token_parameter
 		export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
+		echo "OS_SERVICE_ENDPOINT>>>>$OS_SERVICE_ENDPOINT"
 
 		keystone tenant-create --name admin --description "Admin Tenant"
 		keystone user-create --name admin --pass $5 --email admin@example.com

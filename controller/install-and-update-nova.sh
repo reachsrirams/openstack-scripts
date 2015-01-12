@@ -7,8 +7,7 @@ fi
 echo "Configuring MySQL for Nova..."
 mysql_command="CREATE DATABASE nova; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$1';"
 echo "MySQL Command is:: "$mysql_command
-sleep 2
-mysql -u "$2" -p"$3" -e $mysql_command
+mysql -u "$2" -p"$3" -e "$mysql_command"
 EOF
 
 export OS_TENANT_NAME=admin
@@ -52,7 +51,7 @@ if [ $? -eq 0 ]
 		crudini --set /etc/nova/nova.conf glance host $4
 
 		echo "Populate Image Nova Database..."
-		su -s /bin/sh -c "nova-manage db_sync" nova
+		nova-manage db_sync
 
 		echo "Restarting Nova Service..."
 		service nova-api restart
