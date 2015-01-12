@@ -5,11 +5,9 @@ if [ $# -lt 6]
 fi
 
 echo "Configuring MySQL for Glance..."
-mysql -u "$2" -p"$3" <<EOF
-CREATE DATABASE glance;
-GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '$1';
-GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '$1';
-EOF
+mysql_command="CREATE DATABASE glance; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '$1';"
+echo "MySQL Command is:: "$mysql_command
+mysql -u "$2" -p"$3"-e $mysql_command
 
 export OS_TENANT_NAME=admin
 export OS_USERNAME=admin
@@ -30,7 +28,7 @@ keystone endpoint-create \
 --region regionOne
 
 apt-get install glance python-glanceclient -y
-if [ $? eq 0 ]
+if [ $? -eq 0 ]
 	then
 		echo "Configuring Keystone..."
 		crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$1@$4/glance

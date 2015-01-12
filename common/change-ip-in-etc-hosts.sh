@@ -15,8 +15,12 @@ grep -wP '\t'$1 $hosts_file_name
 if [ $? -eq 0 ] ;
         then
                 echo "controller found - going to remove it"
-                set -x
-                sed -i '/\t'$1'/d' $hosts_file_name
+                sed_command="/\t'$1'/d"
+		echo "SED Command is:: "$sed_command
+                sed -i '$sed_command' $hosts_file_name
 fi
 echo "going to add back"
-echo "$2        controller" >> $hosts_file_name
+echo "$2        $1" >> $hosts_file_name
+echo "After update $hosts_file_name contents..."
+cat $hosts_file_name
+sleep 2

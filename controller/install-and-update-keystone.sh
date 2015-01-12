@@ -1,4 +1,4 @@
-if [ $# -lt 5]
+if [ $# -lt 5 ]
 	then
 		echo "Correct Syntax: install-and-update-keystone <keystone-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password>"
 		exit 1
@@ -6,14 +6,12 @@ fi
 echo "Installing Keystone..."
 sleep 2
 apt-get install keystone python-keystoneclient -y
-if [ $? eq 0 ]
+if [ $? -eq 0 ]
 	then
 		echo "Configuring MySQL for Keystone..."
-		mysql -u "$2" -p"$3" <<EOF
-		CREATE DATABASE keystone;
-		GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1';
-		GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';
-		EOF
+		mysql_command="CREATE DATABASE keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
+		echo "MySQL DB Command is: "$mysql_command
+		mysql -u "$2" -p"$3" -e $mysql_command
 
 		echo "Configuring Keystone..."
 		ADMIN-TOKEN=`openssl rand -hex 10`
@@ -69,5 +67,4 @@ keystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 		export OS_USERNAME=admin
 		export OS_PASSWORD=$5
 		export OS_AUTH_URL=http://$4:35357/v2.0
-		
 fi

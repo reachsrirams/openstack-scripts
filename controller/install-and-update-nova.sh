@@ -5,10 +5,10 @@ if [ $# -lt 7]
 fi
 
 echo "Configuring MySQL for Nova..."
-mysql -u "$2" -p"$3" <<EOF
-CREATE DATABASE nova;
-GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$1';
-GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$1';
+mysql_command="CREATE DATABASE nova; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$1';"
+echo "MySQL Command is:: "$mysql_command
+sleep 2
+mysql -u "$2" -p"$3" -e $mysql_command
 EOF
 
 export OS_TENANT_NAME=admin
@@ -30,7 +30,7 @@ keystone endpoint-create \
 --region regionOne
 
 apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
-if [ $? eq 0 ]
+if [ $? -eq 0 ]
 	then
 		echo "Configuring NOVA Conf File..."
 		crudini --set /etc/nova/nova.conf database connection mysql://glance:$1@$4/glance
