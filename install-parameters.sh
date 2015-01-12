@@ -11,6 +11,12 @@ readonly rabbitmq_user="guest"
 readonly rabbitmq_password="password"
 
 readonly keystone_db_password="password"
+
+readonly glance_password="password"
 readonly glance_db_password="password"
 
 readonly admin_tenant_password="password"
+
+readonly nova_password="password"
+readonly nova_db_password="password"
+
