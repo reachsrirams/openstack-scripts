@@ -20,3 +20,6 @@ readonly admin_tenant_password="password"
 readonly nova_password="password"
 readonly nova_db_password="password"
 
+readonly neutron_password="password"
+readonly neutron_db_password="password"
+
