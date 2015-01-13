@@ -7,7 +7,7 @@ if [ -z $1 ]
 fi
 local_ip=`hostname -I`
 echo "IP to be configured in /etc/hosts: "$local_ip
-controller_ipaddress=$local_ip
+controller_ip_address=$local_ip
 
 echo "Adding controller node info to /etc/hosts"
 sleep $sleep_duration
