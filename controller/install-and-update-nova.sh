@@ -5,7 +5,7 @@ if [ $# -lt 7]
 fi
 
 echo "Configuring MySQL for Nova..."
-mysql_command="CREATE DATABASE nova; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$1';"
+mysql_command="CREATE DATABASE IF NOT EXISTS nova; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$1';"
 echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 EOF

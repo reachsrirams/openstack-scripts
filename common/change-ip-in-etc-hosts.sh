@@ -11,13 +11,13 @@ if [ -z "$3" ]
 fi
 echo "Host File is: $hosts_file_name"
 set -x
-grep -wP '\t'$1 $hosts_file_name
+grep -w " $1" $hosts_file_name
 if [ $? -eq 0 ] ;
         then
                 echo "controller found - going to remove it"
-                sed_command="/\t'$1'/d"
+                sed_command="/ $1/d"
 		echo "SED Command is:: "$sed_command
-                sed -i '$sed_command' $hosts_file_name
+                sed -i "$sed_command" $hosts_file_name
 fi
 echo "going to add back"
 echo "$2        $1" >> $hosts_file_name

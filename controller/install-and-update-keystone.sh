@@ -9,7 +9,7 @@ apt-get install keystone python-keystoneclient -y
 if [ $? -eq 0 ]
 	then
 		echo "Configuring MySQL for Keystone..."
-		mysql_command="CREATE DATABASE keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
+		mysql_command="CREATE DATABASE IF NOT EXISTS keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
 		echo "MySQL DB Command is: "$mysql_command
 		mysql -u "$2" -p"$3" -e "$mysql_command"
 
@@ -37,6 +37,12 @@ keystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 		export OS_SERVICE_TOKEN=$admin_token_parameter
 		export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
 		echo "OS_SERVICE_ENDPOINT>>>>$OS_SERVICE_ENDPOINT"
+		export OS_TENANT_NAME=admin
+		export OS_USERNAME=admin
+		export OS_PASSWORD=$5
+		export OS_AUTH_URL=http://$4:35357/v2.0
+		env 
+		sleep 10
 
 		keystone tenant-create --name admin --description "Admin Tenant"
 		keystone user-create --name admin --pass $5 --email admin@example.com
@@ -64,8 +70,4 @@ keystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 		sleep 10
 		service keystone restart
 
-		export OS_TENANT_NAME=admin
-		export OS_USERNAME=admin
-		export OS_PASSWORD=$5
-		export OS_AUTH_URL=http://$4:35357/v2.0
 fi
