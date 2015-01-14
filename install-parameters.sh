@@ -23,3 +23,4 @@ readonly nova_db_password="password"
 readonly neutron_password="password"
 readonly neutron_db_password="password"
 
+apt-get install crudini

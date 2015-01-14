@@ -11,14 +11,22 @@ if [ $? -eq 0 ]
 		echo "Configuring MySQL for Keystone..."
 		mysql_command="CREATE DATABASE IF NOT EXISTS keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
 		echo "MySQL DB Command is: "$mysql_command
+		sleep 5
 		mysql -u "$2" -p"$3" -e "$mysql_command"
 
 		echo "Configuring Keystone..."
 		admin_token_parameter=`openssl rand -hex 10`
 		crudini --set /etc/keystone/keystone.conf DEFAULT admin_token $admin_token_parameter
+		grep "admin_token" /etc/keystone/keystone.conf
+		sleep 5
+
 		crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
 		crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
 		crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.sql.Token
+
+		echo "Configured KeyStone Conf File"
+		grep "mysql" /etc/keystone/keystone.conf
+		sleep 5
 
 		echo "Populate Identity Service Database..."
 		keystone-manage db_sync

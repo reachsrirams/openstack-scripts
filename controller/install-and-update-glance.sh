@@ -1,4 +1,4 @@
-if [ $# -lt 6]
+if [ $# -lt 6 ]
 	then
 		echo "Correct Syntax: $0 <glance-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password> <glance-password>"
 		exit 1
@@ -7,7 +7,7 @@ fi
 echo "Configuring MySQL for Glance..."
 mysql_command="CREATE DATABASE IF NOT EXISTS glance; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '$1';"
 echo "MySQL Command is:: "$mysql_command
-mysql -u "$2" -p"$3"-e "$mysql_command"
+mysql -u "$2" -p "$3" -e "$mysql_command"
 
 export OS_TENANT_NAME=admin
 export OS_USERNAME=admin
@@ -15,11 +15,12 @@ export OS_PASSWORD=$5
 export OS_AUTH_URL=http://$4:35357/v2.0
 sleep 2
 
-echo "Updating KeyStone for Glance
+echo "Updating KeyStone for Glance"
 keystone user-create --name glance --pass $6
 keystone user-role-add --user glance --tenant service --role admin
 keystone service-create --name glance --type image --description "OpenStack Image Service"
 
+set -x
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ identity / {print $2}') \
 --publicurl http://$4:9292 \
