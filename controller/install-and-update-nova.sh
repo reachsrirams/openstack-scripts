@@ -29,8 +29,8 @@ keystone endpoint-create \
 --region regionOne
 
 echo "About to call apt-get to Install Nova"
-sleep 15
-apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
+sleep 10
+apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y
 if [ $? -eq 0 ]
 	then
 		echo "Configuring NOVA Conf File..."
@@ -54,7 +54,7 @@ if [ $? -eq 0 ]
 
 		echo "Populate Image Nova Database..."
 		nova-manage db_sync
-
+		sleep 5
 		echo "Restarting Nova Service..."
 		service nova-api restart
 		service nova-cert restart

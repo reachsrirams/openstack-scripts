@@ -1,4 +1,4 @@
-apt-get install mariadb-server python-mysqldb
+apt-get install mariadb-server python-mysqldb -y
 if [ $? -eq 0 ]
 	then
 		echo "Updating MySQL Config File..."

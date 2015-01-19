@@ -7,7 +7,7 @@ fi
 echo "Configuring MySQL for Glance..."
 mysql_command="CREATE DATABASE IF NOT EXISTS glance; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY '$1';"
 echo "MySQL Command is:: "$mysql_command
-mysql -u "$2" -p "$3" -e "$mysql_command"
+mysql -u "$2" -p"$3" -e "$mysql_command"
 
 export OS_TENANT_NAME=admin
 export OS_USERNAME=admin
