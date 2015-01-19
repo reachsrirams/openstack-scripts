@@ -61,4 +61,16 @@ if [ $? -eq 0 ]
 		
 		echo "Removing Glance MySQL-Lite Database..."
 		rm -f /var/lib/glance/glance.sqlite
+
+		cirros_image_name="cirros-0.3.3-x86_64-disk.img"
+		wget_url_for_cirros="http://cdn.download.cirros-cloud.net/0.3.3/"$cirros_image_name
+		echo "URL for Image WGET:: "$wget_url_for_cirros
+		sleep 3
+		wget $wget_url_for_cirros
+		glance image-create --name "cirros-0.3.3-x86_64" --file $cirros_image_name --disk-format qcow2 --container-format bare --is-public True --progress
+		sleep 2
+		glance image-list
+		echo "About to delete the local image..."
+		sleep 3
+		rm -f $cirros_image_name
 fi
