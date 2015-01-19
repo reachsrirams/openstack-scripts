@@ -9,16 +9,17 @@ mysql_command="CREATE DATABASE IF NOT EXISTS nova; GRANT ALL PRIVILEGES ON nova.
 echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
-export OS_TENANT_NAME=admin
-export OS_USERNAME=admin
-export OS_PASSWORD=$5
-export OS_AUTH_URL=http://$4:35357/v2.0
+source admin_openrc.sh
 sleep 2
 
-echo "Updating KeyStone for Nova"
+echo "Creating Nova User in KeyStone"
 keystone user-create --name nova --pass $6
+sleep 10
 keystone user-role-add --user nova --tenant service --role admin
-keystone service-create --name nova --type compute --description "OpenStack Compute Service"
+set -x
+keystone service-create --name nova --type compute --description "OpenStack Compute"
+echo "Called service-create for Nova Compute"
+sleep 10
 
 set -x
 keystone endpoint-create \
@@ -29,12 +30,12 @@ keystone endpoint-create \
 --region regionOne
 
 echo "About to call apt-get to Install Nova"
-sleep 10
+sleep 20
 apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y
 if [ $? -eq 0 ]
 	then
 		echo "Configuring NOVA Conf File..."
-		crudini --set /etc/nova/nova.conf database connection mysql://glance:$1@$4/glance
+		crudini --set /etc/nova/nova.conf database connection mysql://nova:$1@$4/nova
 
 		crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 		crudini --set /etc/nova/nova.conf DEFAULT rabbit_host $4
@@ -53,7 +54,7 @@ if [ $? -eq 0 ]
 		crudini --set /etc/nova/nova.conf glance host $4
 
 		echo "Populate Image Nova Database..."
-		nova-manage db_sync
+		nova-manage db sync
 		sleep 5
 		echo "Restarting Nova Service..."
 		service nova-api restart

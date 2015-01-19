@@ -17,9 +17,16 @@ sleep 2
 
 echo "Updating KeyStone for Glance"
 keystone user-create --name glance --pass $6
+sleep 10
 keystone user-role-add --user glance --tenant service --role admin
+sleep 10
 keystone service-create --name glance --type image --description "OpenStack Image Service"
-
+echo "Created Image Service in keystone"
+sleep 10
+echo "About to print keystone service list..."
+sleep 2
+keystone service-list
+sleep 15
 set -x
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ identity / {print $2}') \
@@ -27,6 +34,8 @@ keystone endpoint-create \
 --internalurl http://$4:9292 \
 --adminurl http://$4:9292 \
 --region regionOne
+echo "Added Endpoint..."
+sleep 10
 
 apt-get install glance python-glanceclient -y
 if [ $? -eq 0 ]
