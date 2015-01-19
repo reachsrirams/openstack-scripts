@@ -1,3 +1,5 @@
+source install-parameters.sh
+
 if [ $# -lt 6 ]
 	then
 		echo "Correct Syntax: $0 <glance-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password> <glance-password>"
@@ -13,13 +15,13 @@ source admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC" 5
 
 keystone user-create --name glance --pass $6
-echo_and_sleep "Created Glance User in Keystone" sleep 10
+echo_and_sleep "Created Glance User in Keystone" 10
 
 keystone user-role-add --user glance --tenant service --role admin
-sleep 10
+echo_and_sleep "Created Glance Role in Keystone" 10
+
 keystone service-create --name glance --type image --description "OpenStack Image Service"
 echo_and_sleep "Created Image Service in keystone" 10
-
 
 set -x
 keystone endpoint-create \

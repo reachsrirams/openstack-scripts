@@ -1,5 +1,6 @@
 source install-parameters.sh
-print_keystone_server_list
+print_keystone_service_list
+
 if [ $# -lt 7 ]
 	then
 		echo "Correct Syntax: $0 <nova-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password> <nova-password> <rabbitmq-password>"
@@ -19,7 +20,7 @@ echo_and_sleep "Creating Nova User in KeyStone" 10
 keystone user-role-add --user nova --tenant service --role admin
 set -x
 keystone service-create --name nova --type compute --description "OpenStack Compute"
-echo_sleep "Called service-create for Nova Compute" 10
+echo_and_sleep "Called service-create for Nova Compute" 10
 
 set -x
 keystone endpoint-create \
