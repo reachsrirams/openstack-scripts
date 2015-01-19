@@ -1,3 +1,4 @@
+source install-parameters.sh
 if [ $# -lt 5 ]
 	then
 		echo "Correct Syntax: install-and-update-keystone <keystone-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password>"
