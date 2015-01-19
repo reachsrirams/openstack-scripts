@@ -5,8 +5,7 @@ if [ $? -eq 0 ]
 		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf
 		echo "Updated Bind Address"
 		grep "bind" /etc/mysql/my.cnf
-		echo "Updating MySQL Config File..."
-		sleep 5
+		echo_and_sleep "Updating MySQL Config File..." 5
 		sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
 				innodb_file_per_table\\
 				collation-server = utf8_general_ci\\

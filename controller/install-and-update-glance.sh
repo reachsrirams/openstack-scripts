@@ -9,24 +9,18 @@ mysql_command="CREATE DATABASE IF NOT EXISTS glance; GRANT ALL PRIVILEGES ON gla
 echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
-export OS_TENANT_NAME=admin
-export OS_USERNAME=admin
-export OS_PASSWORD=$5
-export OS_AUTH_URL=http://$4:35357/v2.0
-sleep 2
+source admin_openrc.sh
+echo_and_sleep "Called Source Admin OpenRC" 5
 
-echo "Updating KeyStone for Glance"
 keystone user-create --name glance --pass $6
-sleep 10
+echo_and_sleep "Created Glance User in Keystone" sleep 10
+
 keystone user-role-add --user glance --tenant service --role admin
 sleep 10
 keystone service-create --name glance --type image --description "OpenStack Image Service"
-echo "Created Image Service in keystone"
-sleep 10
-echo "About to print keystone service list..."
-sleep 2
-keystone service-list
-sleep 15
+echo_and_sleep "Created Image Service in keystone" 10
+
+
 set -x
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ identity / {print $2}') \
@@ -34,8 +28,9 @@ keystone endpoint-create \
 --internalurl http://$4:9292 \
 --adminurl http://$4:9292 \
 --region regionOne
-echo "Added Endpoint..."
-sleep 10
+echo_and_sleep "Added Glance Service Endpoint..." 3
+
+print_keystone_service_list
 
 apt-get install glance python-glanceclient -y
 if [ $? -eq 0 ]
@@ -61,25 +56,25 @@ if [ $? -eq 0 ]
 		crudini --set /etc/glance/glance-registry.conf keystone_authtoken admin_password $6
 		crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
 
-		echo "Populate Image Service Database..."
+		echo_and_sleep "About tp Populate Image Service Database..." 5
 		glance-manage db_sync
 
-		echo "Restarting Glance Service..."
+		echo_and_sleep "Restarting Glance Service..." 3
 		service glance-registry restart
 		service glance-api restart
 		
-		echo "Removing Glance MySQL-Lite Database..."
+		echo_and_sleep "Removing Glance MySQL-Lite Database..." 5
 		rm -f /var/lib/glance/glance.sqlite
 
 		cirros_image_name="cirros-0.3.3-x86_64-disk.img"
 		wget_url_for_cirros="http://cdn.download.cirros-cloud.net/0.3.3/"$cirros_image_name
-		echo "URL for Image WGET:: "$wget_url_for_cirros
-		sleep 3
+		echo_and_sleep "URL for Image WGET:: "$wget_url_for_cirros 3
 		wget $wget_url_for_cirros
 		glance image-create --name "cirros-0.3.3-x86_64" --file $cirros_image_name --disk-format qcow2 --container-format bare --is-public True --progress
 		sleep 2
 		glance image-list
-		echo "About to delete the local image..."
-		sleep 3
+		echo_and_sleep "About to delete the local image..." 10
 		rm -f $cirros_image_name
+
+		print_keystone_service_list
 fi

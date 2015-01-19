@@ -22,5 +22,5 @@ fi
 echo "going to add back"
 echo "$2        $1" >> $hosts_file_name
 echo "After update $hosts_file_name contents..."
-cat $hosts_file_name
+grep -w " $1" $hosts_file_name
 sleep 2

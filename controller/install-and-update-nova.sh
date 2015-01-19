@@ -1,3 +1,7 @@
+echo "Printing KeyStone Service List..."
+sleep 2
+keystone service-list
+sleep 15
 if [ $# -lt 7 ]
 	then
 		echo "Correct Syntax: $0 <nova-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password> <nova-password> <rabbitmq-password>"

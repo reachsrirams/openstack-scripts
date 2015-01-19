@@ -3,15 +3,13 @@ if [ $# -lt 5 ]
 		echo "Correct Syntax: install-and-update-keystone <keystone-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password>"
 		exit 1
 fi
-echo "Installing Keystone..."
-sleep 2
+echo_and_sleep "Installing Keystone..." 2
 apt-get install keystone python-keystoneclient -y
 if [ $? -eq 0 ]
 	then
 		echo "Configuring MySQL for Keystone..."
 		mysql_command="CREATE DATABASE IF NOT EXISTS keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
-		echo "MySQL DB Command is: "$mysql_command
-		sleep 5
+		echo_and_sleep "MySQL DB Command is: "$mysql_command 5
 		mysql -u "$2" -p"$3" -e "$mysql_command"
 
 		echo "Configuring Keystone..."
@@ -44,13 +42,8 @@ keystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 		echo "Setting environment variables"
 		export OS_SERVICE_TOKEN=$admin_token_parameter
 		export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
-		echo "OS_SERVICE_ENDPOINT>>>>$OS_SERVICE_ENDPOINT"
-		export OS_TENANT_NAME=admin
-		export OS_USERNAME=admin
-		export OS_PASSWORD=$5
-		export OS_AUTH_URL=http://$4:35357/v2.0
-		env 
-		sleep 10
+		source admin_openrc.sh
+		echo_and_sleep "Called Source Admin OpenRC" 5
 
 		keystone tenant-create --name admin --description "Admin Tenant"
 		keystone user-create --name admin --pass $5 --email admin@example.com
@@ -74,8 +67,8 @@ keystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 		--adminurl http://$4:35357/v2.0 \
 		--region regionOne
 
-		echo "Restarting keystone..."
-		sleep 10
+		echo_and_sleep "Restarting keystone..." 5
 		service keystone restart
 
+		print_keystone_service_list
 fi
