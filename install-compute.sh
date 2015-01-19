@@ -1,35 +1,28 @@
-source ./install-parameters.sh
-if [ $# -lt 2 ]
+source install-parameters.sh
+if [ $# -lt 4 ]
 	then
-		echo "Correct syntax: install-compute <compute-node-name> <data-plane-ip>"
+		echo "Correct syntax: install-compute <compute-node-name> <controller_ip_address> <netnode_ip_address> <data-plane-ip>"
 		exit 1;
 fi
-local_ip = hostname -I
+local_ip=`hostname -I`
 echo "IP to be configured in /etc/hosts: "$local_ip
-sleep $sleep_duration
-sh common/change-ip-in-etc-hosts.sh $1 $local_ip
+bash common/change-ip-in-etc-hosts.sh $1 $local_ip
 
 echo "Adding controller node info to /etc/hosts"
-sleep $sleep_duration
-sh common/change-ip-in-etc-hosts.sh $controller_host_name $controller_ip_address
+bash common/change-ip-in-etc-hosts.sh $controller_host_name $2
 
 echo "Adding network-node info to /etc/hosts"
-sleep $sleep_duration
-sh common/change-ip-in-etc-hosts.sh $network_node_host_name $network_node_ip_address
+bash common/change-ip-in-etc-hosts.sh $network_node_host_name $3
 
 echo "About to setup NTP..."
-sleep $sleep_duration
-sh common/install-and-update-ntp.sh
+bash common/install-and-update-ntp.sh
 
 echo "About to configure OpenStack packages..."
-sleep $sleep_duration
-sh common/install-and-update-openstack-packages.sh
+bash common/install-and-update-openstack-packages.sh
 
 echo "About to configure Nova..."
-sleep $sleep_duration
-sh compute/install-and-update-nova.sh $controller_host_name $nova_password $rabbitmq_password $local_ip
+bash compute/install-and-update-nova.sh $controller_host_name $nova_password $rabbitmq_password $local_ip
 
 echo "About to configure Neutron..."
-sleep $sleep_duration
-sh compute/install-and-update-neutron.sh $controller_host_name $rabbitmq_password $neutron_password $data-plane-ip
+bash compute/install-and-update-neutron.sh $controller_host_name $rabbitmq_password $neutron_password $4
 
