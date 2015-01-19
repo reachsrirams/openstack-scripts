@@ -1,4 +1,5 @@
 source install-parameters.sh
+source admin_openrc.sh
 print_keystone_service_list
 
 if [ $# -lt 7 ]
@@ -12,17 +13,13 @@ mysql_command="CREATE DATABASE IF NOT EXISTS nova; GRANT ALL PRIVILEGES ON nova.
 echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
-source admin_openrc.sh
-sleep 2
-
 keystone user-create --name nova --pass $6
 echo_and_sleep "Creating Nova User in KeyStone" 10
 keystone user-role-add --user nova --tenant service --role admin
-set -x
+
 keystone service-create --name nova --type compute --description "OpenStack Compute"
 echo_and_sleep "Called service-create for Nova Compute" 10
 
-set -x
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ compute / {print $2}') \
 --publicurl http://$4:8774/v2/%\(tenant_id\)s \
@@ -66,3 +63,4 @@ if [ $? -eq 0 ]
 		echo_and_sleep "Removing Nova MySQL-Lite Database..." 5
 		rm -f /var/lib/nova/nova.sqlite
 fi
+print_keystone_server_list

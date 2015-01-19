@@ -23,7 +23,6 @@ echo_and_sleep "Created Glance Role in Keystone" 10
 keystone service-create --name glance --type image --description "OpenStack Image Service"
 echo_and_sleep "Created Image Service in keystone" 10
 
-set -x
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ identity / {print $2}') \
 --publicurl http://$4:9292 \
@@ -77,6 +76,5 @@ if [ $? -eq 0 ]
 		glance image-list
 		echo_and_sleep "About to delete the local image..." 10
 		rm -f $cirros_image_name
-
-		print_keystone_service_list
 fi
+print_keystone_service_list
