@@ -9,7 +9,8 @@ if [ $? -eq 0 ]
 	then
 		echo "Configuring MySQL for Keystone..."
 		mysql_command="CREATE DATABASE IF NOT EXISTS keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
-		echo_and_sleep "MySQL DB Command is: "$mysql_command 5
+		echo "MySQL DB Command is: "$mysql_command 
+		sleep 5
 		mysql -u "$2" -p"$3" -e "$mysql_command"
 
 		echo "Configuring Keystone..."

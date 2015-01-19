@@ -1,7 +1,5 @@
-echo "Printing KeyStone Service List..."
-sleep 2
-keystone service-list
-sleep 15
+source install-parameters.sh
+print_keystone_server_list
 if [ $# -lt 7 ]
 	then
 		echo "Correct Syntax: $0 <nova-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password> <nova-password> <rabbitmq-password>"
@@ -16,14 +14,12 @@ mysql -u "$2" -p"$3" -e "$mysql_command"
 source admin_openrc.sh
 sleep 2
 
-echo "Creating Nova User in KeyStone"
 keystone user-create --name nova --pass $6
-sleep 10
+echo_and_sleep "Creating Nova User in KeyStone" 10
 keystone user-role-add --user nova --tenant service --role admin
 set -x
 keystone service-create --name nova --type compute --description "OpenStack Compute"
-echo "Called service-create for Nova Compute"
-sleep 10
+echo_sleep "Called service-create for Nova Compute" 10
 
 set -x
 keystone endpoint-create \
@@ -33,12 +29,11 @@ keystone endpoint-create \
 --adminurl http://$4:8774/v2/%\(tenant_id\)s \
 --region regionOne
 
-echo "About to call apt-get to Install Nova"
-sleep 20
+echo_and_sleep "About to call apt-get to Install Nova" 10
 apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y
 if [ $? -eq 0 ]
 	then
-		echo "Configuring NOVA Conf File..."
+		echo_and_sleep "Configuring NOVA Conf File..." 3
 		crudini --set /etc/nova/nova.conf database connection mysql://nova:$1@$4/nova
 
 		crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
@@ -57,10 +52,9 @@ if [ $? -eq 0 ]
 
 		crudini --set /etc/nova/nova.conf glance host $4
 
-		echo "Populate Image Nova Database..."
+		echo_and_sleep "Populate Image Nova Database..." 5
 		nova-manage db sync
-		sleep 5
-		echo "Restarting Nova Service..."
+		echo_and_sleep "Restarting Nova Service..." 5
 		service nova-api restart
 		service nova-cert restart
 		service nova-consoleauth restart
@@ -68,6 +62,6 @@ if [ $? -eq 0 ]
 		service nova-conductor restart
 		service nova-novncproxy restart
 
-		echo "Removing Nova MySQL-Lite Database..."
+		echo_and_sleep "Removing Nova MySQL-Lite Database..." 5
 		rm -f /var/lib/nova/nova.sqlite
 fi
