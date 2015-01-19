@@ -1,13 +1,8 @@
-if [ $# -lt 1 ]
-        then
-                echo "Correct syntax: install-and-update-database <controller_ip>"
-                exit 1;
-fi
 apt-get install mariadb-server python-mysqldb
 if [ $? -eq 0 ]
 	then
 		echo "Updating MySQL Config File..."
-		sed -i "s/127.0.0.1/$1/g" /etc/mysql/my.cnf
+		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf
 		echo "Updated Bind Address"
 		grep "bind" /etc/mysql/my.cnf
 		echo "Updating MySQL Config File..."

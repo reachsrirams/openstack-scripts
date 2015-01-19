@@ -10,7 +10,7 @@ echo "IP to be configured in /etc/hosts: "$local_ip
 controller_ip_address=$local_ip
 
 echo "About to setup Maria DB..."
-sh controller/install-and-update-database.sh $local_ip
+sh controller/install-and-update-database.sh
 
 echo "About to setup RabbitMQ..."
 sh controller/install-and-update-rabbitmq.sh $rabbitmq_user $rabbitmq_password
