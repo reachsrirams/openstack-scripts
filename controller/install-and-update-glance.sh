@@ -31,12 +31,10 @@ keystone endpoint-create \
 --region regionOne
 echo_and_sleep "Added Glance Service Endpoint..." 10
 
-print_keystone_service_list
-
 apt-get install glance python-glanceclient -y
 if [ $? -eq 0 ]
 	then
-		echo "Configuring Keystone..."
+		echo "Configuring Glance..."
 		crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$1@$4/glance
 
 		crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$4:5000/v2.0
