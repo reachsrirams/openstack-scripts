@@ -63,4 +63,4 @@ if [ $? -eq 0 ]
 		echo_and_sleep "Removing Nova MySQL-Lite Database..." 5
 		rm -f /var/lib/nova/nova.sqlite
 fi
-print_keystone_server_list
+print_keystone_service_list

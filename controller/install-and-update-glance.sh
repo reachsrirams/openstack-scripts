@@ -29,7 +29,7 @@ keystone endpoint-create \
 --internalurl http://$4:9292 \
 --adminurl http://$4:9292 \
 --region regionOne
-echo_and_sleep "Added Glance Service Endpoint..." 3
+echo_and_sleep "Added Glance Service Endpoint..." 10
 
 print_keystone_service_list
 

@@ -39,7 +39,7 @@ function echo_and_sleep() {
 		else
 			echo_string=$1
 	fi
-	echo $echo_string
+	echo "$echo_string and sleeping for "$sleep_time" seconds..."
 	sleep $sleep_time
 }
 
