@@ -20,4 +20,7 @@ apt-get install neutron-server neutron-plugin-ml2 python-neutronclient -y
 echo_and_sleep "Installing Horizon..." 6
 apt-get install openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache -y
 
+echo_and_sleep "Installing Ceilometer..." 6
+apt-get install mongo-db -y
+apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier python-ceilometerclient -y
 

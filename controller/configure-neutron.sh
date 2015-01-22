@@ -13,9 +13,9 @@ echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
 keystone user-create --name neutron --pass $6
-echo_and_sleep "Creating Neutron User in KeyStone"
+echo_and_sleep "Created Neutron User in KeyStone"
 keystone user-role-add --user neutron --tenant service --role admin
-echo_and_sleep "Creating Neutron Tenant in KeyStone"
+echo_and_sleep "Created Neutron Tenant in KeyStone"
 
 keystone service-create --name neutron --type network --description "OpenStack Networking"
 echo_and_sleep "Called service-create for Neutron Networking" 15
@@ -54,18 +54,18 @@ crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_username nova
 crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $8 
 crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $6
 
-echo_and_sleep "Configuring ML2 INI file..." 5
+echo_and_sleep "Configuring ML2 INI file..."
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers vlan
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_type vlan,local
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_driver openvswitch
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
-echo_and_sleep "Configured VLAN Range." 5
+echo_and_sleep "Configured VLAN Range."
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_security_group True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
-echo_and_sleep "Configured Security Group for ML2. About to Upgrade Neutron DB..." 5
+echo_and_sleep "Configured Security Group for ML2. About to Upgrade Neutron DB..." 
 neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno
 
 echo_and_sleep "Restarting Neutron Service..." 10
@@ -74,5 +74,5 @@ service nova-scheduler restart
 service nova-conductor restart
 service neutron-server restart
 
-echo_and_sleep "Printing Keystone Server List"
+echo_and_sleep "Printing Keystone Service List"
 print_keystone_service_list
