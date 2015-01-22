@@ -44,8 +44,8 @@ function echo_and_sleep() {
 }
 
 function print_keystone_service_list() {
-	echo_and_sleep "About to print Keystone Service List..." 2
+	echo_and_sleep "About to print Keystone Service List" 2
 	keystone service-list
-	echo_and_sleep "..." 10
+	echo_and_sleep "Printed Keystone Service List" 10
 }
 
