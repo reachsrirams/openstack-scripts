@@ -13,11 +13,12 @@ echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
 keystone user-create --name neutron --pass $6
+echo_and_sleep "Creating Neutron User in KeyStone"
 keystone user-role-add --user neutron --tenant service --role admin
-echo_and_sleep "Creating Neutron User in KeyStone" 10
+echo_and_sleep "Creating Neutron Tenant in KeyStone"
 
 keystone service-create --name neutron --type network --description "OpenStack Networking"
-echo_and_sleep "Called service-create for Neutron Networking" 10
+echo_and_sleep "Called service-create for Neutron Networking" 15
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ network / {print $2}') \
@@ -26,7 +27,7 @@ keystone endpoint-create \
 --adminurl http://$4:9696/v2/%\(tenant_id\)s \
 --region regionOne
 
-echo_and_sleep "Configuring Neutron Conf File..." 3
+echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 15
 crudini --set /etc/neutron/neutron.conf database connection mysql://neutron:$1@$4/neutron
 
 crudini --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
@@ -67,7 +68,7 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_drive
 echo_and_sleep "Configured Security Group for ML2. About to Upgrade Neutron DB..." 5
 neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno
 
-echo_and_sleep "Restarting Neutron Service..." 5
+echo_and_sleep "Restarting Neutron Service..." 10
 service nova-api restart
 service nova-scheduler restart
 service nova-conductor restart

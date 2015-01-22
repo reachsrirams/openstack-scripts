@@ -10,8 +10,8 @@ echo "IP to be configured in /etc/hosts: "$local_ip
 controller_ip_address=$local_ip
 
 echo_and_sleep "Adding controller node info to /etc/hosts" 
-sh common/change-ip-in-etc-hosts.sh $controller_host_name $controller_ip_address
+sh change-ip-in-etc-hosts.sh $controller_host_name $controller_ip_address
 
 echo_and_sleep "Adding network-node info to /etc/hosts" 
-sh common/change-ip-in-etc-hosts.sh $network_node_host_name $network_node_ip_address
+sh change-ip-in-etc-hosts.sh $network_node_host_name $network_node_ip_address
 
