@@ -62,10 +62,4 @@ service glance-api restart
 echo_and_sleep "Removing Glance MySQL-Lite Database..." 5
 rm -f /var/lib/glance/glance.sqlite
 
-cirros_image_name="cirros-0.3.3-x86_64-disk.img"
-glance image-create --name "cirros-0.3.3-x86_64" --file $cirros_image_name --disk-format qcow2 --container-format bare --is-public True --progress
-sleep 30
-glance image-list
-echo_and_sleep "About to delete the local image..." 10
-rm -f $cirros_image_name
 print_keystone_service_list

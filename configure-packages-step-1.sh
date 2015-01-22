@@ -23,22 +23,22 @@ sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
 echo_and_sleep "Updated other MySQL Parameters" 2
 grep "storage-engine" /etc/mysql/my.cnf
 
-echo "Restarting MySQL and securing installation..."
+echo_and_sleep "Restarting MySQL and securing installation..."
 service mysql restart;
-sleep 5
+sleep 10
 mysql_secure_installation;
 
 
-echo "Rabbit MQ: Updating password..."
-rabbitmqctl change_password $1 $2
-echo "Rabbit MQ: password updated."
+echo_and_sleep "Rabbit MQ: Updating password..."
+rabbitmqctl change_password $rabbitmq_user $rabbitmq_password
+echo_and_sleep "Rabbit MQ: password updated."
 
 		
-echo_and_sleep "About to setup KeyStone..." 5
+echo_and_sleep "About to setup KeyStone..."
 bash controller/configure-keystone.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
 
 
-echo_and_sleep "About to setup Glance..." 5
+echo_and_sleep "About to setup Glance..."
 bash controller/configure-glance.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
 
 

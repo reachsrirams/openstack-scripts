@@ -18,4 +18,4 @@ if [ $? -eq 0 ]
 		echo_and_sleep "service apache2 restart" 2
 		echo_and_sleep "service memcached restart" 2
 fi
-print_keystone_server_list
+print_keystone_service_list

@@ -79,4 +79,4 @@ if [ $? -eq 0 ]
 		service neutron-server restart
 
 fi
-print_keystone_server_list
+print_keystone_service_list

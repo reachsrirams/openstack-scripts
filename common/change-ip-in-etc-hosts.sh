@@ -10,7 +10,6 @@ if [ -z "$3" ]
                 hosts_file_name=$3
 fi
 echo "Host File is: $hosts_file_name"
-set -x
 grep -w " $1" $hosts_file_name
 if [ $? -eq 0 ] ;
         then
@@ -19,7 +18,6 @@ if [ $? -eq 0 ] ;
 		echo "SED Command is:: "$sed_command
                 sed -i "$sed_command" $hosts_file_name
 fi
-echo "going to add back"
 echo "$2        $1" >> $hosts_file_name
 echo "After update $hosts_file_name contents..."
 grep -w " $1" $hosts_file_name

@@ -1,17 +1,23 @@
 source install-parameters.sh
-if [ -z $1 ]
-	then
-		echo "Using default controller host name: "$controller_host_name
-	else
-		controller_host_name = $1
-fi
-local_ip=`hostname -I`
-echo "IP to be configured in /etc/hosts: "$local_ip
-controller_ip_address=$local_ip
+echo_and_sleep "Installing MariaDB..." 6
+apt-get install mariadb-server python-mysqldb -y
 
-echo "About to setup Maria DB..."
-bash controller/install-and-update-database.sh
+echo_and_sleep "Installing RabbitMQ..." 6
+apt-get install rabbitmq-server -y
 
-echo "About to setup RabbitMQ..."
-bash controller/install-and-update-rabbitmq.sh $rabbitmq_user $rabbitmq_password
+echo_and_sleep "Installing Keystone..." 6
+apt-get install keystone python-keystoneclient -y
+
+echo_and_sleep "Installing Glance..." 6
+apt-get install glance python-glanceclient -y
+
+echo_and_sleep "Installing Nova..." 6
+apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y
+
+echo_and_sleep "Installing Neutron..." 6
+apt-get install neutron-server neutron-plugin-ml2 python-neutronclient -y
+
+echo_and_sleep "Installing Horizon..." 6
+apt-get install openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache -y
+
 
