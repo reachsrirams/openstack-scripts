@@ -1,4 +1,4 @@
-#source install-parameters.sh
+source install-parameters.sh
 echo "Edit /etc/openstack-dashboard/local_settings.py as follows:"
 echo "*********"
 echo "OPENSTACK_HOST = \"controller\"" 
@@ -14,3 +14,10 @@ echo "And then restart the following services"
 echo "service apache2 restart" 
 echo "service memcached restart" 
 echo "*********"
+sed -e "/^ALLOWED_HOSTS =.*$/s/^.*$/ALLOWED_HOSTS = '*'" -i /etc/openstack-dashboard/local_settings.py
+sed -e '/^OPENSTACK_HOST =.*$/s/^.*$/OPENSTACK_HOST = "'$host_ip'"' -i /etc/openstack-dashboard/local_settings.py
+grep "ALLOWED_HOSTS" /etc/openstack-dashboard/local_settings.py
+grep "OPENSTACK_HOST" /etc/openstack-dashboard/local_settings.py
+echo_and_sleep "Update Dashboard Local Settings File" 10
+service apache2 restart
+service memcached restart

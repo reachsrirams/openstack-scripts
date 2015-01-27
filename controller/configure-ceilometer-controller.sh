@@ -7,7 +7,21 @@ if [ $# -lt 8 ]
 		exit 1
 fi
 
-#TBD - mongo DB configuration is required
+function update_mongodb_bind_address() {
+	echo "Updating Bind IP in MongoDB Config File"
+	sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mongodb.conf
+	grep "bind" /etc/mongodb.conf
+	echo_and_sleep "Updated Bind Address" 2
+}
+
+update_mongodb_bind_address
+echo_and_sleep "Starting Mongo DB"
+service mongodb restart
+echo_and_sleep "About to create Ceilometer DB in MongoDB" 10
+mongo --host controller --eval 'db = db.getSiblingDB("ceilometer"); db.addUser({user:"ceilometer", pwd: "CEILOMETER_DBPASS",roles: [ "readWrite", "dbAdmin" ]})'
+
+echo_and_sleep "About to start Ceilometer setup-config"
+source admin_openrc.sh
 
 keystone user-create --name ceilometer --pass $6
 echo_and_sleep "Created Ceilometer User in KeyStone"
@@ -55,3 +69,4 @@ service ceilometer-api restart
 service ceilometer-collector restart
 service ceilometer-alarm-evaluator restart
 service ceilometer-alarm-notifier restart
+
