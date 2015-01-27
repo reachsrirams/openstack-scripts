@@ -27,7 +27,6 @@ readonly ceilometer_password="password"
 readonly ceilometer_db_password="password"
 
 apt-get install crudini -y
-apt-get autoremove
 
 function echo_and_sleep() {
 	if [ -z "$2" ]

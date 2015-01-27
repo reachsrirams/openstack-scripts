@@ -8,3 +8,4 @@ apt-get install ubuntu-cloud-keyring -y
 echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
   "trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
 apt-get update && apt-get dist-upgrade -y
+apt-get autoremove -y
