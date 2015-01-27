@@ -13,9 +13,9 @@ echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
 keystone user-create --name nova --pass $6
-echo_and_sleep "Creating Nova User in KeyStone" 
+echo_and_sleep "Creating Nova User in KeyStone" 10
 keystone user-role-add --user nova --tenant service --role admin
-echo_and_sleep "Created Nova Tenant"
+echo_and_sleep "Created Nova Tenant" 10
 
 keystone service-create --name nova --type compute --description "OpenStack Compute"
 echo_and_sleep "Called service-create for Nova Compute" 10
