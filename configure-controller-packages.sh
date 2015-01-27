@@ -8,6 +8,7 @@ fi
 local_ip=`hostname -I`
 echo "IP to be configured in /etc/hosts: "$local_ip
 controller_ip_address=$local_ip
+controller_host_name=$controller_ip_address
 
 echo "Updating MySQL Config File..."
 sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf

@@ -10,8 +10,8 @@ echo "        'LOCATION': '127.0.0.1:11211',"
 echo "    }" 
 echo "}" 
 echo "*********"
-sed -e "/^ALLOWED_HOSTS =.*$/s/^.*$/ALLOWED_HOSTS = '*'" -i /etc/openstack-dashboard/local_settings.py
-sed -e '/^OPENSTACK_HOST =.*$/s/^.*$/OPENSTACK_HOST = "controller"' -i /etc/openstack-dashboard/local_settings.py
+sed -e "/^ALLOWED_HOSTS =.*$/s/^.*$/ALLOWED_HOSTS = '*'/" -i /etc/openstack-dashboard/local_settings.py
+sed -e "/^OPENSTACK_HOST =.*$/s/^.*$/OPENSTACK_HOST = \""$1"\"/" -i /etc/openstack-dashboard/local_settings.py
 grep "ALLOWED_HOSTS" /etc/openstack-dashboard/local_settings.py
 grep "OPENSTACK_HOST" /etc/openstack-dashboard/local_settings.py
 echo_and_sleep "Update Dashboard Local Settings File" 10
