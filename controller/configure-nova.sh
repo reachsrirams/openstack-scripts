@@ -60,3 +60,5 @@ echo_and_sleep "Removing Nova MySQL-Lite Database..." 10
 rm -f /var/lib/nova/nova.sqlite
 echo_and_sleep "About to print Keystone Service..." 
 print_keystone_service_list
+nova service-list
+echo_and_sleep "Verify Nova Service List" 10

@@ -72,4 +72,6 @@ wget $wget_url_for_cirros
 source admin_openrc.sh
 echo_and_sleep "Downloaded Cirros Image. Ready to call glance image-create command" 3
 glance image-create --name "cirros-0.3.3-x86_64" --file $cirros_image_name --disk-format qcow2 --container-format bare --is-public True --progress
-echo_and_sleep "Completed glance image-create" 10
+echo_and_sleep "Completed glance image-create"
+glance image-list
+echo_and_sleep "Verify Glance Image List" 10
