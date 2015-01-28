@@ -24,7 +24,7 @@ keystone service-create --name glance --type image --description "OpenStack Imag
 echo_and_sleep "Created Image Service in keystone" 10
 
 keystone endpoint-create \
---service-id $(keystone service-list | awk '/ identity / {print $2}') \
+--service-id $(keystone service-list | awk '/ image / {print $2}') \
 --publicurl http://$4:9292 \
 --internalurl http://$4:9292 \
 --adminurl http://$4:9292 \
