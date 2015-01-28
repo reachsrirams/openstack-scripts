@@ -8,7 +8,6 @@ fi
 local_ip=`hostname -I`
 echo "IP to be configured in /etc/hosts: "$local_ip
 controller_ip_address=$local_ip
-controller_host_name=$controller_ip_address
 
 echo "Updating MySQL Config File..."
 sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf
@@ -30,9 +29,10 @@ sleep 10
 mysql_secure_installation;
 
 
-echo_and_sleep "Rabbit MQ: Updating password..."
+echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
 rabbitmqctl change_password $rabbitmq_user $rabbitmq_password
 echo_and_sleep "Rabbit MQ: password updated."
+service rabbitmq-server restart
 
 		
 echo_and_sleep "About to setup KeyStone..."
