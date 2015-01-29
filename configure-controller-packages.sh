@@ -32,6 +32,8 @@ mysql_secure_installation;
 echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
 rabbitmqctl change_password $rabbitmq_user $rabbitmq_password
 echo_and_sleep "Rabbit MQ: password updated."
+sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
+echo_and_sleep "Configured Guest account in Rabbit MQ" 10
 service rabbitmq-server restart
 
 		
