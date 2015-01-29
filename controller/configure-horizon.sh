@@ -14,6 +14,6 @@ sed -e "/^ALLOWED_HOSTS =.*$/s/^.*$/ALLOWED_HOSTS = ['*']/" -i /etc/openstack-da
 sed -e "/^OPENSTACK_HOST =.*$/s/^.*$/OPENSTACK_HOST = \""$1"\"/" -i /etc/openstack-dashboard/local_settings.py
 grep "ALLOWED_HOSTS" /etc/openstack-dashboard/local_settings.py
 grep "OPENSTACK_HOST" /etc/openstack-dashboard/local_settings.py
-echo_and_sleep "Update Dashboard Local Settings File" 10
+echo_and_sleep "Update Dashboard Local Settings File" 7
 service apache2 restart
 service memcached restart

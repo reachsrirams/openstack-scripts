@@ -17,7 +17,7 @@ function update_mongodb_bind_address() {
 update_mongodb_bind_address
 echo_and_sleep "Starting Mongo DB"
 service mongodb restart
-echo_and_sleep "About to create Ceilometer DB in MongoDB" 10
+echo_and_sleep "About to create Ceilometer DB in MongoDB" 7
 mongo --host controller --eval 'db = db.getSiblingDB("ceilometer"); db.addUser({user:"ceilometer", pwd: "CEILOMETER_DBPASS",roles: [ "readWrite", "dbAdmin" ]})'
 
 echo_and_sleep "About to start Ceilometer setup-config"
@@ -29,7 +29,7 @@ keystone user-role-add --user ceilometer --tenant service --role admin
 echo_and_sleep "Created Ceilometer Tenant in KeyStone"
 
 keystone service-create --name ceilometer --type metering --description "Telemetry"
-echo_and_sleep "Called service-create for Ceilometer" 15
+echo_and_sleep "Called service-create for Ceilometer" 10
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ metering / {print $2}') \
@@ -38,7 +38,7 @@ keystone endpoint-create \
 --adminurl http://$4:8777 \
 --region regionOne
 
-echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 15
+echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 10
 crudini --set /etc/ceilometer/ceilometer.conf database connection mongodb://ceilometer:$1@$4:27017/ceilometer
 
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT rpc_backend rabbit

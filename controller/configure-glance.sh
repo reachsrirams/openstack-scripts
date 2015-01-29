@@ -15,13 +15,13 @@ source admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC" 5
 
 keystone user-create --name glance --pass $6
-echo_and_sleep "Created Glance User in Keystone" 10
+echo_and_sleep "Created Glance User in Keystone" 7
 
 keystone user-role-add --user glance --tenant service --role admin
-echo_and_sleep "Created Glance Role in Keystone" 10
+echo_and_sleep "Created Glance Role in Keystone" 7
 
 keystone service-create --name glance --type image --description "OpenStack Image Service"
-echo_and_sleep "Created Image Service in keystone" 10
+echo_and_sleep "Created Image Service in keystone" 7
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ image / {print $2}') \
@@ -29,7 +29,7 @@ keystone endpoint-create \
 --internalurl http://$4:9292 \
 --adminurl http://$4:9292 \
 --region regionOne
-echo_and_sleep "Added Glance Service Endpoint..." 10
+echo_and_sleep "Added Glance Service Endpoint..." 7
 
 echo "Configuring Glance..."
 crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$1@$4/glance
@@ -52,14 +52,14 @@ crudini --set /etc/glance/glance-registry.conf keystone_authtoken admin_user gla
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken admin_password $6
 crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
 
-echo_and_sleep "About tp Populate Image Service Database..." 5
+echo_and_sleep "About to populate Image Service Database" 
 glance-manage db_sync
 
 echo_and_sleep "Restarting Glance Service..." 3
 service glance-registry restart
 service glance-api restart
 
-echo_and_sleep "Removing Glance MySQL-Lite Database..." 5
+echo_and_sleep "Removing Glance MySQL-Lite Database" 
 rm -f /var/lib/glance/glance.sqlite
 
 print_keystone_service_list
@@ -74,4 +74,4 @@ echo_and_sleep "Downloaded Cirros Image. Ready to call glance image-create comma
 glance image-create --name "cirros-0.3.3-x86_64" --file $cirros_image_name --disk-format qcow2 --container-format bare --is-public True --progress
 echo_and_sleep "Completed glance image-create"
 glance image-list
-echo_and_sleep "Verify Glance Image List" 10
+echo_and_sleep "Verify Glance Image List" 7

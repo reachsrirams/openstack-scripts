@@ -45,11 +45,11 @@ echo_and_sleep "Called Source Admin OpenRC" 5
 
 keystone tenant-create --name admin --description "Admin Tenant"
 keystone user-create --name admin --pass $5 --email admin@example.com
-echo_and_sleep "Created Admin Tenant" 10
+echo_and_sleep "Created Admin Tenant" 7
 
 keystone role-create --name admin
 keystone user-role-add --tenant admin --user admin --role admin
-echo_and_sleep "Created Admin Role" 10
+echo_and_sleep "Created Admin Role" 7
 
 keystone role-create --name _member_
 keystone user-role-add --tenant admin --user admin --role _member_
@@ -57,11 +57,11 @@ keystone user-role-add --tenant admin --user admin --role _member_
 keystone tenant-create --name demo --description "Demo Tenant"
 keystone user-create --name demo --pass password
 keystone user-role-add --tenant demo --user demo --role _member_
-echo_and_sleep "Configured Demo Tenant and Role" 10
+echo_and_sleep "Configured Demo Tenant and Role" 7
 
 keystone tenant-create --name service --description "Service Tenant"
 keystone service-create --name keystone --type identity --description "OpenStack Identity"
-echo_and_sleep "Created Identity Service" 10
+echo_and_sleep "Created Identity Service" 7
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ identity / {print $2}') \
@@ -70,7 +70,7 @@ keystone endpoint-create \
 --adminurl http://$4:35357/v2.0 \
 --region regionOne
 
-echo_and_sleep "Added Identity Endpoint and about to restart keystone..." 10
+echo_and_sleep "Added Identity Endpoint and about to restart keystone..." 7
 service keystone restart
 echo_and_sleep "Keystone service restarted" 2
 print_keystone_service_list

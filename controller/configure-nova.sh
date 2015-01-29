@@ -13,12 +13,12 @@ echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
 keystone user-create --name nova --pass $6
-echo_and_sleep "Creating Nova User in KeyStone" 10
+echo_and_sleep "Creating Nova User in KeyStone" 7
 keystone user-role-add --user nova --tenant service --role admin
-echo_and_sleep "Created Nova Tenant" 10
+echo_and_sleep "Created Nova Tenant" 7
 
 keystone service-create --name nova --type compute --description "OpenStack Compute"
-echo_and_sleep "Called service-create for Nova Compute" 10
+echo_and_sleep "Called service-create for Nova Compute" 7
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ compute / {print $2}') \
@@ -27,7 +27,7 @@ keystone endpoint-create \
 --adminurl http://$4:8774/v2/%\(tenant_id\)s \
 --region regionOne
 
-echo_and_sleep "Configuring NOVA Conf File..." 15
+echo_and_sleep "Configuring NOVA Conf File..." 10
 crudini --set /etc/nova/nova.conf database connection mysql://nova:$1@$4/nova
 
 crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
@@ -46,9 +46,9 @@ crudini --set /etc/nova/nova.conf keystone_authtoken admin_password $6
 
 crudini --set /etc/nova/nova.conf glance host $4
 
-echo_and_sleep "Populate Image Nova Database..." 5
+echo_and_sleep "Populate Image Nova Database" 
 nova-manage db sync
-echo_and_sleep "Restarting Nova Service..." 10
+echo_and_sleep "Restarting Nova Service..." 7
 service nova-api restart
 service nova-cert restart
 service nova-consoleauth restart
@@ -56,9 +56,9 @@ service nova-scheduler restart
 service nova-conductor restart
 service nova-novncproxy restart
 
-echo_and_sleep "Removing Nova MySQL-Lite Database..." 10
+echo_and_sleep "Removing Nova MySQL-Lite Database..." 7
 rm -f /var/lib/nova/nova.sqlite
-echo_and_sleep "About to print Keystone Service..." 
+
 print_keystone_service_list
 nova service-list
-echo_and_sleep "Verify Nova Service List" 10
+echo_and_sleep "Verify Nova Service List" 7
