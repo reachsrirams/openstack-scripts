@@ -22,9 +22,9 @@ echo_and_sleep "Called service-create for Neutron Networking" 10
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ network / {print $2}') \
---publicurl http://$4:9696/v2/%\(tenant_id\)s \
---internalurl http://$4:9696/v2/%\(tenant_id\)s \
---adminurl http://$4:9696/v2/%\(tenant_id\)s \
+--publicurl http://$4:9696 \
+--internalurl http://$4:9696 \
+--adminurl http://$4:9696 \
 --region regionOne
 
 echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 10
