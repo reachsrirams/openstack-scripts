@@ -55,8 +55,8 @@ crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $8
 crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $6
 
 echo_and_sleep "Configuring ML2 INI file..."
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers vlan
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_type vlan,local
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers local,vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_type vlan
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_driver openvswitch
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
