@@ -32,7 +32,7 @@ crudini --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_password 
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_auth_url http://$1:5000/v2.0
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_tenant_name service
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_user ceilometer
-crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_password $2
+crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_password $3
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_endpoint_type internalURL
 
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT log_dir /var/log/ceilometer
