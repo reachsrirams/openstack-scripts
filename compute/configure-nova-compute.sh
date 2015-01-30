@@ -1,11 +1,12 @@
 source install-parameters.sh
-if [ $# -lt 4]
+if [ $# -lt 3]
 	then
-		echo "Correct Syntax: $0 <conroller-host-name> <nova-password> <rabbitmq-password> <management-ip>"
+		echo "Correct Syntax: $0 <conroller-host-name> <nova-password> <rabbitmq-password>"
 		exit 1
 fi
 
-echo "Configuring NOVA Conf File..."
+my_local_ip=`hostname -I`
+echo_and_sleep "Local IP: $my_local_ip. Configuring NOVA Conf File..."
 
 crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_host $1
@@ -18,17 +19,18 @@ crudini --set /etc/nova/nova.conf keystone_authtoken admin_tenant_name service
 crudini --set /etc/nova/nova.conf keystone_authtoken admin_user nova
 crudini --set /etc/nova/nova.conf keystone_authtoken admin_password $2
 
-crudini --set /etc/nova/nova.conf DEFAULT my_ip $4
+crudini --set /etc/nova/nova.conf DEFAULT my_ip $my_local_ip
 crudini --set /etc/nova/nova.conf DEFAULT vnc_enabled True
 crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 0.0.0.0
 crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $4
 crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$1:6080/vnc_auto.html
-echo_and_sleep "Configured Nova Parameters" 10
 
 crudini --set /etc/nova/nova.conf glance host $1
+crudini --set /etc/nova/nova.conf DEFAULT verbose True
+echo_and_sleep "Configured Nova Parameters"
 
 echo "Restarting Nova Service..."
 service nova-compute restart
 
-echo "Removing Nova MySQL-Lite Database..."
+echo_and_sleep "Removing Nova MySQL-Lite Database..."
 rm -f /var/lib/nova/nova.sqlite
