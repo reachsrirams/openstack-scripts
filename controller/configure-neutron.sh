@@ -62,6 +62,10 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_driver openvsw
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
 echo_and_sleep "Configured VLAN Range."
 
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings physnet1:br-eth1
+echo_and_sleep "Configured OVS"
+
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_security_group True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver

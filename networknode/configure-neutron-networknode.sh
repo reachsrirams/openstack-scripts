@@ -1,6 +1,6 @@
-if [ $# -lt 4 ]
+if [ $# -lt 5 ]
 	then
-		echo "Correct syntax: $0 <controller-host-name> <rabbitmq-password> <neutron-password> <external-interface>
+		echo "Correct syntax: $0 <controller-host-name> <rabbitmq-password> <neutron-password> <external-interface> <data-traffic-interface>"
 		exit 1;
 fi
 
@@ -38,8 +38,6 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_securit
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
-echo_and_sleep "Configuring OVS Information" 3
-
 echo_and_sleep "Configuring L3 Agent Information" 1
 crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
 crudini --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
@@ -55,12 +53,16 @@ crudini --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
 echo_and_sleep "Configured DHCP Agent Information" 2
 
 
-service openvswitch-switch restart
-echo_and_sleep "Restarted OVS Service..." 2
 ovs-vsctl add-br br-ex
 ovs-vsctl add-port br-ex $4
+ovs-vsctl add-br br-eth1
+ovs-vsctl add-port br-ex $5
 ovs-vsctl show
-echo_and_sleep "Configured OVS" 2
+echo_and_sleep "Configured OVS bridges" 2
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings phynet1:br-eth1
+service openvswitch-switch restart
+echo_and_sleep "Restarted OVS Service..." 2
 
 service neutron-plugin-openvswitch-agent restart 
 service neutron-l3-agent restart
