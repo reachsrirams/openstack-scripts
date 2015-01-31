@@ -1,16 +1,15 @@
 source install-parameters.sh
 if [ $# -lt 4 ]
 	then
-		echo "Correct syntax: $0 <compute-node-name> <compute_ip_address> <controller_ip_address>"
+		echo "Correct syntax: $0 <networknode-ip> <controller-ip> <compute-node-name> <compute_ip_address>"
 		exit 1;
 fi
-local_ip=`hostname -I`
-echo "IP to be configured in /etc/hosts: "$local_ip
-bash change-ip-in-etc-hosts.sh $1 $2
+echo "Adding network node info to /etc/hosts"
+bash change-ip-in-etc-hosts.sh $network_node_host_name $1
 
 echo "Adding controller node info to /etc/hosts"
-bash change-ip-in-etc-hosts.sh $controller_host_name $3
+bash change-ip-in-etc-hosts.sh $controller_host_name $2
 
-echo "Adding network-node info to /etc/hosts"
-bash change-ip-in-etc-hosts.sh $network_node_host_name $local_ip
+echo "Adding compute node info to /etc/hosts"
+bash change-ip-in-etc-hosts.sh $3 $4
 

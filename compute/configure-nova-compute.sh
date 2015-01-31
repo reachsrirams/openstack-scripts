@@ -1,5 +1,5 @@
 source install-parameters.sh
-if [ $# -lt 3]
+if [ $# -lt 3 ]
 	then
 		echo "Correct Syntax: $0 <conroller-host-name> <nova-password> <rabbitmq-password>"
 		exit 1
