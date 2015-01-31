@@ -1,5 +1,5 @@
 source install-parameters.sh
-if [ $# -lt 4 ]
+if [ $# -lt 2 ]
 	then
 		echo "Correct syntax: $0 <compute-hostname> <compute-node-ip>"
 		exit 1;
