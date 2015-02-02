@@ -56,7 +56,7 @@ echo_and_sleep "Configured DHCP Agent Information" 2
 ovs-vsctl add-br br-ex
 ovs-vsctl add-port br-ex $4
 ovs-vsctl add-br br-eth1
-ovs-vsctl add-port br-ex $5
+ovs-vsctl add-port br-eth1 $5
 ovs-vsctl show
 echo_and_sleep "Configured OVS bridges" 2
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type vlan
