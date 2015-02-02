@@ -24,3 +24,4 @@ echo_and_sleep "Installing Ceilometer..." 6
 apt-get install mongodb-server -y
 apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier python-ceilometerclient -y
 
+apt-get autoremove -y
