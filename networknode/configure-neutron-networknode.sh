@@ -1,17 +1,18 @@
+source install-parameters.sh
+source admin_openrc.sh
+
 if [ $# -lt 5 ]
 	then
 		echo "Correct syntax: $0 <controller-host-name> <rabbitmq-password> <neutron-password> <external-interface> <data-traffic-interface>"
 		exit 1;
 fi
 
-source install-parameters.sh
 
 echo_and_sleep "Configuring Neutron Conf File" 3
 
 crudini --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
 crudini --set /etc/neutron/neutron.conf DEFAULT rabbit_host $1
 crudini --set /etc/neutron/neutron.conf DEFAULT rabbit_password $2
-
 crudini --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
 
 crudini --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://$1:5000/v2.0
@@ -26,7 +27,7 @@ crudini --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
 crudini --set /etc/neutron/neutron.conf DEFAULT verbose True
 
 echo_and_sleep "Configuring ML2 INI file"
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers local,vlan
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_type vlan,local
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_driver openvswitch
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks external
