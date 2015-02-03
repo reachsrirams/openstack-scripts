@@ -3,7 +3,7 @@ source admin_openrc.sh
 
 if [ $# -lt 5 ]
 	then
-		echo "Correct syntax: $0 <controller-host-name> <rabbitmq-password> <neutron-password> <external-interface> <data-traffic-interface>"
+		echo "Correct syntax: $0 <controller-host-name> <rabbitmq-password> <neutron-password> <data-traffic-interface>"
 		exit 1;
 fi
 
@@ -42,7 +42,6 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_drive
 echo_and_sleep "Configuring L3 Agent Information" 1
 crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
 crudini --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
-crudini --set /etc/neutron/l3_agent.ini DEFAULT external_network_bridge br-ex
 crudini --set /etc/neutron/l3_agent.ini DEFAULT verbose True
 echo_and_sleep "Configured L3 Agent Information" 2
 
@@ -53,11 +52,8 @@ crudini --set /etc/neutron/dhcp_agent.ini DEFAULT use_namespaces True
 crudini --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
 echo_and_sleep "Configured DHCP Agent Information" 2
 
-
-ovs-vsctl add-br br-ex
-ovs-vsctl add-port br-ex $4
 ovs-vsctl add-br br-eth1
-ovs-vsctl add-port br-eth1 $5
+ovs-vsctl add-port br-eth1 $4
 ovs-vsctl show
 echo_and_sleep "Configured OVS bridges" 2
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type vlan

@@ -1,12 +1,11 @@
 source install-parameters.sh
-if [ $# -lt 3 ]
+if [ $# -lt 4 ]
 	then
-		echo "Correct Syntax: $0 <conroller-host-name> <nova-password> <rabbitmq-password>"
+		echo "Correct Syntax: $0 <conroller-host-name> <nova-password> <rabbitmq-password> <compute_ip>"
 		exit 1
 fi
 
-my_local_ip=`hostname -I`
-echo_and_sleep "Local IP: $my_local_ip. Configuring NOVA Conf File..."
+echo_and_sleep "Local IP: $4. Configuring NOVA Conf File..."
 
 crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_host $1
@@ -19,10 +18,10 @@ crudini --set /etc/nova/nova.conf keystone_authtoken admin_tenant_name service
 crudini --set /etc/nova/nova.conf keystone_authtoken admin_user nova
 crudini --set /etc/nova/nova.conf keystone_authtoken admin_password $2
 
-crudini --set /etc/nova/nova.conf DEFAULT my_ip $my_local_ip
+crudini --set /etc/nova/nova.conf DEFAULT my_ip $4
 crudini --set /etc/nova/nova.conf DEFAULT vnc_enabled True
 crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 0.0.0.0
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $my_local_ip
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $4
 crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$1:6080/vnc_auto.html
 
 crudini --set /etc/nova/nova.conf glance host $1
