@@ -1,7 +1,7 @@
 source install-parameters.sh
 source admin_openrc.sh
 
-if [ $# -lt 5 ]
+if [ $# -lt 4 ]
 	then
 		echo "Correct syntax: $0 <controller-host-name> <rabbitmq-password> <neutron-password> <data-traffic-interface>"
 		exit 1;
