@@ -37,6 +37,7 @@ crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 crudini --set /etc/nova/nova.conf DEFAULT my_ip `hostname -I`
 crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen `hostname -I`
 crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address `hostname -I`
+crudini --set /etc/nova/nova.conf DEFAULT verbose True
 
 crudini --set /etc/nova/nova.conf keystone_authtoken auth_uri http://$4:5000/v2.0
 crudini --set /etc/nova/nova.conf keystone_authtoken identity_uri http://$4:35357
