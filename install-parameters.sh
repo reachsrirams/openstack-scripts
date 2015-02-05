@@ -26,6 +26,13 @@ readonly neutron_db_password="password"
 readonly ceilometer_password="password"
 readonly ceilometer_db_password="password"
 
+readonly neutron_ml2_type_drivers="vlan"
+readonly neutron_ml2_tenant_network_types="vlan"
+readonly neutron_ml2_mechanism_drivers="openvswitch"
+
+readonly neutron_ovs_tenant_network_type="vlan"
+
+
 apt-get install crudini -y
 
 function echo_and_sleep() {

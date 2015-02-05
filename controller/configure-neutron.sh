@@ -56,14 +56,14 @@ crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $8
 crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $6
 
 echo_and_sleep "Configuring ML2 INI file..."
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers vlan
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vlan
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers $neutron_ml2_type_drivers
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types $neutron_ml2_tenant_network_types
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers $neutron_ml2_mechanism_drivers
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
 echo_and_sleep "Configured VLAN Range."
 
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type $neutron_ovs_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings physnet1:br-eth1
 echo_and_sleep "Configured OVS"
 

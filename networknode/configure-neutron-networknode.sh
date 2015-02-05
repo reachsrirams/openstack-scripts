@@ -27,9 +27,9 @@ crudini --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
 crudini --set /etc/neutron/neutron.conf DEFAULT verbose True
 
 echo_and_sleep "Configuring ML2 INI file"
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers vlan
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vlan
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers $neutron_ml2_type_drivers
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types $neutron_ml2_tenant_network_types
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers $neutron_ml2_mechanism_drivers
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks external
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
@@ -56,7 +56,7 @@ ovs-vsctl add-br br-eth1
 ovs-vsctl add-port br-eth1 $4
 ovs-vsctl show
 echo_and_sleep "Configured OVS bridges" 2
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type $neutron_ovs_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings physnet1:br-eth1
 service openvswitch-switch restart
 echo_and_sleep "Restarted OVS Service..." 2
