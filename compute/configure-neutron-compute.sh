@@ -26,9 +26,9 @@ crudini --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
 crudini --set /etc/neutron/neutron.conf DEFAULT verbose True
 
 echo_and_sleep "Configuring ML2 INI file"
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_type vlan,local
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_driver openvswitch
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers vlan
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types local
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
 echo_and_sleep "Configured VLAN Range." 
@@ -55,7 +55,7 @@ crudini --set /etc/nova/nova.conf neutron url http://$1:9696
 crudini --set /etc/nova/nova.conf neutron auth_strategy keystone
 crudini --set /etc/nova/nova.conf neutron admin_auth_url http://$1:35357/v2.0
 crudini --set /etc/nova/nova.conf neutron admin_tenant_name service
-crudini --set /etc/nova/nova.conf neutron admin_user neutron
+crudini --set /etc/nova/nova.conf neutron admin_username neutron
 crudini --set /etc/nova/nova.conf neutron admin_password $3
 echo_and_sleep "Configured Nova to use Neutron - neutron section" 5
 
