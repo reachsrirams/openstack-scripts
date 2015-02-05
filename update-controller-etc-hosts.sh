@@ -4,8 +4,12 @@ if [ $# -lt 2 ]
 		echo "Correct syntax: $0 <compute-hostname> <compute-node-ip>"
 		exit 1;
 fi
-local_ip=`hostname -I`
-echo "IP to be configured in /etc/hosts: "$local_ip
+local_ip=$3
+if [ ! -z "$3" ]
+	then
+		local_ip=`hostname -I`
+		echo "IP to be configured in /etc/hosts: "$local_ip
+fi
 controller_ip_address=$local_ip
 
 echo_and_sleep "Adding controller node info to /etc/hosts" 

@@ -1,7 +1,7 @@
 source install-parameters.sh
 if [ $# -lt 1 ]
 	then
-		echo "Correct syntax: $0 <data-plane-ip>"
+		echo "Correct syntax: $0 <data-plane-interface>"
 		exit 1;
 fi
 
