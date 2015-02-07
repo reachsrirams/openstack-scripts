@@ -56,7 +56,7 @@ echo_and_sleep "Service Tenant ID is: $service_tenant_id" 10
 bash controller/configure-neutron.sh $neutron_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $neutron_password $rabbitmq_password $service_tenant_id
 
 echo_and_sleep "About to setup Horizon-Dashboard"
-bash controller/configure-horizon.sh $controller_ip_address
+bash controller/configure-horizon.sh $controller_host_name
 
 echo_and_sleep "About to setup Ceilometer..."
 bash controller/configure-ceilometer-controller.sh $ceilometer_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $ceilometer_password $rabbitmq_password $ceilometer_password
