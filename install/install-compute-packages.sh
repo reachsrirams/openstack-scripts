@@ -1,5 +1,3 @@
-source install-parameters.sh
-
 echo "About to install Nova for Compute"
 apt-get install nova-compute sysfsutils -y
 
