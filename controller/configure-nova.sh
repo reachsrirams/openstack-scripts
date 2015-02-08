@@ -34,9 +34,12 @@ crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_host $4
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_password $7
 crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
-crudini --set /etc/nova/nova.conf DEFAULT my_ip `hostname -I`
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen `hostname -I`
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address `hostname -I`
+eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+echo "eth0 IP Address: $eth0_ip"
+sleep 2
+crudini --set /etc/nova/nova.conf DEFAULT my_ip $eth0_ip
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $eth0_ip
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $eth0_ip
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
 
 crudini --set /etc/nova/nova.conf keystone_authtoken auth_uri http://$4:5000/v2.0
