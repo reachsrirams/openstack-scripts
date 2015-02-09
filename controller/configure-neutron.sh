@@ -73,6 +73,20 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_drive
 echo_and_sleep "Configured Security Group for ML2. About to Upgrade Neutron DB..." 
 neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno
 
+crudini --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
+crudini --set /etc/nova/nova.conf DEFAULT security_group_api neutron
+crudini --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.LinuxOVSIntefaceDriver
+crudini --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
+echo_and_sleep "Configured Nova to use Neutron - DEFAULT section"
+
+crudini --set /etc/nova/nova.conf neutron url http://$1:9696
+crudini --set /etc/nova/nova.conf neutron auth_strategy keystone
+crudini --set /etc/nova/nova.conf neutron admin_auth_url http://$1:35357/v2.0
+crudini --set /etc/nova/nova.conf neutron admin_tenant_name service
+crudini --set /etc/nova/nova.conf neutron admin_username neutron
+crudini --set /etc/nova/nova.conf neutron admin_password $6
+echo_and_sleep "Configured Nova to use Neutron - neutron section" 2
+
 echo_and_sleep "Restarting Neutron Service..." 7
 service nova-api restart
 service nova-scheduler restart
