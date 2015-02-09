@@ -18,5 +18,5 @@ echo "Updating compute IP address to /etc/hosts"
 bash change-ip-in-etc-hosts.sh $compute_host_name $compute_ip_address
 
 echo "Updating controller IP address to /etc/hosts"
-bash change-ip-in-etc-hosts.sh $controller_host_name $3
+bash change-ip-in-etc-hosts.sh $controller_host_name $1
 
