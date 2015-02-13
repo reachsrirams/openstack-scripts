@@ -1,6 +1,3 @@
-source install-parameters.sh
-source admin_openrc.sh
-
 if [ $# -lt 1 ]
 	then
 		echo "Correct syntax: $0 <external-interface>"
