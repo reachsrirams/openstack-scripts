@@ -30,7 +30,7 @@ echo_and_sleep "Configuring ML2 INI file"
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers $neutron_ml2_type_drivers
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types $neutron_ml2_tenant_network_types
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers $neutron_ml2_mechanism_drivers
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks external
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks *
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
 echo_and_sleep "Configured VLAN Range."
@@ -52,16 +52,17 @@ crudini --set /etc/neutron/dhcp_agent.ini DEFAULT use_namespaces True
 crudini --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
 echo_and_sleep "Configured DHCP Agent Information" 2
 
-ovs-vsctl add-br br-eth1
-ovs-vsctl add-port br-eth1 $4
-ovs-vsctl show
-echo_and_sleep "Configured OVS bridges" 2
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type $neutron_ovs_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings physnet1:br-eth1
 service openvswitch-switch restart
 echo_and_sleep "Restarted OVS Service..." 2
 
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge tenant_network_type $neutron_linuxbridge_tenant_network_type
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge physical_interface_mappings physnet1:eth1
+echo_and_sleep "Configured Linux Bridge" 3
+
 service neutron-plugin-openvswitch-agent restart 
+service neutron-plugin-linuxbridge-agent restart 
 service neutron-l3-agent restart
 service neutron-dhcp-agent restart
 service neutron-metadata-agent restart

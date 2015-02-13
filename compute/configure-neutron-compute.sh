@@ -37,11 +37,14 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_securit
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
-ovs-vsctl add-br br-eth1
-ovs-vsctl add-port br-eth1 $4
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type $neutron_ovs_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings physnet1:br-eth1
 echo_and_sleep "Configured OVS Information"
+
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge tenant_network_type $neutron_linuxbridge_tenant_network_type
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge physical_interface_mappings physnet1:eth1
+echo_and_sleep "Configured Linux Bridge"
+
 service openvswitch-switch restart
 echo_and_sleep "Restarting OVS Service..." 5
 

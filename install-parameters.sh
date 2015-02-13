@@ -31,6 +31,7 @@ readonly neutron_ml2_tenant_network_types="vlan"
 readonly neutron_ml2_mechanism_drivers="openvswitch"
 
 readonly neutron_ovs_tenant_network_type="vlan"
+readonly neutron_linuxbridge_tenant_network_type="vlan"
 
 
 apt-get install crudini -y
