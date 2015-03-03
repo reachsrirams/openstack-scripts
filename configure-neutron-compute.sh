@@ -30,7 +30,6 @@ echo_and_sleep "Configuring ML2 INI file"
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers $neutron_ml2_type_drivers
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types $neutron_ml2_tenant_network_types
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers $neutron_ml2_mechanism_drivers
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks external
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges physnet1:1001:1200
 echo_and_sleep "Configured VLAN Range."
@@ -39,31 +38,31 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_securit
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
-echo_and_sleep "Configuring L3 Agent Information" 2
-crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
-crudini --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
-crudini --set /etc/neutron/l3_agent.ini DEFAULT verbose True
-echo_and_sleep "Configured L3 Agent Information" 2
-
-echo_and_sleep "Configuring DHCP Agent Information" 1
-crudini --set /etc/neutron/dhcp_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
-crudini --set /etc/neutron/dhcp_agent.ini DEFAULT dhcp_driver neutron.agent.linux.dhcp.Dnsmasq
-crudini --set /etc/neutron/dhcp_agent.ini DEFAULT use_namespaces True
-crudini --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
-echo_and_sleep "Configured DHCP Agent Information" 2
-
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs tenant_network_type $neutron_ovs_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings physnet1:br-eth1
-service openvswitch-switch restart
-echo_and_sleep "Restarted OVS Service..." 2
+echo_and_sleep "Configured OVS Information" 2
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge tenant_network_type $neutron_linuxbridge_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge physical_interface_mappings physnet1:eth1
 echo_and_sleep "Configured Linux Bridge" 2
 
-service neutron-plugin-openvswitch-agent restart 
-service neutron-plugin-linuxbridge-agent restart 
-service neutron-l3-agent restart
-service neutron-dhcp-agent restart
-service neutron-metadata-agent restart
-echo_and_sleep "Restarted Neutron Services" 2
+service openvswitch-switch restart
+echo_and_sleep "Restarted OVS Service..." 2
+
+crudini --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
+crudini --set /etc/nova/nova.conf DEFAULT security_group_api neutron
+crudini --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.LinuxOVSIntefaceDriver
+crudini --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
+echo_and_sleep "Configured Nova to use Neutron - DEFAULT section" 5
+
+crudini --set /etc/nova/nova.conf neutron url http://$1:9696
+crudini --set /etc/nova/nova.conf neutron auth_strategy keystone
+crudini --set /etc/nova/nova.conf neutron admin_auth_url http://$1:35357/v2.0
+crudini --set /etc/nova/nova.conf neutron admin_tenant_name service
+crudini --set /etc/nova/nova.conf neutron admin_username neutron
+crudini --set /etc/nova/nova.conf neutron admin_password $3
+echo_and_sleep "Configured Nova to use Neutron - neutron section" 5
+
+echo_and_sleep "Restarting Neutron related services" 2
+
+service nova-compute restart
