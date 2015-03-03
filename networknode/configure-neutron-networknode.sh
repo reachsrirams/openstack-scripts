@@ -39,7 +39,7 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_securit
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
-echo_and_sleep "Configuring L3 Agent Information" 1
+echo_and_sleep "Configuring L3 Agent Information" 2
 crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
 crudini --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
 crudini --set /etc/neutron/l3_agent.ini DEFAULT verbose True
