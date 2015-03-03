@@ -59,7 +59,7 @@ echo_and_sleep "Restarted OVS Service..." 2
 
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge tenant_network_type $neutron_linuxbridge_tenant_network_type
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge physical_interface_mappings physnet1:eth1
-echo_and_sleep "Configured Linux Bridge" 3
+echo_and_sleep "Configured Linux Bridge" 2
 
 service neutron-plugin-openvswitch-agent restart 
 service neutron-plugin-linuxbridge-agent restart 

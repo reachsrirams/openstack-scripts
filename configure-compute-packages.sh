@@ -7,7 +7,7 @@ fi
 
 compute_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP is: $compute_ip_address"
-sleep 3
+sleep 2
 
 echo_and_sleep "About to configure Kernel Paramters for Compute" 3
 bash compute/configure-kernel-parameters.sh
