@@ -8,4 +8,4 @@ echo "eth0 IP is: $eth0_ip"
 sleep 3
 bash configure-packages-controller.sh
 bash configure-packages-networknode.sh $1
-bash configure-packages-compute.sh $eth0_ip $1
+bash configure-packages-compute.sh $1
