@@ -1,4 +1,4 @@
-bash install-common-packages.sh
-bash install-controller-packages.sh
-bash install-compute-packages.sh
-bash install-networknode-packages.sh
+bash install-packages-common.sh
+bash install-packages-controller.sh
+bash install-packages-compute.sh
+bash install-packages-networknode.sh

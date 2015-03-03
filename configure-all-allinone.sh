@@ -6,6 +6,6 @@ fi
 eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP is: $eth0_ip"
 sleep 3
-bash configure-controller-packages.sh
-bash configure-networknode-packages.sh $1
-bash configure-compute-packages.sh $eth0_ip $1
+bash configure-packages-controller.sh
+bash configure-packages-networknode.sh $1
+bash configure-packages-compute.sh $eth0_ip $1
