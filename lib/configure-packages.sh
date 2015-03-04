@@ -7,15 +7,11 @@ fi
 
 if [ "$1" == "compute" ]
 	then
-		local_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-		echo "eth0 IP is: $local_ip_address"
-		sleep 3
-		
 		echo_and_sleep "About to configure Compute"
 		bash configure-forwarding.sh compute
 
 		echo_and_sleep "About to configure Nova for Compute" 3
-		bash configure-nova-compute.sh $controller_host_name $nova_password $rabbitmq_password $local_ip_address
+		bash configure-nova.sh compute $controller_host_name $nova_password $rabbitmq_password
 		
 		echo_and_sleep "About to configure Neutron for Compute" 3
 		bash configure-neutron.sh compute $controller_host_name $rabbitmq_password $neutron_password $2
@@ -69,14 +65,11 @@ elif [ "$1" == "controller" ]
 		echo_and_sleep "About to setup KeyStone..."
 		bash configure-keystone-controller.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
 		
-		
 		echo_and_sleep "About to setup Glance..."
 		bash configure-glance-controller.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
 		
-		
 		echo_and_sleep "About to setup NOVA..."
-		bash configure-nova.sh $nova_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $nova_password $rabbitmq_password
-		
+		bash configure-nova.sh controller $controller_host_name $nova_password $rabbitmq_password $nova_db_password $mysql_user $mysql_password 
 		
 		echo_and_sleep "About to setup Neutron..."
 		source admin_openrc.sh
