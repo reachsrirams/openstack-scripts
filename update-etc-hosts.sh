@@ -1,4 +1,4 @@
-source config-parameters.sh
+source lib/config-parameters.sh
 
 local_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP is: $local_ip_address"
