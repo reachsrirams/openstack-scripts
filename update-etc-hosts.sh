@@ -9,7 +9,7 @@ echo "Local host name: $local_host_name"
 
 if [ "$1" == "controller" ]
 	then
-		controller_ip_address=$local_ip
+		controller_ip_address=$local_ip_address
 		echo_and_sleep "Adding controller node info to /etc/hosts"
 		bash lib/change-ip-in-etc-hosts.sh $controller_host_name $controller_ip_address
 elif [ "$1" == "compute" ] || [ "$1" == "networknode" ]
