@@ -6,6 +6,7 @@ fi
 
 if [ "$1" == "allinone" ]
 	then
+		echo "Installing packages for All-in-One"
 		bash lib/install-packages.sh common
 		bash lib/install-packages.sh controller
 		bash lib/install-packages.sh compute
@@ -17,7 +18,7 @@ elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode
 		bash lib/install-packages.sh $1
 elif [ "$1" == "controller_networknode" ]
 	then
-		echo "Installing packages for: "$1
+		echo "Installing packages for Controller and Network Node"
 		bash lib/install-packages.sh common
 		bash lib/install-packages.sh controller
 		bash lib/install-packages.sh networknode
