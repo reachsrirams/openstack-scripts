@@ -1,4 +1,4 @@
-if [ $# -lt 1 ]
+if [ $# -ne 1 ]
 	then
 		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ]"
 		exit 1;
@@ -6,26 +6,27 @@ fi
 
 if [ "$1" == "allinone" ]
 	then
-		bash install-packages common
-		bash install-packages controller
-		bash install-packages compute
-		bash install-packages networknode
-fi
-
-if [ "$1" == "controller" ] || [ "$1" == "compute ] || [ "$1" == "networknode" ]
+		bash install-packages.sh common
+		bash install-packages.sh controller
+		bash install-packages.sh compute
+		bash install-packages.sh networknode
+elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode" ]
 	then
-		bash install-packages common
-		bash install-packages $1
-fi
-
-if [ "$1" == "controller_networknode" ]
+		echo "Installing packages for: "$1
+		bash install-packages.sh common
+		bash install-packages.sh $1
+elif [ "$1" == "controller_networknode" ]
 	then
-		bash install-packages common
-		bash install-packages controller
-		bash install-packages networknode
-fi
-
-if [ "$1" == "common" ]
+		echo "Installing packages for: "$1
+		bash install-packages.sh common
+		bash install-packages.sh controller
+		bash install-packages.sh networknode
+elif [ "$1" == "common" ]
 	then
-		bash install-packages common
+		echo "Installing common packages"
+		bash install-packages.sh common
+else
+	
+	echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ]"
+	exit 1;
 fi
