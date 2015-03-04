@@ -1,4 +1,4 @@
-source install-parameters.sh
+source config-parameters.sh
 echo "Edit /etc/openstack-dashboard/local_settings.py as follows:"
 echo "*********"
 echo "OPENSTACK_HOST = \"controller\"" 

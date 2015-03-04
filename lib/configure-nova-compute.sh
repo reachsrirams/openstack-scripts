@@ -1,4 +1,4 @@
-source install-parameters.sh
+source config-parameters.sh
 if [ $# -lt 4 ]
 	then
 		echo "Correct Syntax: $0 <conroller-host-name> <nova-password> <rabbitmq-password> <compute_ip>"

@@ -1,4 +1,4 @@
-source install-parameters.sh
+source config-parameters.sh
 
 if [ $# -lt 6 ]
 	then

@@ -1,4 +1,4 @@
-source install-parameters.sh
+source config-parameters.sh
 source admin_openrc.sh
 
 if [ $# -lt 7 ]
@@ -34,13 +34,6 @@ crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_host $4
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_password $7
 crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
-eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-echo "eth0 IP Address: $eth0_ip"
-sleep 2
-crudini --set /etc/nova/nova.conf DEFAULT my_ip $eth0_ip
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $eth0_ip
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $eth0_ip
-crudini --set /etc/nova/nova.conf DEFAULT verbose True
 
 crudini --set /etc/nova/nova.conf keystone_authtoken auth_uri http://$4:5000/v2.0
 crudini --set /etc/nova/nova.conf keystone_authtoken identity_uri http://$4:35357
@@ -48,7 +41,18 @@ crudini --set /etc/nova/nova.conf keystone_authtoken admin_tenant_name service
 crudini --set /etc/nova/nova.conf keystone_authtoken admin_user nova
 crudini --set /etc/nova/nova.conf keystone_authtoken admin_password $6
 
+eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+echo "eth0 IP Address: $eth0_ip"
+sleep 2
+crudini --set /etc/nova/nova.conf DEFAULT my_ip $eth0_ip
+crudini --set /etc/nova/nova.conf DEFAULT vnc_enabled True
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $eth0_ip
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $eth0_ip
+
+
 crudini --set /etc/nova/nova.conf glance host $4
+crudini --set /etc/nova/nova.conf DEFAULT verbose True
+echo_and_sleep "Configured Nova Parameters"
 
 echo_and_sleep "Populate Image Nova Database" 
 nova-manage db sync
@@ -60,7 +64,7 @@ service nova-scheduler restart
 service nova-conductor restart
 service nova-novncproxy restart
 
-echo_and_sleep "Removing Nova MySQL-Lite Database..." 7
+echo_and_sleep "Removing Nova MySQL-Lite Database..."
 rm -f /var/lib/nova/nova.sqlite
 
 print_keystone_service_list
