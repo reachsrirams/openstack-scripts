@@ -12,13 +12,13 @@ if [ "$1" == "compute" ]
 		sleep 3
 		
 		echo_and_sleep "About to configure forwarding" 2
-		bash lib/configure-forwarding.sh compute
+		bash configure-forwarding.sh compute
 
 		echo_and_sleep "About to configure Nova for Compute" 3
 		bash configure-nova-compute.sh $controller_host_name $nova_password $rabbitmq_password $local_ip_address
 		
 		echo_and_sleep "About to configure Neutron for Compute" 3
-		bash configure-neutron-compute.sh $controller_host_name $rabbitmq_password $neutron_password $2
+		bash configure-neutron.sh compute $controller_host_name $rabbitmq_password $neutron_password $2
 		
 		metering_secret="password"
 		echo_and_sleep "About to configure Ceilometer for Compute" 3
@@ -29,7 +29,7 @@ elif [ "$1" == "networknode" ]
 		bash configure-forwarding.sh networknode
 
 		echo_and_sleep "About to configure Neutron for Network Node" 2
-		bash configure-neutron-networknode.sh $controller_host_name $rabbitmq_password $neutron_password $2
+		bash configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password $2
 else
 	echo "Correct syntax: $0 [ compute | networknode ] <data-plane-interface>"
 	exit 1;
