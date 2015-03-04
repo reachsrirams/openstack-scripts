@@ -1,6 +1,6 @@
 if [ $# -lt 1 ]
 	then
-		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode ]"
+		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ]"
 		exit 1;
 fi
 
@@ -25,3 +25,7 @@ if [ "$1" == "controller_networknode" ]
 		bash install-packages networknode
 fi
 
+if [ "$1" == "common" ]
+	then
+		bash install-packages common
+fi
