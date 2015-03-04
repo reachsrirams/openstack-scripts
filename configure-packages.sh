@@ -1,4 +1,4 @@
-source install-parameters.sh
+source config-parameters.sh
 if [ $# -ne 2 ]
 	then
 		echo "Correct syntax: $0 [ compute | networknode ] <data-plane-interface>"
