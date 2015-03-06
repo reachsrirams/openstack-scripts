@@ -72,7 +72,7 @@ elif [ "$1" == "controller" ]
 		bash $(dirname $0)/configure-nova.sh controller $controller_host_name $nova_password $rabbitmq_password $nova_db_password $mysql_user $mysql_password 
 		
 		echo_and_sleep "About to setup Neutron..."
-		source admin_openrc.sh
+		source $(dirname $0)/admin_openrc.sh
 		service_tenant_id=`keystone tenant-get service | grep id | cut -d '|' -f3 | tr -s ' '`
 		echo_and_sleep "Service Tenant ID is: $service_tenant_id" 10
 		bash $(dirname $0)/configure-neutron-controller.sh $neutron_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $neutron_password $rabbitmq_password $service_tenant_id
