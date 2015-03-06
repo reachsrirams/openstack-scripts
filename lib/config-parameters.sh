@@ -1,8 +1,5 @@
-readonly sleep_duration=5
 controller_host_name="controller"
 controller_ip_address="192.168.1.155"
-network_node_host_name="networknode"
-network_node_ip_address="192.168.1.156"
 
 readonly mysql_user="root"
 readonly mysql_password="password"
@@ -32,7 +29,6 @@ readonly neutron_ml2_mechanism_drivers="openvswitch"
 
 readonly neutron_ovs_tenant_network_type="vlan"
 readonly neutron_linuxbridge_tenant_network_type="vlan"
-
 
 apt-get install crudini -y
 

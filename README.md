@@ -4,5 +4,29 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 
 #### Dependency - crudini
 
+The configuration scripts using ####crudini#### to update OpenStack configuration files. Crudini will be installed automatically.
+
 #### Platform supported - Ubuntu
 ### OpenStack version - Juno
+
+## How to use the scripts ##
+
+1. Step 1 - update lib/config-parameters.sh script 
+   - Change the hostname to be used for controller. This name will be used in all configuration files. You will need to use this name to update the /etc/hosts file for correct lookups. 
+   - Change passwords as necessary 
+
+2. Step 2 - install common packages
+   - Execute _sudo bash install.sh common_
+   - It is a good idea to reboot the system since kernel packages may have been updated.
+
+3. Step 3 - install OpenStack packages depending upon the type of the node
+   - If the node is of type controller, execute _sudo bash install.sh controller_
+   - If the node is of type compute, execute _sudo bash install.sh compute_
+   - If the node is of type networknode, execute _sudo bash install.sh networknode_
+   - If the node is of type allinone, execute _sudo bash install.sh allinone_
+
+4. Step 5 - configure OpenStack packages depending upon the type of the node
+   - If the node is of type controller, execute _sudo bash configure.sh controller_
+   - If the node is of type compute, execute _sudo bash configure.sh compute_
+   - If the node is of type networknode, execute _sudo bash configure.sh networknode_
+   - If the node is of type allinone, execute _sudo bash configure.sh allinone_
