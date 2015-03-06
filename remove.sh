@@ -8,7 +8,7 @@ function remove-compute-packages() {
 }
 
 function remove-controller-packages() {
-	echo "About to remove packages for Compute Node"
+	echo "About to remove packages for Controller Node"
 	sleep 2
 	apt-get purge mariadb-server python-mysqldb -y
 	apt-get purge rabbitmq-server -y
