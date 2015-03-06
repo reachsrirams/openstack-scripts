@@ -18,7 +18,7 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 3. Step 3 - install OpenStack packages depending upon the type of the node
    - If the node is of type controller, execute **sudo bash install.sh controller**
    - If the node is of type compute, execute **_sudo bash install.sh compute_**
-   - If the node is of type networknode, execute _sudo bash install.sh networknode_
+   - If the node is of type networknode, execute `sudo bash install.sh networknode`
    - If the node is of type allinone, execute _sudo bash install.sh allinone_
    - **Note - during the installation of MariaDB, you will be required to enter DB password manually**
 
