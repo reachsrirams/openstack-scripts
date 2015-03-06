@@ -16,7 +16,7 @@ This project aims to covert the steps in the OpenStack Install guide into useful
    - It is a good idea to reboot the system since kernel packages may have been updated.
 
 3. Install OpenStack packages depending upon the type of the node
-   - If the node is of type controller, execute sudo bash install.sh controller
+   - If the node is of type controller, execute `sudo bash install.sh controller`
    - If the node is of type compute, execute `sudo bash install.sh compute`
    - If the node is of type networknode, execute `sudo bash install.sh networknode`
    - If the node is of type allinone, execute `sudo bash install.sh allinone`
