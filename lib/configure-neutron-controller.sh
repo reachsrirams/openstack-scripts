@@ -1,5 +1,5 @@
-source config-parameters.sh
-source admin_openrc.sh
+source $(dirname $0)/config-parameters.sh
+source $(dirname $0)/admin_openrc.sh
 
 if [ $# -lt 8 ]
 	then

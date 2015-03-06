@@ -1,4 +1,4 @@
-source config-parameters.sh
+source $(dirname $0)/config-parameters.sh
 if [ $# -lt 5 ]
 	then
 		echo "Correct Syntax: install-and-update-keystone <keystone-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password>"
@@ -40,7 +40,7 @@ ystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 echo "Setting environment variables"
 export OS_SERVICE_TOKEN=$admin_token_parameter
 export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
-source admin_openrc.sh
+source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC" 5
 
 keystone tenant-create --name admin --description "Admin Tenant"

@@ -1,4 +1,4 @@
-source config-parameters.sh
+source $(dirname $0)/config-parameters.sh
 
 echo_and_sleep "About to add cirros image to Glance"
 cirros_image_name="cirros-0.3.3-x86_64-disk.img"

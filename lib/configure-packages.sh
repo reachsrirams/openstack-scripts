@@ -1,4 +1,4 @@
-source config-parameters.sh
+source $(dirname $0)/config-parameters.sh
 if [ $# -ne 2 ]
 	then
 		echo "Correct syntax: $0 [ controller | compute | networknode ] <data-plane-interface>"
@@ -8,24 +8,24 @@ fi
 if [ "$1" == "compute" ]
 	then
 		echo_and_sleep "About to configure Compute"
-		bash configure-forwarding.sh compute
+		bash $(dirname $0)/configure-forwarding.sh compute
 
 		echo_and_sleep "About to configure Nova for Compute" 3
-		bash configure-nova.sh compute $controller_host_name $nova_password $rabbitmq_password
+		bash $(dirname $0)/configure-nova.sh compute $controller_host_name $nova_password $rabbitmq_password
 		
 		echo_and_sleep "About to configure Neutron for Compute" 3
-		bash configure-neutron.sh compute $controller_host_name $rabbitmq_password $neutron_password $2
+		bash $(dirname $0)/configure-neutron.sh compute $controller_host_name $rabbitmq_password $neutron_password $2
 		
 		metering_secret="password"
 		echo_and_sleep "About to configure Ceilometer for Compute" 3
-		bash configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
+		bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
 elif [ "$1" == "networknode" ]
 	then
 		echo_and_sleep "About to configure Network Node"
-		bash configure-forwarding.sh networknode
+		bash $(dirname $0)/configure-forwarding.sh networknode
 
 		echo_and_sleep "About to configure Neutron for Network Node" 2
-		bash configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password $2
+		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password $2
 
 elif [ "$1" == "controller" ]
 	then
@@ -63,25 +63,25 @@ elif [ "$1" == "controller" ]
 		
 				
 		echo_and_sleep "About to setup KeyStone..."
-		bash configure-keystone-controller.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
+		bash $(dirname $0)/configure-keystone-controller.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
 		
 		echo_and_sleep "About to setup Glance..."
-		bash configure-glance-controller.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
+		bash $(dirname $0)/configure-glance-controller.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
 		
 		echo_and_sleep "About to setup NOVA..."
-		bash configure-nova.sh controller $controller_host_name $nova_password $rabbitmq_password $nova_db_password $mysql_user $mysql_password 
+		bash $(dirname $0)/configure-nova.sh controller $controller_host_name $nova_password $rabbitmq_password $nova_db_password $mysql_user $mysql_password 
 		
 		echo_and_sleep "About to setup Neutron..."
 		source admin_openrc.sh
 		service_tenant_id=`keystone tenant-get service | grep id | cut -d '|' -f3 | tr -s ' '`
 		echo_and_sleep "Service Tenant ID is: $service_tenant_id" 10
-		bash configure-neutron-controller.sh $neutron_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $neutron_password $rabbitmq_password $service_tenant_id
+		bash $(dirname $0)/configure-neutron-controller.sh $neutron_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $neutron_password $rabbitmq_password $service_tenant_id
 		
 		echo_and_sleep "About to setup Horizon-Dashboard"
-		bash configure-horizon-controller.sh $controller_host_name
+		bash $(dirname $0)/configure-horizon-controller.sh $controller_host_name
 		
 		echo_and_sleep "About to setup Ceilometer..."
-		bash configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
+		bash $(dirname $0)/configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
 else
 	echo "Correct syntax: $0 [ compute | networknode ] <data-plane-interface>"
 	exit 1;

@@ -86,7 +86,7 @@ if [ "$1" == "allinone" ]
 		install-common-packages
 		install-controller-packages
 		install-compute-packages
-		install-network-node-packages
+		install-networknode-packages
 elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode" ]
 	then
 		echo "Installing packages for: "$1
@@ -97,7 +97,7 @@ elif [ "$1" == "controller_networknode" ]
 		echo "Installing packages for Controller and Network Node"
 		install-common-packages
 		install-controller-packages
-		install-network-node-packages
+		install-networknode-packages
 elif [ "$1" == "common" ]
 	then
 		echo "Installing common packages"

@@ -1,4 +1,4 @@
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 	then
 		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode ] <data-plane-eth-interface>"
 		exit 1;

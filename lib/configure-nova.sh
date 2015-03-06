@@ -1,4 +1,4 @@
-source config-parameters.sh
+source $(dirname $0)/config-parameters.sh
 
 if [ "$1" != "controller" ] && [ "$1" != "compute" ]
 	then
@@ -18,9 +18,9 @@ if [ "$1" == "compute" ] && [ $# -ne 4 ]
 		exit 1;
 fi
 		
-source admin_openrc.sh
+source $(dirname $0)/admin_openrc.sh
 
-if [ "$1 == "controller" ]
+if [ "$1" == "controller" ]
 	then
 		echo "Configuring MySQL for Nova..."
 		mysql_command="CREATE DATABASE IF NOT EXISTS nova; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$5'; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$5';"
@@ -80,14 +80,14 @@ crudini --set /etc/nova/nova.conf glance host $2
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
 echo_and_sleep "Updated NOVA Configuration File"
 
-echo_and_sleep "Removing Nova MySQL-Lite Database..."
+echo_and_sleep "Removing Nova MySQL-Lite Database"
 rm -f /var/lib/nova/nova.sqlite
 
 if [ "$1" == "controller" ]
 	then
 		echo_and_sleep "Populate Image Nova Database" 
 		nova-manage db sync
-		echo_and_sleep "Restarting Nova Service..." 7
+		echo_and_sleep "Restarting Nova Service" 7
 		service nova-api restart
 		service nova-cert restart
 		service nova-consoleauth restart
@@ -96,7 +96,7 @@ if [ "$1" == "controller" ]
 		service nova-novncproxy restart
 elif [ "$1" == "compute" ]
 	then
-		echo "Restarting Nova Service..."
+		echo "Restarting Nova Service"
 		service nova-compute restart
 fi
 

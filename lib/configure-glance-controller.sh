@@ -1,4 +1,4 @@
-source config-parameters.sh
+source $(dirname $0)/config-parameters.sh
 
 if [ $# -lt 6 ]
 	then
@@ -11,7 +11,7 @@ mysql_command="CREATE DATABASE IF NOT EXISTS glance; GRANT ALL PRIVILEGES ON gla
 echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
-source admin_openrc.sh
+source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC" 5
 
 keystone user-create --name glance --pass $6

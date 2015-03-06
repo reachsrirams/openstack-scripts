@@ -1,4 +1,4 @@
-source config-parameters.sh
+source $(dirname $0)/config-parameters.sh
 
 if [ "$1" != "controller" ] && [ "$1" != "compute" ]
 	then
@@ -25,9 +25,9 @@ function update_mongodb_bind_address() {
 	echo_and_sleep "Updated Bind Address" 2
 }
 
-source admin_openrc.sh
+source $(dirname $0)/admin_openrc.sh
 
-if [ "$1 == "controller" ]
+if [ "$1" == "controller" ]
 	then
 		update_mongodb_bind_address
 		echo_and_sleep "Starting Mongo DB"
@@ -69,8 +69,9 @@ crudini --set /etc/ceilometer/ceilometer.conf keystone_authtoken admin_password 
 
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_auth_url http://$2:5000/v2.0
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_tenant_name service
-crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_user ceilometer
+crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_username ceilometer
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_password $4
+crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_region_name regionOne
 
 crudini --set /etc/ceilometer/ceilometer.conf publisher metering_secret $5
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT log_dir /var/log/ceilometer
@@ -87,6 +88,7 @@ if [ "$1" == "compute" ]
 		crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_endpoint_type internalURL
 fi
 
+crudini --set /etc/ceilometer/ceilometer.conf DEFAULT verbose True
 echo_and_sleep "Configured Ceilometer Conf File" 3
 
 if [ "$1" == "controller" ]
@@ -106,6 +108,4 @@ elif [ "$1" == "compute" ]
 		service ceilometer-agent-compute restart
 		
 fi
-
-
 
