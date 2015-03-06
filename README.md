@@ -29,3 +29,14 @@ This project aims to covert the steps in the OpenStack Install guide into useful
    - If the node is of type allinone, execute `sudo bash configure.sh allinone`
    - **Note - during the configuration of MariaDB, you will be required to confirm few DB clean up operations manually** 
 
+## Updating /etc/hosts file ##
+
+Since all configuration uses the name of the controller host, it is important to update `/etc/hosts` file on all the node to map an IP address to the controller host name. You can use the `update-etc-hosts.sh` script for this purpose.
+
+## Removing OpenStack packages ##
+
+You can remove all the OpenStack packages using the `remove.sh` script. Depending upon the type of the node, you can remove packages as follows:
+- `sudo bash remove.sh controller`
+- `sudo bash remove.sh compute`
+- `sudo bash remove.sh networknode`
+- `sudo bash remove.sh all`
