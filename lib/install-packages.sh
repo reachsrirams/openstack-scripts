@@ -40,11 +40,11 @@ if [ "$1" == "controller" ]
 		sleep 2
 		apt-get install glance python-glanceclient -y
 		
-		echo "Installing Nova..."
+		echo "Installing Nova for Controller"
 		sleep 2
 		apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y
 		
-		echo "Installing Neutron..."
+		echo "Installing Neutron for Controller"
 		sleep 2
 		apt-get install neutron-server neutron-plugin-ml2 python-neutronclient -y
 		
@@ -52,7 +52,7 @@ if [ "$1" == "controller" ]
 		sleep 2
 		apt-get install openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache -y
 		
-		echo "Installing Ceilometer..."
+		echo "Installing Ceilometer for Controller"
 		sleep 2
 		apt-get install mongodb-server -y
 		apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier python-ceilometerclient -y
@@ -66,7 +66,7 @@ if [ "$1" == "compute" ]
 		apt-get install nova-compute sysfsutils -y
 
 		echo "About to install Neutron for Compute"
-		apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
+		apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-plugin-linuxbridge-agent -y
 		
 		echo "About to install Ceilometer for Compute"
 		apt-get install ceilometer-agent-compute -y
