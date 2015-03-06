@@ -2,12 +2,8 @@
 
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a complete automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Dependency - crudini
-
-The configuration scripts using ####crudini#### to update OpenStack configuration files. Crudini will be installed automatically.
-
 #### Platform supported - Ubuntu
-### OpenStack version - Juno
+#### OpenStack version - Juno
 
 ## How to use the scripts ##
 
@@ -25,8 +21,13 @@ The configuration scripts using ####crudini#### to update OpenStack configuratio
    - If the node is of type networknode, execute _sudo bash install.sh networknode_
    - If the node is of type allinone, execute _sudo bash install.sh allinone_
 
+## Note - during the installation of MariaDB, you will be required to enter DB password manually ##
+
 4. Step 5 - configure OpenStack packages depending upon the type of the node
    - If the node is of type controller, execute _sudo bash configure.sh controller_
    - If the node is of type compute, execute _sudo bash configure.sh compute_
    - If the node is of type networknode, execute _sudo bash configure.sh networknode_
    - If the node is of type allinone, execute _sudo bash configure.sh allinone_
+
+## Note - during the configuration of MariaDB, you will be required to confirm few DB clean up operations manually ##
+
