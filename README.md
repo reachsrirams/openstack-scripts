@@ -40,3 +40,11 @@ You can remove all the OpenStack packages using the `remove.sh` script. Dependin
 - `sudo bash remove.sh compute`
 - `sudo bash remove.sh networknode`
 - `sudo bash remove.sh all`
+
+## Restarting OpenStack services ##
+
+Restarting OpenStack services is needed at times - especially when config file entries are changed. Depending upon the type of the node you can restart OpenStack services as follows:
+- `sudo bash restart.sh controller`
+- `sudo bash restart.sh compute`
+
+You can remove all the OpenStack packages using the `remove.sh` script. Depending upon the type of the node, you can remove packages as follows:

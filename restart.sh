@@ -81,9 +81,10 @@ function restart-networknode-services() {
 	sleep 2
 }
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 	then
-		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode ]"
+		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode ] [ all | nova | horizon ]"
+		exit 1;
 fi
 
 case $1 in 
@@ -95,5 +96,8 @@ case $1 in
 		restart-networknode-services $2
 		restart-compute-services $2
 		;;
+	*)
+		echo "Invalid node type: $1."
+		exit 1;
 esac 
 
