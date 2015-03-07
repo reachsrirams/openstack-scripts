@@ -5,6 +5,9 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 #### Platform supported - Ubuntu
 #### OpenStack version - Juno
 
+#### Important Note ####
+The installation installs only Open vSwitch packages by default. Installing Linux bridge can be done using a utility script provided in `util` directory.
+
 ## How to use the scripts step by step ##
 
 1. Update lib/config-parameters.sh script 
