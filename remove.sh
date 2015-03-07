@@ -25,7 +25,7 @@ function remove-controller-packages() {
 function remove-networknode-packages() {
 	echo "About to remove packages for Network Node"
 	sleep 2
-	apt-get purge neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-plugin-linuxbridge-agent -y
+	apt-get purge neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent -y
 	apt-get autoremove -y
 }
 

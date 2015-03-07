@@ -57,7 +57,7 @@ function install-compute-packages() {
 	apt-get install nova-compute sysfsutils -y
 
 	echo "About to install Neutron for Compute"
-	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-plugin-linuxbridge-agent -y
+	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
 	
 	echo "About to install Ceilometer for Compute"
 	apt-get install ceilometer-agent-compute -y
@@ -68,7 +68,7 @@ function install-compute-packages() {
 function install-networknode-packages() {
 	echo "About to install Neutron for Network Node..."
 	sleep 5
-	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-plugin-linuxbridge-agent -y
+	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent -y
 	apt-get autoremove -y
 }
 

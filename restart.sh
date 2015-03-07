@@ -60,8 +60,6 @@ function restart-compute-services() {
 	sleep 2
 	service neutron-plugin-openvswitch-agent restart 
 	sleep 2
-	service neutron-plugin-linuxbridge-agent restart 
-	sleep 2
 	service ceilometer-agent-compute restart
 }
 
@@ -70,8 +68,6 @@ function restart-networknode-services() {
 	service openvswitch-switch restart
 	sleep 2
 	service neutron-plugin-openvswitch-agent restart 
-	sleep 2
-	service neutron-plugin-linuxbridge-agent restart 
 	sleep 2
 	service neutron-l3-agent restart
 	sleep 2
