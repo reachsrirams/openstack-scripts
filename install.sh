@@ -107,3 +107,4 @@ else
 	echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ]"
 	exit 1;
 fi
+
