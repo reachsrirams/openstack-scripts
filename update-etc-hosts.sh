@@ -29,4 +29,4 @@ else
 	echo "Correct syntax: $0 [ controller | compute | networknode ] <controller-ip-address>"
 	exit 1;
 fi
-		
+
