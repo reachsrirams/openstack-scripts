@@ -4,6 +4,8 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 
 #### Platform supported - Ubuntu
 #### OpenStack version - Juno
+#### Prerequisites ####
+Git packages must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server.
 
 #### Important Notes ####
 1. The installation installs only Open vSwitch packages by default. Installing Linux bridge can be done using a utility script provided in `util` directory.
