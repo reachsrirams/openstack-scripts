@@ -1,5 +1,5 @@
 source $(dirname $0)/config-parameters.sh
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
 	then
 		echo "Correct syntax: $0 [ controller | compute | networknode ]"
 		exit 1;
