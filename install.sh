@@ -51,6 +51,7 @@ function install-controller-packages() {
 	echo "Installing Ceilometer for Controller"
 	sleep 2
 	apt-get install mongodb-server -y
+	sleep 2
 	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier python-ceilometerclient -y
 
 	apt-get autoremove -y
@@ -90,6 +91,7 @@ fi
 if [ "$1" == "allinone" ]
 	then
 		echo "Installing packages for All-in-One"
+		sleep 5
 		install-common-packages
 		install-controller-packages
 		install-compute-packages
@@ -97,17 +99,20 @@ if [ "$1" == "allinone" ]
 elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode" ]
 	then
 		echo "Installing packages for: "$1
+		sleep 5
 		install-common-packages
 		install-$1-packages
 elif [ "$1" == "controller_networknode" ]
 	then
 		echo "Installing packages for Controller and Network Node"
+		sleep 5
 		install-common-packages
 		install-controller-packages
 		install-networknode-packages
 elif [ "$1" == "common" ]
 	then
 		echo "Installing common packages"
+		sleep 5
 		install-common-packages
 else
 	
