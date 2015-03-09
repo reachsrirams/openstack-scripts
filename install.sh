@@ -59,16 +59,16 @@ function install-controller-packages() {
 
 function install-compute-packages() {
 	echo "About to install Nova for Compute"
+	sleep 3
 	apt-get install nova-compute sysfsutils -y
-	sleep 2
 
 	echo "About to install Neutron for Compute"
-	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
 	sleep 2
+	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
 	
 	echo "About to install Ceilometer for Compute"
-	apt-get install ceilometer-agent-compute -y
 	sleep 2
+	apt-get install ceilometer-agent-compute -y
 	
 	apt-get autoremove -y
 }
@@ -98,9 +98,9 @@ if [ "$1" == "allinone" ]
 		install-networknode-packages
 elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode" ]
 	then
+		install-common-packages
 		echo "Installing packages for: "$1
 		sleep 5
-		install-common-packages
 		install-$1-packages
 elif [ "$1" == "controller_networknode" ]
 	then
