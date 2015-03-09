@@ -14,7 +14,8 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
 ## How to use the scripts step by step ##
 
 1. Update lib/config-parameters.sh script 
-   - Change the hostname to be used for controller. This name will be used in all configuration files. You will need to use this name to update the /etc/hosts file for correct lookups. 
+   - Change the hostname to be used for controller. This name will be used in all configuration files. 
+   - You will need to use this name to update the /etc/hosts file for correct lookups. The `update-etc-hosts.sh` script can be used for this purpose.
    - Change passwords as necessary 
 
 2. Install common packages
