@@ -5,8 +5,9 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 #### Platform supported - Ubuntu
 #### OpenStack version - Juno
 
-#### Important Note ####
-The installation installs only Open vSwitch packages by default. Installing Linux bridge can be done using a utility script provided in `util` directory.
+#### Important Notes ####
+1. The installation installs only Open vSwitch packages by default. Installing Linux bridge can be done using a utility script provided in `util` directory.
+2. The Nova configuration includes a setting to use `AllHostsFilter` as the default filter for scheduler. If you want the default filters of Nova, remove this entry and restart Nova services on the controller.
 
 ## How to use the scripts step by step ##
 

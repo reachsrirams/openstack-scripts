@@ -70,6 +70,7 @@ crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $eth0_ip
 if [ "$1" == "controller" ]
 	then
 		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $eth0_ip
+		crudini --set /etc/nova/nova.conf DEFAULT scheduler_default_filters AllHostsFilter
 elif [ "$1" == "compute" ]
 	then
 		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 0.0.0.0
