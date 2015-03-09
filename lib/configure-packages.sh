@@ -30,10 +30,7 @@ elif [ "$1" == "networknode" ]
 elif [ "$1" == "controller" ]
 	then
 		echo_and_sleep "About to configure Controller"	
-		local_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-		echo "eth0 IP is: $local_ip_address"
 		sleep 3
-		controller_ip_address=$local_ip_address
 		
 		echo "Updating MySQL Config File..."
 		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf

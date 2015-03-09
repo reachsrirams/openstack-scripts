@@ -1,5 +1,20 @@
 controller_host_name="controller"
-controller_ip_address="192.168.1.155"
+
+### Start - Neutron related settings
+
+readonly neutron_ml2_type_drivers="vlan"
+readonly neutron_ml2_tenant_network_types="vlan"
+readonly neutron_ml2_mechanism_drivers="openvswitch"
+
+readonly neutron_ml2_network_vlan_ranges="physnet1:1001:1200"
+
+readonly neutron_ovs_tenant_network_type="vlan"
+readonly neutron_ovs_bridge_mappings="physnet1:br-eth1"
+
+readonly neutron_linuxbridge_tenant_network_type="vlan"
+readonly neutron_linuxbridge_physical_interface_mappings="physnet1:eth1"
+
+### End - Neutron related settings
 
 readonly mysql_user="root"
 readonly mysql_password="password"
@@ -22,13 +37,6 @@ readonly neutron_db_password="password"
 
 readonly ceilometer_password="password"
 readonly ceilometer_db_password="password"
-
-readonly neutron_ml2_type_drivers="vlan"
-readonly neutron_ml2_tenant_network_types="vlan"
-readonly neutron_ml2_mechanism_drivers="openvswitch"
-
-readonly neutron_ovs_tenant_network_type="vlan"
-readonly neutron_linuxbridge_tenant_network_type="vlan"
 
 function echo_and_sleep() {
 	if [ -z "$2" ]
