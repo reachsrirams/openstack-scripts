@@ -1,31 +1,35 @@
 function install-common-packages() {
+	echo "About to install crudini"
+	apt-get install crudini -y
+	sleep 3
+
 	echo "About to install NTP Server"
-	sleep 5
+	sleep 3
 	apt-get install ntp -y
 	service ntp restart
 	
 	echo "About to configure Packages for JUNO"
-	sleep 5
+	sleep 3
 	apt-get install ubuntu-cloud-keyring -y
 	echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
   	"trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
 	echo "Doing full system update"
-	sleep 5
+	sleep 3
 	apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
 	apt-get autoremove -y
 }
 
 function install-controller-packages() {
 	echo "Installing MariaDB..."
-	sleep 5
+	sleep 3
 	apt-get install mariadb-server python-mysqldb -y
 	
 	echo "Installing RabbitMQ..." 
-	sleep 5
+	sleep 3
 	apt-get install rabbitmq-server -y
 	
 	echo "Installing Keystone..."
-	sleep 5
+	sleep 3
 	apt-get install keystone python-keystoneclient -y
 	
 	echo "Installing Glance..."
@@ -55,19 +59,22 @@ function install-controller-packages() {
 function install-compute-packages() {
 	echo "About to install Nova for Compute"
 	apt-get install nova-compute sysfsutils -y
+	sleep 2
 
 	echo "About to install Neutron for Compute"
 	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
+	sleep 2
 	
 	echo "About to install Ceilometer for Compute"
 	apt-get install ceilometer-agent-compute -y
+	sleep 2
 	
 	apt-get autoremove -y
 }
 
 function install-networknode-packages() {
 	echo "About to install Neutron for Network Node..."
-	sleep 5
+	sleep 2
 	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent -y
 	apt-get autoremove -y
 }
