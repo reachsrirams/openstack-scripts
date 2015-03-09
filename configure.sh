@@ -1,4 +1,4 @@
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
 	then
 		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode ]"
 		exit 1;
