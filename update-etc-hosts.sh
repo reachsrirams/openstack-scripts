@@ -1,5 +1,6 @@
 echo "Running: $0 $@"
 dir_path=$(dirname $0)
+source $dir_path/lib/config-parameters.sh
 
 local_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP is: $local_ip_address"
