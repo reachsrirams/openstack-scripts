@@ -1,4 +1,4 @@
-echo "Running: "$0" "$@
+echo "Running: $0 $@"
 source $(dirname $0)/config-parameters.sh
 
 if [ $# -lt 6 ]
