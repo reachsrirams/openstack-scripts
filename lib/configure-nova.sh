@@ -75,7 +75,7 @@ if [ "$1" == "controller" ]
 elif [ "$1" == "compute" ]
 	then
 		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 0.0.0.0
-		crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$1:6080/vnc_auto.html
+		crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$2:6080/vnc_auto.html
 fi
 
 crudini --set /etc/nova/nova.conf glance host $2
