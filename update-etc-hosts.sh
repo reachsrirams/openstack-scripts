@@ -1,3 +1,4 @@
+echo "Running: $0 $@"
 dir_path=$(dirname $0)
 
 local_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`

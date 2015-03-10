@@ -1,3 +1,4 @@
+echo "Running: $0 $@"
 function restart-controller-horizon() {
 	service apache2 restart
 	sleep 2

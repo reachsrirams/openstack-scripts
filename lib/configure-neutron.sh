@@ -1,3 +1,4 @@
+echo "Running: $0 $@"
 source $(dirname $0)/config-parameters.sh
 source $(dirname $0)/admin_openrc.sh
 
