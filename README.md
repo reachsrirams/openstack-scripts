@@ -38,7 +38,7 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
 
 ## Updating /etc/hosts file ##
 
-Since all configuration uses the name of the controller host, it is important to update `/etc/hosts` file on all the node to map an IP address to the controller host name. You can use the `update-etc-hosts.sh` script for this purpose.
+Since all configuration uses the name of the controller host, it is important to update `/etc/hosts` file on all the node to map an IP address to the controller host name. You can use the `util/update-etc-hosts.sh` script for this purpose.
 
 ## Removing OpenStack packages ##
 
