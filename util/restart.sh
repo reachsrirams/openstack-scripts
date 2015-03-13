@@ -82,16 +82,10 @@ function restart-networknode-services() {
 	sleep 2
 }
 
-if [ $# -lt 1 ]
+if [ $# -ne 1 ]
 	then
-		echo "Correct Syntax: $0 [ all | nova | horizon ] [ allinone ]"
-		echo "Note: second parameter is optional"
+		echo "Correct Syntax: $0 [ all | nova | horizon ]"
 		exit 1;
-fi
-
-if [ ! -z $2 ]
-	then
-		node_type=$2
 fi
 
 case $node_type in 

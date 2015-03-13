@@ -1,21 +1,36 @@
 node_type="Unknown"
 
-for package_name in nova-api nova-compute neutron-dhcp-agent
-do
-	dpkg --list | grep $package_name | grep -q ii
-	if [ $? -eq 0 ] && [ $package_name == "nova-api" ]
+dpkg --list | grep nova-api | grep -q ii
+if [ $? -eq 0 ]
+then
+	nova_api_installed=true
+fi
+
+dpkg --list | grep nova-compute | grep -q ii
+if [ $? -eq 0 ]
+then
+	nova_compute_installed=true
+fi
+
+dpkg --list | grep neutron-dhcp-agent | grep -q ii
+if [ $? -eq 0 ]
+then
+	neutron_dhcp_installed=true
+fi
+
+if [ $nova_api_installed == "true" ]
+then
+	node_type="controller"
+	if [ $nova_compute_installed == "true" ]
 	then
-		node_type="controller"
-		break
-	elif [ $? -eq 0 ] && [ $package_name == "nova-compute" ]
-	then
-		node_type="compute"
-		break
-	elif [ $? -eq 0 ] && [ $package_name == "neutron-dhcp-agent" ]
-	then
-		node_type="networknode"
-		break
+		node_type="allinone"
 	fi
-done
+elif [ $nova_compute_installed == "true" ]
+then
+	node_type="compute"
+elif [ $neutron_dhcp_installed == "true" ]
+then
+	node_type="networknode"
+fi
 
 echo $node_type
