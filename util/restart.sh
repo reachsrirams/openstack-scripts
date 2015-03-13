@@ -1,21 +1,6 @@
 echo "Running: $0 $@"
 
-node_type="Unknown"
-
-for package_name in nova-api nova-compute neutron-dhcp-agent
-do
-	dpkg --list | grep $package_name | grep ii
-	if [ $? -eq 0 ] && [ $package_name == "nova-api" ]
-	then
-		node_type="controller"
-		break	
-	elif [ $? -eq 0 ] && [ $package_name == "nova-compute" ]
-	then
-		node_type="compute"
-		break	
-	fi
-done
-
+node_type=`$(dirname $0)/detect-nodetype.sh`
 echo "Node Type detected as: $node_type"
 
 function restart-controller-horizon() {
