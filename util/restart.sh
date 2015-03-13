@@ -1,6 +1,6 @@
 echo "Running: $0 $@"
 
-node_type=`$(dirname $0)/detect-nodetype.sh`
+node_type=`bash $(dirname $0)/detect-nodetype.sh`
 echo "Node Type detected as: $node_type"
 
 function restart-controller-horizon() {
@@ -82,23 +82,29 @@ function restart-networknode-services() {
 	sleep 2
 }
 
-if [ $# -ne 2 ]
+if [ $# -lt 1 ]
 	then
-		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode ] [ all | nova | horizon ]"
+		echo "Correct Syntax: $0 [ all | nova | horizon ] [ allinone ]"
+		echo "Note: second parameter is optional"
 		exit 1;
 fi
 
-case $1 in 
-	controller) restart-controller-services $2 ;;
-	compute) restart-compute-services $2 ;;
-	networknode) restart-networknode-services $2 ;;
+if [ ! -z $2 ]
+	then
+		node_type=$2
+fi
+
+case $node_type in 
+	controller) restart-controller-services $1 ;;
+	compute) restart-compute-services $1 ;;
+	networknode) restart-networknode-services $1 ;;
 	allinone)
-		restart-controller-services $2
-		restart-networknode-services $2
-		restart-compute-services $2
+		restart-controller-services $1
+		restart-networknode-services $1
+		restart-compute-services $1
 		;;
 	*)
-		echo "Invalid node type: $1."
+		echo "Invalid node type: $node_type."
 		exit 1;
 esac 
 
