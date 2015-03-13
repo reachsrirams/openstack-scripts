@@ -1,4 +1,7 @@
 node_type="Unknown"
+nova_api_installed=false
+nova_compute_installed=false
+neutron_dhcp_installed=false
 
 dpkg --list | grep nova-api | grep -q ii
 if [ $? -eq 0 ]
