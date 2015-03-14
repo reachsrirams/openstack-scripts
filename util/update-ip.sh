@@ -12,21 +12,20 @@ fi
 
 case $node_type in
 	controller) 
-		bash $(dirname $0)/update-etc-hosts.sh $node_type $1
-		bash $(dirname $0)/update-nova-config-ip.sh $node_type
-		bash $(dirname $0)/restart.sh all
+		bash $(dirname $0)/update-etc-hosts.sh $1
+		bash $(dirname $0)/update-nova-config-ip.sh
+		bash $(dirname $0)/restart.sh 
 		;;
 	compute)
-		bash $(dirname $0)/update-etc-hosts.sh $node_type $1 $2
-		bash $(dirname $0)/update-nova-config-ip.sh $node_type $2
-		bash $(dirname $0)/restart.sh all
+		bash $(dirname $0)/update-etc-hosts.sh $1 $2
+		bash $(dirname $0)/update-nova-config-ip.sh $2
+		bash $(dirname $0)/restart.sh 
 		;;
 	networknode)
-		bash $(dirname $0)/update-etc-hosts.sh $node_type $1 $2
-		bash $(dirname $0)/restart.sh all
+		bash $(dirname $0)/update-etc-hosts.sh $1 $2
+		bash $(dirname $0)/restart.sh 
 		;;
 	*)
 		echo "Unsupported node type for $0: $node_type"
 		exit 1
 esac
-		
