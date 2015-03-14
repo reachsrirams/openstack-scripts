@@ -30,6 +30,28 @@ function restart-controller-glance() {
 	service glance-registry restart
 }
 
+function restart-networknode-services() {
+	echo "Restarting Network Node Services"
+	service openvswitch-switch restart
+	sleep 2
+	service neutron-plugin-openvswitch-agent restart 
+	sleep 2
+	service neutron-l3-agent restart
+	sleep 2
+	service neutron-dhcp-agent restart
+	sleep 2
+	service neutron-metadata-agent restart
+	sleep 2
+	service neutron-plugin-linuxbridge-agent restart
+	sleep 2
+}
+
+function restart-controller-neutron() {
+	service neutron-server restart
+	sleep 2
+	restart-networknode-services
+}
+
 function restart-controller-services() {
 	echo "Restarting Controller Services $1"
 	if [ "$1" == "nova" ]
@@ -38,6 +60,9 @@ function restart-controller-services() {
 	elif [ "$1" == "horizon" ]
 		then
 			restart-controller-horizon
+	elif [ "$1" == "neutron" ]
+		then
+			restart-controller-neutron
 	else
 		service mysql restart
 		sleep 5
@@ -49,7 +74,7 @@ function restart-controller-services() {
 		sleep 2
 		restart-controller-nova
 		sleep 2
-		service neutron-server restart
+		restart-controller-neutron
 		sleep 2
 		restart-controller-horizon
 		sleep 2
@@ -58,7 +83,7 @@ function restart-controller-services() {
 }
 
 function restart-compute-services() {
-	echo "Restarting Compute Services $1"
+	echo "Restarting Compute Services"
 	service nova-compute restart
 	sleep 2
 	service openvswitch-switch restart
@@ -68,23 +93,10 @@ function restart-compute-services() {
 	service ceilometer-agent-compute restart
 }
 
-function restart-networknode-services() {
-	echo "Restarting Network Node Services $1"
-	service openvswitch-switch restart
-	sleep 2
-	service neutron-plugin-openvswitch-agent restart 
-	sleep 2
-	service neutron-l3-agent restart
-	sleep 2
-	service neutron-dhcp-agent restart
-	sleep 2
-	service neutron-metadata-agent restart
-	sleep 2
-}
 
 if [ $# -ne 1 ]
 	then
-		echo "Correct Syntax: $0 [ all | nova | horizon ]"
+		echo "Correct Syntax: $0 [ all | nova | horizon | neutron ]"
 		exit 1;
 fi
 

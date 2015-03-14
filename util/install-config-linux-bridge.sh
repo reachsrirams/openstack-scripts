@@ -3,8 +3,12 @@ if [ $# -lt 1 ]
 		echo "Correct Syntax: $0 <linux-bridge-tenant-network-type> <physical-interface-mappings> <ml2-type-drivers> <ml2-tenant-network-types>"
 fi
 
+apt-get purge neutron-plugin-openvswitch-agent -y
+apt-get purge openvswitch-switch -y
+apt-get autoremove -y
 apt-get install neutron-plugin-linuxbridge-agent -y
 sleep 5
+
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers linuxbridge
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini linux_bridge tenant_network_type $1
 
@@ -31,8 +35,8 @@ fi
 
 echo "Setting Linux Bridge drivers for other Agents"
 sleep 3
-crudini --set /etc/neutron/dhcp_agent.ini interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
-crudini --set /etc/neutron/l3_agent.ini interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
+crudini --set /etc/neutron/dhcp_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
+crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
 
 sleep 3
 service neutron-server restart 
