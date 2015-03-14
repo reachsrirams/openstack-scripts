@@ -10,9 +10,15 @@ echo "Local host name: $local_host_name"
 
 if [ "$1" == "controller" ]
 	then
-		echo "Adding controller node info to /etc/hosts"
-		sleep 3
-		bash $dir_path/change-ip-in-etc-hosts.sh $controller_host_name $local_ip_address
+		if [ $# -eq 2 ]
+			then
+				echo "Adding controller node info to /etc/hosts"
+				sleep 2
+				bash $dir_path/change-ip-in-etc-hosts.sh $2 $local_ip_address
+		else
+			echo "Correct syntax: $0 controller <controller-host-name>"
+			exit 1;
+		fi
 elif [ "$1" == "compute" ] || [ "$1" == "networknode" ]
 	then
 		if [ $# -eq 3 ]
