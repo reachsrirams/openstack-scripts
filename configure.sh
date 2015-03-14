@@ -1,28 +1,25 @@
-if [ $# -ne 1 ]
-	then
-		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode ]"
-		exit 1;
-fi
+node_type=`bash $(dirname $0)/detect-nodetype.sh`
+echo "Node Type detected as: $node_type"
 
-if [ "$1" == "allinone" ]
+if [ "$node_type" == "allinone" ]
 	then
 		echo "Configuring packages for All-in-one"
 		sleep 5
 		bash lib/configure-packages.sh controller 
 		bash lib/configure-packages.sh networknode
 		bash lib/configure-packages.sh compute 
-elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode" ]
+elif [ "$node_type" == "controller" ] || [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
 	then
-		echo "Configuring packages for: "$1
+		echo "Configuring packages for: "$node_type
 		sleep 5
-		bash lib/configure-packages.sh $1 
-elif [ "$1" == "controller_networknode" ]
+		bash lib/configure-packages.sh $node_type 
+elif [ "$node_type" == "controller_networknode" ]
 	then
 		echo "Configuring packages for Controller and Network Node"
 		sleep 5
 		bash lib/configure-packages.sh controller 
 		bash lib/configure-packages.sh networknode
 else
-	echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode ]" 
+	echo "Unsupported Node Type for $0: $node_type"
 	exit 1;
 fi

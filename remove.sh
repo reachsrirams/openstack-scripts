@@ -29,28 +29,27 @@ function remove-networknode-packages() {
 	apt-get autoremove -y
 }
 
-if [ $# -lt 1 ]
-	then
-		echo "Correct Syntax: $0 [ all | controller | compute | networknode ]"
-		exit 1;
-fi
 
-if [ "$1" == "all" ]
-	then
+node_type=`bash $(dirname $0)/detect-nodetype.sh`
+echo "Node Type detected as: $node_type"
+sleep 5
+case $node_type in
+	allinone)
 		remove-controller-packages
 		remove-compute-packages
 		remove-networknode-packages
-elif [ "$1" == "controller" ]
-	then
+		;;
+	controller)
 		remove-controller-packages
-elif [ "$1" == "compute" ]
-	then
+		;;
+	compute)
 		remove-compute-packages
-elif [ "$1" == "networknode" ]
-	then
+		;;
+	networknode)
 		remove-networknode-packages
-else
-	echo "Correct Syntax: $0 [ all | controller | compute | networknode ]"
-	exit 1;
-fi
+		;;
+	*)
+		echo "Unsupported Node type for $0: $node_type"
+		exit 1;
+esac
 
