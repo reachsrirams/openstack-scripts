@@ -42,30 +42,33 @@ function debug-keystone() {
 	fi
 }
 
-if [ $# -lt 3 ]
+if [ $# -lt 2 ]
 	then
-		echo "Correct Syntax: $0 [ controller | compute ] <openstack-service-name> <on|off>"
+		echo "Correct Syntax: $0 <openstack-service-name> <on|off>"
 		exit 1;
 fi
 
 debug_flag="False"
-if [ "$3" == "on" ]
+if [ "$2" == "on" ]
 	then
 		debug_flag="True"
 fi
 
-case $2 in
+node_type=`bash $(dirname $0)/detect-nodetype.sh`
+echo "Node Type detected as: $node_type"
+
+case $1 in
 	neutron)
-		debug-neutron $1 $debug_flag
+		debug-neutron $node_type $debug_flag
 		;;
 	nova)
-		debug-nova $1 $debug_flag
+		debug-nova $node_type $debug_flag
 		;;
 	keystone)
-		debug-keystone $1 $debug_flag
+		debug-keystone $node_type $debug_flag
 		;;
 	*)
-		echo "Invalid service: $2. Only the following services are supported: nova, neutron, keystone."
+		echo "Invalid service: $1. Only the following services are supported: nova, neutron, keystone."
 		exit 1;
 	;;
 esac
