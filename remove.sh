@@ -30,7 +30,7 @@ function remove-networknode-packages() {
 }
 
 
-node_type=`bash $(dirname $0)/detect-nodetype.sh`
+node_type=`bash $(dirname $0)/util/detect-nodetype.sh`
 echo "Node Type detected as: $node_type"
 sleep 5
 case $node_type in

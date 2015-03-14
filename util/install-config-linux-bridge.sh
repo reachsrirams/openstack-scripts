@@ -31,7 +31,7 @@ fi
 
 echo "Setting Linux Bridge drivers for other Agents"
 sleep 3
-crudini --set /etc/neutron/dchp_agent.ini interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
+crudini --set /etc/neutron/dhcp_agent.ini interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
 crudini --set /etc/neutron/l3_agent.ini interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
 
 sleep 3
@@ -39,6 +39,6 @@ service neutron-server restart
 sleep 3
 service neutron-plugin-linuxbridge-agent restart
 sleep 3
-service neutron-plugin-dhcp-agent restart
+service neutron-dhcp-agent restart
 sleep 3
-service neutron-plugin-l3-agent restart
+service neutron-l3-agent restart
