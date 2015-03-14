@@ -15,7 +15,7 @@ echo "Configuring Keystone..."
 admin_token_parameter=`openssl rand -hex 10`
 crudini --set /etc/keystone/keystone.conf DEFAULT admin_token $admin_token_parameter
 grep "admin_token" /etc/keystone/keystone.conf
-sleep 5
+sleep 3
 
 crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
 crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
@@ -23,7 +23,7 @@ crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistenc
 
 echo "Configured KeyStone Conf File"
 grep "mysql" /etc/keystone/keystone.conf
-sleep 5
+sleep 3
 
 echo "Populate Identity Service Database..."
 keystone-manage db_sync
@@ -42,15 +42,15 @@ echo "Setting environment variables"
 export OS_SERVICE_TOKEN=$admin_token_parameter
 export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
 source $(dirname $0)/admin_openrc.sh
-echo_and_sleep "Called Source Admin OpenRC" 5
+echo_and_sleep "Called Source Admin OpenRC"
 
 keystone tenant-create --name admin --description "Admin Tenant"
 keystone user-create --name admin --pass $5 --email admin@example.com
-echo_and_sleep "Created Admin Tenant" 7
+echo_and_sleep "Created Admin Tenant"
 
 keystone role-create --name admin
 keystone user-role-add --tenant admin --user admin --role admin
-echo_and_sleep "Created Admin Role" 7
+echo_and_sleep "Created Admin Role"
 
 keystone role-create --name _member_
 keystone user-role-add --tenant admin --user admin --role _member_
@@ -58,11 +58,11 @@ keystone user-role-add --tenant admin --user admin --role _member_
 keystone tenant-create --name demo --description "Demo Tenant"
 keystone user-create --name demo --pass password
 keystone user-role-add --tenant demo --user demo --role _member_
-echo_and_sleep "Configured Demo Tenant and Role" 7
+echo_and_sleep "Configured Demo Tenant and Role"
 
 keystone tenant-create --name service --description "Service Tenant"
 keystone service-create --name keystone --type identity --description "OpenStack Identity"
-echo_and_sleep "Created Identity Service" 7
+echo_and_sleep "Created Identity Service"
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ identity / {print $2}') \
@@ -71,7 +71,7 @@ keystone endpoint-create \
 --adminurl http://$4:35357/v2.0 \
 --region regionOne
 
-echo_and_sleep "Added Identity Endpoint and about to restart keystone..." 7
+echo_and_sleep "Added Identity Endpoint and about to restart keystone"
 service keystone restart
 echo_and_sleep "Keystone service restarted" 2
 print_keystone_service_list

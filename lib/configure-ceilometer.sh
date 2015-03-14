@@ -33,7 +33,7 @@ if [ "$1" == "controller" ]
 		update_mongodb_bind_address
 		echo_and_sleep "Starting Mongo DB"
 		service mongodb restart
-		echo_and_sleep "About to create Ceilometer DB in MongoDB" 7
+		echo_and_sleep "About to create Ceilometer DB in MongoDB" 6
 		mongo --host controller --eval 'db = db.getSiblingDB("ceilometer"); db.addUser({user:"ceilometer", pwd: "CEILOMETER_DBPASS",roles: [ "readWrite", "dbAdmin" ]})'
 		
 		echo_and_sleep "About to start Ceilometer setup-config"
@@ -44,7 +44,7 @@ if [ "$1" == "controller" ]
 		echo_and_sleep "Created Ceilometer Tenant in KeyStone"
 		
 		keystone service-create --name ceilometer --type metering --description "Telemetry"
-		echo_and_sleep "Called service-create for Ceilometer" 10
+		echo_and_sleep "Called service-create for Ceilometer" 8
 		
 		keystone endpoint-create \
 		--service-id $(keystone service-list | awk '/ metering / {print $2}') \
@@ -53,7 +53,7 @@ if [ "$1" == "controller" ]
 		--adminurl http://$2:8777 \
 		--region regionOne
 		
-		echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 10
+		echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 8
 		crudini --set /etc/ceilometer/ceilometer.conf database connection mongodb://ceilometer:$6@$2:27017/ceilometer
 fi
 
@@ -85,7 +85,7 @@ if [ "$1" == "compute" ]
 		crudini --set /etc/nova/nova.conf DEFAULT notify_on_state_change vm_and_task_state
 		crudini --set /etc/nova/nova.conf DEFAULT notification_driver nova.openstack.common.notifier.rpc_notifier
 		crudini --set /etc/nova/nova.conf DEFAULT notification_driver ceilometer.compute.nova_notifier
-		echo_and_sleep "Configured Nova to use Ceilometer - DEFAULT section" 5
+		echo_and_sleep "Configured Nova to use Ceilometer - DEFAULT section" 3
 		crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_endpoint_type internalURL
 fi
 

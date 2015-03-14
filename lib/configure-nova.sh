@@ -29,12 +29,12 @@ if [ "$1" == "controller" ]
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 		
 		keystone user-create --name nova --pass $3
-		echo_and_sleep "Creating Nova User in KeyStone" 7
+		echo_and_sleep "Creating Nova User in KeyStone"
 		keystone user-role-add --user nova --tenant service --role admin
-		echo_and_sleep "Created Nova Tenant" 7
+		echo_and_sleep "Created Nova Tenant"
 		
 		keystone service-create --name nova --type compute --description "OpenStack Compute"
-		echo_and_sleep "Called service-create for Nova Compute" 7
+		echo_and_sleep "Called service-create for Nova Compute"
 		
 		keystone endpoint-create \
 		--service-id $(keystone service-list | awk '/ compute / {print $2}') \
@@ -80,16 +80,16 @@ fi
 
 crudini --set /etc/nova/nova.conf glance host $2
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
-echo_and_sleep "Updated NOVA Configuration File"
+echo_and_sleep "Updated NOVA Configuration File" 2
 
-echo_and_sleep "Removing Nova MySQL-Lite Database"
+echo_and_sleep "Removing Nova MySQL-Lite Database" 3
 rm -f /var/lib/nova/nova.sqlite
 
 if [ "$1" == "controller" ]
 	then
 		echo_and_sleep "Populate Image Nova Database" 
 		nova-manage db sync
-		echo_and_sleep "Restarting Nova Service" 7
+		echo_and_sleep "Restarting Nova Service"
 		service nova-api restart
 		service nova-cert restart
 		service nova-consoleauth restart
@@ -106,5 +106,5 @@ if [ "$1" == "controller" ]
 	then
 		print_keystone_service_list
 		nova service-list
-		echo_and_sleep "Verify Nova Service List" 7
+		echo_and_sleep "Verify Nova Service List" 5
 fi

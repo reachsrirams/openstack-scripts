@@ -13,16 +13,16 @@ echo "MySQL Command is:: "$mysql_command
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
 source $(dirname $0)/admin_openrc.sh
-echo_and_sleep "Called Source Admin OpenRC" 5
+echo_and_sleep "Called Source Admin OpenRC"
 
 keystone user-create --name glance --pass $6
-echo_and_sleep "Created Glance User in Keystone" 7
+echo_and_sleep "Created Glance User in Keystone"
 
 keystone user-role-add --user glance --tenant service --role admin
-echo_and_sleep "Created Glance Role in Keystone" 7
+echo_and_sleep "Created Glance Role in Keystone"
 
 keystone service-create --name glance --type image --description "OpenStack Image Service"
-echo_and_sleep "Created Image Service in keystone" 7
+echo_and_sleep "Created Image Service in keystone"
 
 keystone endpoint-create \
 --service-id $(keystone service-list | awk '/ image / {print $2}') \
@@ -30,7 +30,7 @@ keystone endpoint-create \
 --internalurl http://$4:9292 \
 --adminurl http://$4:9292 \
 --region regionOne
-echo_and_sleep "Added Glance Service Endpoint..." 7
+echo_and_sleep "Added Glance Service Endpoint"
 
 echo "Configuring Glance..."
 crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$1@$4/glance

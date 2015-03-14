@@ -41,7 +41,7 @@ readonly ceilometer_db_password="password"
 function echo_and_sleep() {
 	if [ -z "$2" ]
 		then
-			sleep_time=5
+			sleep_time=4
 		else
 			sleep_time=$2
 	fi
@@ -59,6 +59,6 @@ function echo_and_sleep() {
 function print_keystone_service_list() {
 	echo_and_sleep "About to print Keystone Service List" 2
 	keystone service-list
-	echo_and_sleep "Printed Keystone Service List" 10
+	echo_and_sleep "Printed Keystone Service List" 8
 }
 

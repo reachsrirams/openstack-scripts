@@ -13,7 +13,7 @@ if [ "$1" == "controller" ] && [ $# -ne 8 ]
         then
 		echo "Correct syntax: $0 controller  <controller-host-name> <rabbitmq-password> <neutron-password> <neutron-db-password> <mysql-username> <mysql-password> <service-tenant-id>"
                 exit 1;
-elif [ $# -ne 4 ]
+elif [ "$1" == "compute" ] || [ "$1" == "networknode" ] && [ $# -ne 4 ]
 	then
 		echo "Correct syntax: $0 [ compute | networknode ] <controller-host-name> <rabbitmq-password> <neutron-password>"
 		exit 1;
@@ -32,7 +32,7 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 		echo_and_sleep "Created Neutron Tenant in KeyStone"
 		
 		keystone service-create --name neutron --type network --description "OpenStack Networking"
-		echo_and_sleep "Called service-create for Neutron Networking" 10
+		echo_and_sleep "Called service-create for Neutron Networking" 8
 		
 		keystone endpoint-create \
 		--service-id $(keystone service-list | awk '/ network / {print $2}') \
@@ -41,7 +41,7 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 		--adminurl http://$2:9696 \
 		--region regionOne
 		
-		echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 10
+		echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 7
 		crudini --set /etc/neutron/neutron.conf database connection mysql://neutron:$5@$2/neutron
 fi
 
@@ -138,7 +138,7 @@ if [ "$1" == "controller" ]
 	then
 		echo_and_sleep "Configured Security Group for ML2. About to Upgrade Neutron DB..."
 		neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno
-		echo_and_sleep "Restarting Neutron Service..." 7
+		echo_and_sleep "Restarting Neutron Service..."
 		service nova-api restart
 		service nova-scheduler restart
 		service nova-conductor restart

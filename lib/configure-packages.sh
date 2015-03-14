@@ -12,9 +12,11 @@ if [ $# -ne 1 ]
 		exit 1;
 fi
 
+metering_secret="password"
+
 if [ "$1" == "compute" ]
 	then
-		echo_and_sleep "About to configure Compute"
+		echo_and_sleep "About to configure Compute" 3
 		bash $(dirname $0)/configure-forwarding.sh compute
 
 		echo_and_sleep "About to configure Nova for Compute" 3
@@ -23,7 +25,6 @@ if [ "$1" == "compute" ]
 		echo_and_sleep "About to configure Neutron for Compute" 3
 		bash $(dirname $0)/configure-neutron.sh compute $controller_host_name $rabbitmq_password $neutron_password
 		
-		metering_secret="password"
 		echo_and_sleep "About to configure Ceilometer for Compute" 3
 		bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
 elif [ "$1" == "networknode" ]
@@ -37,7 +38,6 @@ elif [ "$1" == "networknode" ]
 elif [ "$1" == "controller" ]
 	then
 		echo_and_sleep "About to configure Controller"	
-		sleep 3
 		
 		echo "Updating MySQL Config File..."
 		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf
@@ -55,14 +55,14 @@ elif [ "$1" == "controller" ]
 		
 		echo_and_sleep "Restarting MySQL and securing installation..."
 		service mysql restart;
-		sleep 10
+		sleep 5
 		mysql_secure_installation;
 		
 		echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
 		rabbitmqctl change_password $rabbitmq_user $rabbitmq_password
 		echo_and_sleep "Rabbit MQ: password updated."
 		sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
-		echo_and_sleep "Configured Guest account in Rabbit MQ" 10
+		echo_and_sleep "Configured Guest account in Rabbit MQ" 8
 		service rabbitmq-server restart
 		
 				
@@ -78,8 +78,8 @@ elif [ "$1" == "controller" ]
 		echo_and_sleep "About to setup Neutron..."
 		source $(dirname $0)/admin_openrc.sh
 		service_tenant_id=`keystone tenant-get service | grep id | cut -d '|' -f3 | tr -s ' '`
-		echo_and_sleep "Service Tenant ID is: $service_tenant_id" 10
-		bash $(dirname $0)/configure-neutron.sh controller $controller_host_name $rabbitmq_password $neutron_password $rabbitmq_password $neutron_db_password $mysql_user $mysql_password $service_tenant_id
+		echo_and_sleep "Service Tenant ID is: $service_tenant_id" 7
+		bash $(dirname $0)/configure-neutron.sh controller $controller_host_name $rabbitmq_password $neutron_password $neutron_db_password $mysql_user $mysql_password $service_tenant_id
 		
 		echo_and_sleep "About to setup Horizon-Dashboard"
 		bash $(dirname $0)/configure-horizon-controller.sh $controller_host_name
