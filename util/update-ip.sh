@@ -14,16 +14,16 @@ case $node_type in
 	controller) 
 		bash $(dirname $0)/update-etc-hosts.sh $1
 		bash $(dirname $0)/update-nova-config-ip.sh
-		bash $(dirname $0)/restart.sh 
+		bash $(dirname $0)/restart.sh all
 		;;
 	compute)
 		bash $(dirname $0)/update-etc-hosts.sh $1 $2
 		bash $(dirname $0)/update-nova-config-ip.sh $2
-		bash $(dirname $0)/restart.sh 
+		bash $(dirname $0)/restart.sh all
 		;;
 	networknode)
 		bash $(dirname $0)/update-etc-hosts.sh $1 $2
-		bash $(dirname $0)/restart.sh 
+		bash $(dirname $0)/restart.sh all
 		;;
 	*)
 		echo "Unsupported node type for $0: $node_type"
