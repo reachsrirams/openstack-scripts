@@ -4,6 +4,15 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 
 #### Platform supported - Ubuntu
 #### OpenStack version - Juno
+#### OpenStack services installed ####
+The following OpenStack services are installed as part these scripts:
+1. Keystone (Identity)
+2. Glance (Image)
+3. Nova (Compute)
+4. Neutron (Networking)
+5. Horizon (Dashboard)
+6. Ceilometer (Telemetry)
+
 #### Prerequisites ####
 Git packages must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server.
 
