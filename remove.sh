@@ -52,4 +52,3 @@ case $node_type in
 		echo "Unsupported Node type for $0: $node_type"
 		exit 1;
 esac
-
