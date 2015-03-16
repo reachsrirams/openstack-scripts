@@ -2,6 +2,7 @@ echo "Running: $0 $@"
 
 node_type=`bash $(dirname $0)/detect-nodetype.sh`
 echo "Node Type detected as: $node_type"
+sleep 3
 
 if [ $# -lt 1 ]
 	then
