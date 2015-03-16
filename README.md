@@ -33,9 +33,12 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
 4. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
    - **Note - during the configuration of MariaDB, you will be required to confirm few DB clean up operations manually** 
 
-## Updating /etc/hosts file ##
+## Updating IP Address ##
 
-Since all configuration uses the name of the controller host, it is important to update `/etc/hosts` file on all the node to map an IP address to the controller host name. You can use the `util/update-etc-hosts.sh` script for this purpose.
+The install scripts use a name for the controller (defined in `config-parameters.sh` script). This name needs to be updated in the /etc/hosts file. Also to view the VNC console of an instance, it is convenient to use IP address in the Nova configuration file. All these changes can be done using `util/update-ip.sh` script. 
+
+Usage: `sudo bash util/update-ip.sh <controller-host-name> <controller-ip>`. 
+The second parameter is used only for compute nodes.
 
 ## Removing OpenStack packages ##
 
@@ -44,4 +47,8 @@ You can remove all the OpenStack packages using `sudo bash remove.sh`. The **nod
 ## Restarting OpenStack services ##
 
 Restarting OpenStack services is needed at times - especially when config file entries are changed. You can execute `sudo bash restart.sh` to do this. The **node type** is detected automatically.
+
+## Updating /etc/hosts file ##
+
+Since all configuration uses the name of the controller host, it is important to update `/etc/hosts` file on all the node to map an IP address to the controller host name. You can use the `util/update-etc-hosts.sh` script for this purpose.
 
