@@ -6,6 +6,7 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 #### OpenStack version - Juno
 #### OpenStack services installed ####
 The following OpenStack services are installed as part these scripts:
+
 1. Keystone (Identity)
 2. Glance (Image)
 3. Nova (Compute)
