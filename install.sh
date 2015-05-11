@@ -8,12 +8,23 @@ function install-common-packages() {
 	apt-get install ntp -y
 	service ntp restart
 	
-	echo "About to configure Packages for JUNO"
-	sleep 3
-	apt-get install ubuntu-cloud-keyring -y
-	echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
-  	"trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
-	echo "Doing full system update"
+	if [ "$1" == "kilo" ]
+	then
+		echo "About to configure Packages for KILO"
+		sleep 3
+		apt-get install ubuntu-cloud-keyring -y
+		echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
+  		"trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
+		echo "Doing full system update"
+	else
+		echo "About to configure Packages for JUNO"
+		sleep 3
+		apt-get install ubuntu-cloud-keyring -y
+		echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
+  		"trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
+		echo "Doing full system update"
+	fi
+		
 	sleep 3
 	apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
 	apt-get autoremove -y
@@ -84,7 +95,7 @@ function install-networknode-packages() {
 
 if [ $# -ne 1 ]
 	then
-		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ]"
+		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ] [ juno | kilo ]"
 		exit 1;
 fi
 
@@ -92,13 +103,13 @@ if [ "$1" == "allinone" ]
 	then
 		echo "Installing packages for All-in-One"
 		sleep 5
-		install-common-packages
+		install-common-packages $2
 		install-controller-packages
 		install-compute-packages
 		install-networknode-packages
 elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode" ]
 	then
-		install-common-packages
+		install-common-packages $2
 		echo "Installing packages for: "$1
 		sleep 5
 		install-$1-packages
@@ -106,14 +117,14 @@ elif [ "$1" == "controller_networknode" ]
 	then
 		echo "Installing packages for Controller and Network Node"
 		sleep 5
-		install-common-packages
+		install-common-packages $2
 		install-controller-packages
 		install-networknode-packages
 elif [ "$1" == "common" ]
 	then
 		echo "Installing common packages"
 		sleep 5
-		install-common-packages
+		install-common-packages $2
 else
 	
 	echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | common ]"
