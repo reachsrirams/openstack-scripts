@@ -8,23 +8,12 @@ function install-common-packages() {
 	apt-get install ntp -y
 	service ntp restart
 	
-	if [ "$1" == "kilo" ]
-	then
-		echo "About to configure Packages for KILO"
-		sleep 3
-		apt-get install ubuntu-cloud-keyring -y
-		echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
-  		"trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
-		echo "Doing full system update"
-	else
-		echo "About to configure Packages for JUNO"
-		sleep 3
-		apt-get install ubuntu-cloud-keyring -y
-		echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
-  		"trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
-		echo "Doing full system update"
-	fi
-		
+	echo "About to configure Packages for KILO"
+	sleep 3
+	apt-get install ubuntu-cloud-keyring -y
+	echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
+  	"trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
+	echo "Doing full system update"
 	sleep 3
 	apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
 	apt-get autoremove -y
