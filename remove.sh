@@ -14,18 +14,24 @@ function remove-controller-packages() {
 	apt-get purge rabbitmq-server -y
 	apt-get purge keystone python-keystoneclient -y
 	apt-get purge glance python-glanceclient -y
-	apt-get purge nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y
+	apt-get purge nova-api nova-cert nova-conductor nova-consoleauth \
+	nova-novncproxy nova-scheduler python-novaclient -y
 	apt-get purge neutron-server neutron-plugin-ml2 python-neutronclient -y
-	apt-get purge openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache -y
-	apt-get purge mongodb-server -y
-	apt-get purge ceilometer-api ceilometer-collector ceilometer-agent-central ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier python-ceilometerclient -y
+	apt-get purge cinder-api cinder-scheduler python-cinderclient -y
+	apt-get purge openstack-dashboard apache2 libapache2-mod-wsgi \
+	memcached python-memcache -y
+	apt-get purge mongodb-server mongodb-clients python-pymongo -y
+	apt-get purge ceilometer-api ceilometer-collector ceilometer-agent-central \
+	ceilometer-agent-notification ceilometer-alarm-evaluator \
+	ceilometer-alarm-notifier python-ceilometerclient -y
 	apt-get autoremove -y
 }
 
 function remove-networknode-packages() {
 	echo "About to remove packages for Network Node"
 	sleep 2
-	apt-get purge neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent -y
+	apt-get purge neutron-plugin-ml2 neutron-plugin-openvswitch-agent \
+	neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent -y
 	apt-get autoremove -y
 }
 
@@ -46,6 +52,10 @@ case $node_type in
 		remove-compute-packages
 		;;
 	networknode)
+		remove-networknode-packages
+		;;
+	controller_networknode)
+		remove-controller-packages
 		remove-networknode-packages
 		;;
 	*)
