@@ -1,3 +1,14 @@
+function remove-common-packages() {
+	echo "About to remove Common packages (only APT sources list will be removed)"
+	sleep 2
+	rm -f /etc/apt/sources.list.d/cloudarchive-kilo.list
+	echo "Doing full system update"
+        sleep 3
+        apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
+        apt-get autoremove -y
+	
+}
+
 function remove-compute-packages() {
 	echo "About to remove packages for Compute Node"
 	sleep 2
@@ -62,3 +73,4 @@ case $node_type in
 		echo "Unsupported Node type for $0: $node_type"
 		exit 1;
 esac
+remove-common-packages

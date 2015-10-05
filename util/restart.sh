@@ -109,6 +109,10 @@ case $node_type in
 		restart-networknode-services $1
 		restart-compute-services $1
 		;;
+	controller_networknode)
+		restart-controller-services $1
+		restart-networknode-services $1
+		;;
 	*)
 		echo "Invalid node type: $node_type."
 		exit 1;

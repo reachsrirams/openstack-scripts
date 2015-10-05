@@ -10,6 +10,7 @@ function install-common-packages() {
 	
 	echo "About to configure Packages for KILO"
 	sleep 3
+	rm -f /etc/apt/sources.list.d/cloudarchive-juno.list
 	apt-get install ubuntu-cloud-keyring -y
 	echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
   	"trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
