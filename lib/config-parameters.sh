@@ -19,7 +19,7 @@ readonly neutron_linuxbridge_physical_interface_mappings="physnet1:eth1"
 readonly mysql_user="root"
 readonly mysql_password="password"
 
-readonly rabbitmq_user="guest"
+readonly rabbitmq_user="openstack"
 readonly rabbitmq_password="password"
 
 readonly keystone_db_password="password"

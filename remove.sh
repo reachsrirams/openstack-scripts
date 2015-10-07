@@ -1,3 +1,7 @@
+function stop-controller-services() {
+	service apache2 stop
+}
+
 function remove-common-packages() {
 	echo "About to remove Common packages (only APT sources list will be removed)"
 	sleep 2
@@ -19,6 +23,7 @@ function remove-compute-packages() {
 }
 
 function remove-controller-packages() {
+	stop-controller-services
 	echo "About to remove packages for Controller Node"
 	sleep 2
 	apt-get purge mariadb-server python-mysqldb -y
