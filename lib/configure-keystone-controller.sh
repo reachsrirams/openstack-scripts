@@ -31,6 +31,8 @@ crudini --set /etc/keystone/keystone.conf revoke driver keystone.contrib.revoke.
 grep "mysql" /etc/keystone/keystone.conf
 echo_and_sleep "Configured KeyStone Conf File" 2
 
+grep -q '^ServerName' /etc/apache2/apache2.conf && sed 's/^ServerName.*/ServerName controller/' -i /etc/apache2/apache2.conf || echo "ServerName controller" >> /etc/apache2/apache2.conf 
+
 cp $(dirname $0)/wsgi-keystone.conf /etc/apache2/sites-available/
 ls -al /etc/apache2/sites-available | grep key
 echo_and_sleep "Keystone file under Apache" 5
