@@ -29,7 +29,7 @@ if [ "$1" == "compute" ]
 		bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
 fi
 
-if [ "$1" == "controller" ] || [ "$1" == "controller_networknode" ]
+if [ "$1" == "controller" ] 
 	then
 		echo_and_sleep "About to configure Controller"	
 		
@@ -82,7 +82,7 @@ if [ "$1" == "controller" ] || [ "$1" == "controller_networknode" ]
 		bash $(dirname $0)/configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
 fi
 
-if [ "$1" == "networknode" ] || [ "$1" == "controller_networknode" ]
+if [ "$1" == "networknode" ]
 	then
 		echo_and_sleep "About to configure Network Node"
 		bash $(dirname $0)/configure-forwarding.sh networknode
@@ -90,5 +90,5 @@ if [ "$1" == "networknode" ] || [ "$1" == "controller_networknode" ]
 		echo_and_sleep "About to configure Neutron for Network Node" 2
 		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password
 
-		print-configure-bridge-message
 fi
+print-configure-bridge-message
