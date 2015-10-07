@@ -2,7 +2,7 @@ echo "Running: $0 $@"
 source $(dirname $0)/config-parameters.sh
 if [ $# -lt 5 ]
 	then
-		echo "Correct Syntax: install-and-update-keystone <keystone-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password>"
+		echo "Correct Syntax: $0 <keystone-db-password> <mysql-username> <mysql-password> <controller-host-name> <admin-tenant-password>"
 		exit 1
 fi
 echo "Configuring MySQL for Keystone..."
@@ -18,12 +18,29 @@ grep "admin_token" /etc/keystone/keystone.conf
 sleep 3
 
 crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
-crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
-crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.sql.Token
 
-echo "Configured KeyStone Conf File"
+echo_and_sleep "New in Kilo - Memcache configuration" 2
+crudini --set /etc/keystone/keystone.conf memcache servers localhost:11211
+
+crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
+crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.memcache.Token
+
+echo_and_sleep "New in Kilo - SQL Revoke configuration" 2
+crudini --set /etc/keystone/keystone.conf revoke driver keystone.contrib.revoke.backends.sql.Revoke
+
 grep "mysql" /etc/keystone/keystone.conf
-sleep 3
+echo_and_sleep "Configured KeyStone Conf File" 2
+
+cp $(dirname $0)/wsgi-keystone.conf /etc/apache2/sites-available/
+ls -al /etc/apache2/sites-available | grep key
+echo_and_sleep "Keystone file under Apache" 5
+
+ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled
+mkdir -p /var/www/cgi-bin/keystone
+curl http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=stable/kilo \
+  | tee /var/www/cgi-bin/keystone/main /var/www/cgi-bin/keystone/admin
+chown -R keystone:keystone /var/www/cgi-bin/keystone
+chmod 755 /var/www/cgi-bin/keystone/*
 
 echo "Populate Identity Service Database..."
 keystone-manage db_sync
@@ -31,8 +48,13 @@ keystone-manage db_sync
 echo "Restarting KeyStone Service..."
 service keystone restart
 
+echo "Restarting Apache Service..."
+service apache2 restart
+
 echo "Removing KeyStone MySQL-Lite Database..."
 rm -f /var/lib/keystone/keystone.db
+
+echo_and_sleep "KEYSTONE CONFIG PART 2 - WAIT !!!" 30
 
 echo "Setting up crontab for Identity Token cleanup..."
 (crontab -l -u keystone 2>&1 | grep -q token_flush) || echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/

@@ -8,7 +8,7 @@ function install-common-packages() {
 	apt-get install ntp -y
 	service ntp restart
 	
-	echo "About to configure Packages for KILO"
+	echo "About to configure APT for Kilo"
 	sleep 3
 	rm -f /etc/apt/sources.list.d/cloudarchive-juno.list
 	apt-get install ubuntu-cloud-keyring -y
