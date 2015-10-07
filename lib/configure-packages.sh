@@ -27,15 +27,9 @@ if [ "$1" == "compute" ]
 		
 		echo_and_sleep "About to configure Ceilometer for Compute" 3
 		bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
-elif [ "$1" == "networknode" ]
-	then
-		echo_and_sleep "About to configure Network Node"
-		bash $(dirname $0)/configure-forwarding.sh networknode
+fi
 
-		echo_and_sleep "About to configure Neutron for Network Node" 2
-		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password
-
-elif [ "$1" == "controller" ]
+if [ "$1" == "controller" ] || [ "$1" == "controller_networknode" ]
 	then
 		echo_and_sleep "About to configure Controller"	
 		
@@ -59,10 +53,10 @@ elif [ "$1" == "controller" ]
 		mysql_secure_installation;
 		
 		echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
-		rabbitmqctl change_password $rabbitmq_user $rabbitmq_password
-		echo_and_sleep "Rabbit MQ: password updated."
-		sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
-		echo_and_sleep "Configured Guest account in Rabbit MQ" 8
+		rabbitmqctl add_user $rabbitmq_user $rabbitmq_password
+		echo_and_sleep "Rabbit MQ: User Added. About to set Permissions"
+		rabbitmqctl set_permissions $rabbitmq_user ".*" ".*" ".*"
+		echo_and_sleep "Configured Permissions in Rabbit MQ" 8
 		service rabbitmq-server restart
 		
 				
@@ -86,8 +80,15 @@ elif [ "$1" == "controller" ]
 		
 		echo_and_sleep "About to setup Ceilometer..."
 		bash $(dirname $0)/configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
-else
-	echo "Correct syntax: $0 [ compute | networknode ] "
-	exit 1;
 fi
-print-configure-bridge-message
+
+if [ "$1" == "networknode" ] || [ "$1" == "controller_networknode" ]
+	then
+		echo_and_sleep "About to configure Network Node"
+		bash $(dirname $0)/configure-forwarding.sh networknode
+
+		echo_and_sleep "About to configure Neutron for Network Node" 2
+		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password
+
+		print-configure-bridge-message
+fi
