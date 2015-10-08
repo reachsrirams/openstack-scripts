@@ -34,7 +34,7 @@ if [ "$1" == "controller" ]
 		echo_and_sleep "About to configure Controller"	
 		
 		echo "Updating MySQL Config File..."
-		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/my.cnf
+		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/mariadb.conf.d/mysqld.cnf
 		echo_and_sleep "Updated Bind Address" 2
 		grep "bind" /etc/mysql/my.cnf
 		
