@@ -32,7 +32,7 @@ function install-controller-packages() {
 	echo "Installing Keystone..."
 	echo "manual" > /etc/init/keystone.override
 	sleep 3
-	apt-get install keystone python-keystoneclient -y
+	apt-get install keystone python-openstackclient python-keystoneclient -y
 	apt-get install apache2 libapache2-mod-wsgi memcached python-memcache -y
 	
 	echo "Installing Glance..."

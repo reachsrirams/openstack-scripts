@@ -66,7 +66,7 @@ export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
 source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC"
 
-openstack service create --name keystone identity --description "OpenStack Identity" identity
+openstack service create --name keystone --description "OpenStack Identity" identity
 echo_and_sleep "Created Identity Service"
 
 openstack endpoint create \
