@@ -26,7 +26,7 @@ openstack endpoint create \
 image
 echo_and_sleep "Added Glance Service Endpoint"
 
-opentack user create --password $6 glance
+openstack user create --password $6 glance
 echo_and_sleep "Created Glance User in Keystone"
 
 keystone user-role-add --user glance --tenant service --role admin

@@ -61,8 +61,10 @@ echo "Setting up crontab for Identity Token cleanup..."
 ystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone	
 
 echo "Setting environment variables"
-export OS_SERVICE_TOKEN=$admin_token_parameter
-export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
+#export OS_SERVICE_TOKEN=$admin_token_parameter
+#export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
+export OS_TOKEN=$admin_token_parameter
+export OS_URL=http://$4:35357/v2.0
 source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC"
 
