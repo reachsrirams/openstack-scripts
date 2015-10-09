@@ -66,6 +66,8 @@ echo "Setting environment variables"
 export OS_TOKEN=$admin_token_parameter
 export OS_URL=http://$4:35357/v2.0
 source $(dirname $0)/admin_openrc.sh
+echo_and_sleep "Getting token issued" 3
+openstack token issue
 echo_and_sleep "Called Source Admin OpenRC"
 
 openstack service create --name keystone --description "OpenStack Identity" identity
