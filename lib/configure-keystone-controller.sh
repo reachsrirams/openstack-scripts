@@ -47,7 +47,7 @@ chmod 755 /var/www/cgi-bin/keystone/*
 echo "Populate Identity Service Database..."
 keystone-manage db_sync
 
-echo "Restarting KeyStone Service..."
+echo_and_sleep "Restarting KeyStone Service" 3
 service keystone restart
 
 echo "Restarting Apache Service..."
@@ -55,8 +55,6 @@ service apache2 restart
 
 echo "Removing KeyStone MySQL-Lite Database..."
 rm -f /var/lib/keystone/keystone.db
-
-echo_and_sleep "KEYSTONE CONFIG PART 2 - WAIT !!!" 30
 
 echo "Setting up crontab for Identity Token cleanup..."
 (crontab -l -u keystone 2>&1 | grep -q token_flush) || echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/
@@ -67,6 +65,16 @@ export OS_SERVICE_TOKEN=$admin_token_parameter
 export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
 source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC"
+
+openstack service create --name keystone identity --description "OpenStack Identity" identity
+echo_and_sleep "Created Identity Service"
+
+openstack endpoint create \
+--publicurl http://$4:5000/v2.0 \
+--internalurl http://$4:5000/v2.0 \
+--adminurl http://$4:35357/v2.0 \
+--region RegionOne \
+identity
 
 keystone tenant-create --name admin --description "Admin Tenant"
 keystone user-create --name admin --pass $5 --email admin@example.com
@@ -85,15 +93,6 @@ keystone user-role-add --tenant demo --user demo --role _member_
 echo_and_sleep "Configured Demo Tenant and Role"
 
 keystone tenant-create --name service --description "Service Tenant"
-keystone service-create --name keystone --type identity --description "OpenStack Identity"
-echo_and_sleep "Created Identity Service"
-
-keystone endpoint-create \
---service-id $(keystone service-list | awk '/ identity / {print $2}') \
---publicurl http://$4:5000/v2.0 \
---internalurl http://$4:5000/v2.0 \
---adminurl http://$4:35357/v2.0 \
---region regionOne
 
 echo_and_sleep "Added Identity Endpoint and about to restart keystone"
 service keystone restart
