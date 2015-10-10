@@ -14,19 +14,20 @@ mysql -u "$2" -p"$3" -e "$mysql_command"
 echo "Configuring Keystone..."
 admin_token_parameter=`openssl rand -hex 10`
 crudini --set /etc/keystone/keystone.conf DEFAULT admin_token $admin_token_parameter
+sleep 1
 grep "admin_token" /etc/keystone/keystone.conf
-sleep 3
+sleep 2
 
 crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
 
-echo_and_sleep "New in Kilo - Memcache configuration" 2
 crudini --set /etc/keystone/keystone.conf memcache servers localhost:11211
+echo_and_sleep "New in Kilo - Memcache configuration" 2
 
 crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
 crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.memcache.Token
 
-echo_and_sleep "New in Kilo - SQL Revoke configuration" 2
 crudini --set /etc/keystone/keystone.conf revoke driver keystone.contrib.revoke.backends.sql.Revoke
+echo_and_sleep "New in Kilo - SQL Revoke configuration" 2
 
 grep "mysql" /etc/keystone/keystone.conf
 echo_and_sleep "Configured KeyStone Conf File" 2
@@ -35,7 +36,7 @@ grep -q '^ServerName' /etc/apache2/apache2.conf && sed 's/^ServerName.*/ServerNa
 
 cp $(dirname $0)/wsgi-keystone.conf /etc/apache2/sites-available/
 ls -al /etc/apache2/sites-available | grep key
-echo_and_sleep "Keystone file under Apache" 5
+echo_and_sleep "Added Keystone file under Apache" 3
 
 ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled
 mkdir -p /var/www/cgi-bin/keystone
@@ -44,13 +45,13 @@ curl http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=
 chown -R keystone:keystone /var/www/cgi-bin/keystone
 chmod 755 /var/www/cgi-bin/keystone/*
 
-echo "Populate Identity Service Database..."
+echo_and_sleep "Populate Identity Service Database" 2
 keystone-manage db_sync
 
-echo_and_sleep "Restarting KeyStone Service" 3
+echo_and_sleep "Restarting KeyStone Service" 2
 service keystone restart
 
-echo "Restarting Apache Service..."
+echo_and_sleep "Restarting Apache Service" 2
 service apache2 restart
 
 echo "Removing KeyStone MySQL-Lite Database..."
@@ -60,15 +61,14 @@ echo "Setting up crontab for Identity Token cleanup..."
 (crontab -l -u keystone 2>&1 | grep -q token_flush) || echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/
 ystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone	
 
-echo "Setting environment variables"
+echo_sleep "Setting environment variables" 1
 #export OS_SERVICE_TOKEN=$admin_token_parameter
 #export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
 export OS_TOKEN=$admin_token_parameter
 export OS_URL=http://$4:35357/v2.0
-source $(dirname $0)/admin_openrc.sh
-echo_and_sleep "Getting token issued" 3
-openstack token issue
-echo_and_sleep "Called Source Admin OpenRC"
+#source $(dirname $0)/admin_openrc.sh
+#echo_and_sleep "Called Source Admin OpenRC"
+echo_sleep "Set environment variables" 2
 
 openstack service create --name keystone --description "OpenStack Identity" identity
 echo_and_sleep "Created Identity Service"
@@ -79,26 +79,26 @@ openstack endpoint create \
 --adminurl http://$4:35357/v2.0 \
 --region RegionOne \
 identity
+echo_and_sleep "Added Identity Endpoint and about to restart keystone" 2
+service keystone restart
+echo_and_sleep "Keystone service restarted" 2
 
-keystone tenant-create --name admin --description "Admin Tenant"
-keystone user-create --name admin --pass $5 --email admin@example.com
-echo_and_sleep "Created Admin Tenant"
+openstack project create --description "Admin Project" admin
+openstack user create --password $5 admin
+echo_and_sleep "Created Admin Project and User"
 
-keystone role-create --name admin
-keystone user-role-add --tenant admin --user admin --role admin
-echo_and_sleep "Created Admin Role"
+openstack role create admin
+openstack role add --project admin --user admin admin
+echo_and_sleep "Created and added Admin Role" 2
 
-keystone role-create --name _member_
-keystone user-role-add --tenant admin --user admin --role _member_
+openstack project create --description "Service Project" service
 
-keystone tenant-create --name demo --description "Demo Tenant"
-keystone user-create --name demo --pass password
-keystone user-role-add --tenant demo --user demo --role _member_
-echo_and_sleep "Configured Demo Tenant and Role"
+openstack project create --description "Demo Project" demo
+openstack user create --password password demo
+openstack role create user
+openstack role add --project demo --user demo user
+echo_and_sleep "Configured Demo Tenant and Role" 2
 
-keystone tenant-create --name service --description "Service Tenant"
-
-echo_and_sleep "Added Identity Endpoint and about to restart keystone"
 service keystone restart
 echo_and_sleep "Keystone service restarted" 2
 print_keystone_service_list
