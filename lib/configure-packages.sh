@@ -64,7 +64,7 @@ if [ "$1" == "controller" ]
 		bash $(dirname $0)/configure-keystone-controller.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
 		
 		echo_and_sleep "About to setup Glance..."
-		bash $(dirname $0)/configure-glance-controller.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
+		bash $(dirname $0)/configure-glance.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
 		
 		echo_and_sleep "About to setup NOVA..."
 		bash $(dirname $0)/configure-nova.sh controller $controller_host_name $nova_password $rabbitmq_password $nova_db_password $mysql_user $mysql_password 
