@@ -28,7 +28,7 @@ if [ "$1" == "controller" ]
 		echo "MySQL Command is:: "$mysql_command
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 		
-		create-user-service nova $3 nova "OpenStack Compute" compute
+		create-user-service nova $3 nova '"OpenStack Compute"' compute
 		
 		openstack endpoint create \
 		--publicurl http://$2:8774/v2/%\(tenant_id\)s \

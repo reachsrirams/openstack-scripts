@@ -26,7 +26,7 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 		echo "MySQL Command is:: "$mysql_command
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 
-		create-user-service neutron $4 neutron "OpenStack Networking" network
+		create-user-service neutron $4 neutron '"OpenStack Networking"' network
 		
 		openstack endpoint create \
 		--publicurl http://$2:9696 \
