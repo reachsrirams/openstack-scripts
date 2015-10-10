@@ -44,10 +44,10 @@ if [ "$1" == "controller" ]
 		--publicurl http://$2:8777 \
 		--internalurl http://$2:8777 \
 		--adminurl http://$2:8777 \
-		--region RegionOne
+		--region RegionOne \
 		metering
 		
-		echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 8
+		echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 4
 		crudini --set /etc/ceilometer/ceilometer.conf database connection mongodb://ceilometer:$6@$2:27017/ceilometer
 fi
 

@@ -32,14 +32,14 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 		--publicurl http://$2:9696 \
 		--internalurl http://$2:9696 \
 		--adminurl http://$2:9696 \
-		--region RegionOne
+		--region RegionOne \
 		network
 		
-		echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 7
+		echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 5
 		crudini --set /etc/neutron/neutron.conf database connection mysql://neutron:$5@$2/neutron
 fi
 
-echo_and_sleep "Configuring Neutron Conf File" 3
+echo_and_sleep "Configuring Neutron Conf File" 2
 
 crudini --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
 configure-oslo-messaging /etc/neutron/neutron.conf $2 openstack $3

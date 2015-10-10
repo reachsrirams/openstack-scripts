@@ -34,16 +34,16 @@ if [ "$1" == "controller" ]
 		--publicurl http://$2:8774/v2/%\(tenant_id\)s \
 		--internalurl http://$2:8774/v2/%\(tenant_id\)s \
 		--adminurl http://$2:8774/v2/%\(tenant_id\)s \
-		--region RegionOne
+		--region RegionOne \
 		compute
-		echo_and_sleep "Created Endpoint for Nova"
+		echo_and_sleep "Created Endpoint for Nova" 2
 		
-		echo_and_sleep "Configuring NOVA DB Connection"
 		crudini --set /etc/nova/nova.conf database connection mysql://nova:$5@$2/nova
+		echo_and_sleep "Configured NOVA DB Connection" 2
 
 fi
 
-echo_and_sleep "Updating NOVA Configuration File"
+echo_and_sleep "Updating NOVA Configuration File" 1
 
 crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 
