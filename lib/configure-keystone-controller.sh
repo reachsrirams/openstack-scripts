@@ -61,14 +61,10 @@ echo "Setting up crontab for Identity Token cleanup..."
 (crontab -l -u keystone 2>&1 | grep -q token_flush) || echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/
 ystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone	
 
-echo_sleep "Setting environment variables" 1
-#export OS_SERVICE_TOKEN=$admin_token_parameter
-#export OS_SERVICE_ENDPOINT=http://$4:35357/v2.0
+echo_and_sleep "Setting environment variables" 1
 export OS_TOKEN=$admin_token_parameter
 export OS_URL=http://$4:35357/v2.0
-#source $(dirname $0)/admin_openrc.sh
-#echo_and_sleep "Called Source Admin OpenRC"
-echo_sleep "Set environment variables" 2
+echo_and_sleep "Set environment variables" 1
 
 openstack service create --name keystone --description "OpenStack Identity" identity
 echo_and_sleep "Created Identity Service"
@@ -85,13 +81,14 @@ echo_and_sleep "Keystone service restarted" 2
 
 openstack project create --description "Admin Project" admin
 openstack user create --password $5 admin
-echo_and_sleep "Created Admin Project and User"
+echo_and_sleep "Created Admin Project and User" 2
 
 openstack role create admin
 openstack role add --project admin --user admin admin
 echo_and_sleep "Created and added Admin Role" 2
 
 openstack project create --description "Service Project" service
+echo_and_sleep "Configured Service Project" 2
 
 openstack project create --description "Demo Project" demo
 openstack user create --password password demo
@@ -101,5 +98,7 @@ echo_and_sleep "Configured Demo Tenant and Role" 2
 
 service keystone restart
 echo_and_sleep "Keystone service restarted" 2
+source $(dirname $0)/admin_openrc.sh
+echo_and_sleep "Called Source Admin OpenRC"
 print_keystone_service_list
 
