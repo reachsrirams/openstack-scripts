@@ -62,3 +62,31 @@ function print_keystone_service_list() {
 	echo_and_sleep "Printed Keystone Service List" 5
 }
 
+function configure-keystone-authentication() {
+	echo_and_sleep "Called $0 $@" 10
+	crudini --set $1 keystone_authtoken auth_uri http://$2:5000
+	crudini --set $1 keystone_authtoken auth_url http://$2:35357
+	crudini --set $1 keystone_authtoken auth_plugin password
+	crudini --set $1 keystone_authtoken project_domain_id default
+	crudini --set $1 keystone_authtoken user_domain_id default
+	crudini --set $1 keystone_authtoken project_name service
+	crudini --set $1 keystone_authtoken username $3
+	crudini --set $1 keystone_authtoken password $4
+}
+
+function configure-oslo-messaging() {
+	echo_and_sleep "Called $0 $@" 10
+	crudini --set $1 oslo_messaging_rabbit rabbit_host $2
+	crudini --set $1 oslo_messaging_rabbit rabbit_userid $3
+	crudini --set $1 oslo_messaging_rabbit rabbit_password $4
+}
+
+function create-user-service() {
+	echo_and_sleep "Called $0 $@" 10
+	openstack user create --password $2 $1
+	echo_and_sleep "Created User $1"
+	openstack role add --project service --user $1 admin
+	echo_and_sleep "Created Tenant $1"
+	openstack service create --name $3 --description $4 $5
+	echo_and_sleep "Created Service $4"
+}

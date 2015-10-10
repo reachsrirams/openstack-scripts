@@ -15,8 +15,7 @@ mysql -u "$2" -p"$3" -e "$mysql_command"
 source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC"
 
-openstack service create --name glance --description "OpenStack Image Service" image 
-echo_and_sleep "Created Image Service in keystone"
+create-user-service glance $6 glance "OpenStack Image Service" image
 
 openstack endpoint create \
 --publicurl http://$4:9292 \
@@ -26,37 +25,17 @@ openstack endpoint create \
 image
 echo_and_sleep "Added Glance Service Endpoint"
 
-openstack user create --password $6 glance
-echo_and_sleep "Created Glance User in Keystone"
-
-keystone user-role-add --user glance --tenant service --role admin
-echo_and_sleep "Created Glance Role in Keystone"
-
 echo "Configuring Glance..."
 crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$1@$4/glance
 
-crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$4:5000
-crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_url http://$4:35357
-crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_plugin password
-crudini --set /etc/glance/glance-api.conf keystone_authtoken project_domain_id default
-crudini --set /etc/glance/glance-api.conf keystone_authtoken user_domain_id default
-crudini --set /etc/glance/glance-api.conf keystone_authtoken project_name service
-crudini --set /etc/glance/glance-api.conf keystone_authtoken username glance
-crudini --set /etc/glance/glance-api.conf keystone_authtoken password $6
+configure-keystone-authentication /etc/glance/glance-api.con $4 glance $6
 crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
 crudini --set /etc/glance/glance-api.conf glance_store default_store file
 crudini --set /etc/glance/glance-api.conf glance_store filesystem_store_datadir /var/lib/glance/images
 
 crudini --set /etc/glance/glance-registry.conf database connection mysql://glance:$1@$4/glance
 
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_uri http://$4:5000
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_url http://$4:35357
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_plugin password
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken project_domain_id default
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken user_domain_id default
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken project_name service
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken username glance
-crudini --set /etc/glance/glance-registry.conf keystone_authtoken password $6
+configure-keystone-authentication /etc/glance/glance-registry.con $4 glance $6
 crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
 
 echo_and_sleep "About to populate Image Service Database" 

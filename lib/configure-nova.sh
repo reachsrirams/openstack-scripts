@@ -28,20 +28,15 @@ if [ "$1" == "controller" ]
 		echo "MySQL Command is:: "$mysql_command
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 		
-		keystone user-create --name nova --pass $3
-		echo_and_sleep "Creating Nova User in KeyStone"
-		keystone user-role-add --user nova --tenant service --role admin
-		echo_and_sleep "Created Nova Tenant"
+		create-user-service nova $3 nova "OpenStack Compute" compute
 		
-		keystone service-create --name nova --type compute --description "OpenStack Compute"
-		echo_and_sleep "Called service-create for Nova Compute"
-		
-		keystone endpoint-create \
-		--service-id $(keystone service-list | awk '/ compute / {print $2}') \
+		openstack endpoint create \
 		--publicurl http://$2:8774/v2/%\(tenant_id\)s \
 		--internalurl http://$2:8774/v2/%\(tenant_id\)s \
 		--adminurl http://$2:8774/v2/%\(tenant_id\)s \
 		--region RegionOne
+		compute
+		echo_and_sleep "Created Endpoint for Nova"
 		
 		echo_and_sleep "Configuring NOVA DB Connection"
 		crudini --set /etc/nova/nova.conf database connection mysql://nova:$5@$2/nova
@@ -52,23 +47,12 @@ echo_and_sleep "Updating NOVA Configuration File"
 
 crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 
-crudini --set /etc/nova/nova.conf oslo_messaging_rabbit rabbit_host $2
-
 ##TBD - Fix hardcoding of Rabbit USER ID
-crudini --set /etc/nova/nova.conf oslo_messaging_rabbit rabbit_userid openstack
-crudini --set /etc/nova/nova.conf oslo_messaging_rabbit rabbit_password $4
+configure-oslo-messaging /etc/nova/nova.conf $2 openstack $4
 
 crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 
-crudini --set /etc/nova/nova.conf keystone_authtoken auth_uri http://$4:5000
-crudini --set /etc/nova/nova.conf keystone_authtoken auth_url http://$4:35357
-crudini --set /etc/nova/nova.conf keystone_authtoken auth_plugin password
-crudini --set /etc/nova/nova.conf keystone_authtoken project_domain_id default
-crudini --set /etc/nova/nova.conf keystone_authtoken user_domain_id default
-crudini --set /etc/nova/nova.conf keystone_authtoken project_name service
-crudini --set /etc/nova/nova.conf keystone_authtoken username glance
-crudini --set /etc/nova/nova.conf keystone_authtoken password $6
-crudini --set /etc/nova/nova.conf keystone_authtoken admin_password $3
+configure-keystone-authentication /etc/nova/nova.conf $4 nova $6
 
 eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP Address: $eth0_ip"

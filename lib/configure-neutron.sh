@@ -26,20 +26,14 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 		echo "MySQL Command is:: "$mysql_command
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 
-		keystone user-create --name neutron --pass $4
-		echo_and_sleep "Created Neutron User in KeyStone"
-		keystone user-role-add --user neutron --tenant service --role admin
-		echo_and_sleep "Created Neutron Tenant in KeyStone"
+		create-user-service neutron $4 neutron "OpenStack Networking" network
 		
-		keystone service-create --name neutron --type network --description "OpenStack Networking"
-		echo_and_sleep "Called service-create for Neutron Networking" 8
-		
-		keystone endpoint-create \
-		--service-id $(keystone service-list | awk '/ network / {print $2}') \
+		openstack endpoint create \
 		--publicurl http://$2:9696 \
 		--internalurl http://$2:9696 \
 		--adminurl http://$2:9696 \
-		--region regionOne
+		--region RegionOne
+		network
 		
 		echo_and_sleep "Created Neutron Endpoint in Keystone. About to Neutron Conf File" 7
 		crudini --set /etc/neutron/neutron.conf database connection mysql://neutron:$5@$2/neutron
@@ -48,15 +42,10 @@ fi
 echo_and_sleep "Configuring Neutron Conf File" 3
 
 crudini --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
-crudini --set /etc/neutron/neutron.conf DEFAULT rabbit_host $2
-crudini --set /etc/neutron/neutron.conf DEFAULT rabbit_password $3
+configure-oslo-messaging /etc/neutron/neutron.conf $2 openstack $3
 crudini --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
 
-crudini --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://$2:5000/v2.0
-crudini --set /etc/neutron/neutron.conf keystone_authtoken identity_uri http://$2:35357
-crudini --set /etc/neutron/neutron.conf keystone_authtoken admin_tenant_name service
-crudini --set /etc/neutron/neutron.conf keystone_authtoken admin_user neutron
-crudini --set /etc/neutron/neutron.conf keystone_authtoken admin_password $4
+configure-keystone-authentication /etc/neutron/neutron.conf $2 neutron $4
 
 crudini --set /etc/neutron/neutron.conf DEFAULT core_plugin ml2
 crudini --set /etc/neutron/neutron.conf DEFAULT service_plugins router
@@ -69,7 +58,7 @@ if [ "$1" == "controller" ]
 		crudini --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_url http://$2:8774/v2
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_auth_url http://$2:35357/v2.0
-		crudini --set /etc/neutron/neutron.conf DEFAULT nova_region_name regionOne
+		crudini --set /etc/neutron/neutron.conf DEFAULT nova_region_name RegionOne
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_username nova
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $8
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $4
