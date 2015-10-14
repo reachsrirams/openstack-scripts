@@ -90,6 +90,6 @@ function create-user-service() {
 	echo_and_sleep "Created User $1"
 	openstack role add --project service --user $1 admin
 	echo_and_sleep "Created Tenant $1"
-	openstack service create --name $3 --description "$4" $5
+	openstack service create --name $3 --description $4 $5
 	echo_and_sleep "Created Service $4"
 }

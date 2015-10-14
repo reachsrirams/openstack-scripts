@@ -28,7 +28,7 @@ if [ "$1" == "controller" ]
 		echo "MySQL Command is:: "$mysql_command
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 		
-		create-user-service nova $3 nova '"OpenStack Compute"' compute
+		create-user-service nova $3 nova OpenStackCompute compute
 		
 		openstack endpoint create \
 		--publicurl http://$2:8774/v2/%\(tenant_id\)s \
@@ -52,7 +52,7 @@ configure-oslo-messaging /etc/nova/nova.conf $2 openstack $4
 
 crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 
-configure-keystone-authentication /etc/nova/nova.conf $4 nova $6
+configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
 eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP Address: $eth0_ip"

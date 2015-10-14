@@ -38,7 +38,7 @@ if [ "$1" == "controller" ]
 		
 		echo_and_sleep "About to start Ceilometer setup-config"
 
-		create-user-service ceilometer $4 ceilometer '"Telemetry"' metering
+		create-user-service ceilometer $4 ceilometer OpenStackTelemetry metering
 		
 		openstack endpoint create \
 		--publicurl http://$2:8777 \
@@ -55,7 +55,7 @@ crudini --set /etc/ceilometer/ceilometer.conf DEFAULT rpc_backend rabbit
 configure-oslo-messaging $2 openstack $3
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT auth_strategy keystone
 
-configure-keystone-authentication $2 ceilometer $4
+configure-keystone-authentication /etc/ceilometer/ceilometer.conf $2 ceilometer $4
 
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_auth_url http://$2:5000/v2.0
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_tenant_name service

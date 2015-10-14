@@ -17,6 +17,5 @@ grep "ALLOWED_HOSTS" /etc/openstack-dashboard/local_settings.py
 grep "OPENSTACK_HOST" /etc/openstack-dashboard/local_settings.py
 echo_and_sleep "Restarting apache2" 3
 service apache2 reload
-service apache2 restart
 echo_and_sleep "Restarting memcached" 3
 service memcached restart
