@@ -52,7 +52,7 @@ if [ "$1" == "controller" ]
 fi
 
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT rpc_backend rabbit
-configure-oslo-messaging $2 openstack $3
+configure-oslo-messaging /etc/ceilometer/ceilometer.conf $2 openstack $3
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT auth_strategy keystone
 
 configure-keystone-authentication /etc/ceilometer/ceilometer.conf $2 ceilometer $4

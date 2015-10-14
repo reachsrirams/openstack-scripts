@@ -32,20 +32,26 @@ fi
 if [ "$1" == "controller" ] 
 	then
 		echo_and_sleep "About to configure Controller"	
-		
-		echo "Updating MySQL Config File..."
-		sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/mariadb.conf.d/mysqld.cnf
+                mysql_conf_file="/etc/mysql/mariadb.conf.d/mysqld.cnf"
+                if [ -f "$mysql_conf_file" ]
+                then
+			echo_and_sleep “Maria DB Conf file found” 2
+                else
+                        mysql_conf_file="/etc/mysql/my.cnf"
+                fi
+                echo "Updating MySQL Config File...: $mysql_conf_file"
+		sed -i "s/127.0.0.1/0.0.0.0/g" $mysql_conf_file
 		echo_and_sleep "Updated Bind Address" 2
-		grep "bind" /etc/mysql/mariadb.conf.d/mysqld.cnf
+		grep "bind" $mysql_conf_file
 		
 		sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
 				innodb_file_per_table\\
 				collation-server = utf8_general_ci\\
 				init-connect = 'SET NAMES utf8'\\
 				character-set-server = utf8\\
-		" /etc/mysql/mariadb.conf.d/mysqld.cnf
+		" $mysql_conf_file
 		echo_and_sleep "Updated other MySQL Parameters" 2
-		grep "storage-engine" /etc/mysql/mariadb.conf.d/mysqld.cnf
+		grep "storage-engine" $mysql_conf_file
 		
 		echo_and_sleep "Restarting MySQL and securing installation..."
 		service mysql restart;

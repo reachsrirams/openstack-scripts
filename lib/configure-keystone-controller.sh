@@ -66,7 +66,7 @@ export OS_TOKEN=$admin_token_parameter
 export OS_URL=http://$4:35357/v2.0
 echo_and_sleep "Set environment variables" 1
 
-openstack service create --name keystone --description "OpenStack Identity" identity
+openstack service create --name keystone --description "OpenStackIdentity" identity
 echo_and_sleep "Created Identity Service"
 
 openstack endpoint create \

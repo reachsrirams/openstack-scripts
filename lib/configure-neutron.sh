@@ -57,11 +57,15 @@ if [ "$1" == "controller" ]
 		crudini --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_status_changes True
 		crudini --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_url http://$2:8774/v2
-		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_auth_url http://$2:35357/v2.0
-		crudini --set /etc/neutron/neutron.conf DEFAULT nova_region_name RegionOne
-		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_username nova
-		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_tenant_id $8
-		crudini --set /etc/neutron/neutron.conf DEFAULT nova_admin_password $4
+
+		crudini --set /etc/neutron/neutron.conf nova auth_url http://$2:35357/v2.0
+		crudini --set /etc/neutron/neutron.conf nova auth_plugin password
+		crudini --set /etc/neutron/neutron.conf nova project_domain_id default
+		crudini --set /etc/neutron/neutron.conf nova user_domain_id default
+		crudini --set /etc/neutron/neutron.conf nova region_name RegionOne
+		crudini --set /etc/neutron/neutron.conf nova project_name service
+		crudini --set /etc/neutron/neutron.conf nova username nova
+		crudini --set /etc/neutron/neutron.conf nova password $4
 fi
 
 echo_and_sleep "Configuring ML2 INI file"
@@ -114,9 +118,15 @@ if [ "$1" == "networknode" ]
 		echo_and_sleep "Configuring DHCP Agent Information" 1
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT dhcp_driver neutron.agent.linux.dhcp.Dnsmasq
-		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT use_namespaces True
+		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT dhcp_delete_namespaces True
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
 		echo_and_sleep "Configured DHCP Agent Information" 2
+
+		echo_and_sleep "Configuring Metadata Agent Information in Network Node" 1
+		configure-keystone-authentication /etc/neutron/metadata_agent.ini $2 neutron $4
+		crudini --set /etc/neutron/metadata_agent.ini DEFAULT nova_metadata_ip $2
+		crudini --set /etc/neutron/metadata_agent.ini DEFAULT metadata_proxy_shared_secret password
+		echo_and_sleep "Configured Metadata Agent Information in Network Node" 2
 fi
 		
 echo_and_sleep "Restarting Neutron related services" 2
@@ -126,13 +136,15 @@ echo_and_sleep "Restarted OVS Service..." 2
 if [ "$1" == "controller" ]
 	then
 		echo_and_sleep "Configured Security Group for ML2. About to Upgrade Neutron DB..."
-		neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno
+		neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
 		echo_and_sleep "Restarting Neutron Service..."
 		service nova-api restart
 		service nova-scheduler restart
 		service nova-conductor restart
 		service neutron-server restart
 		print_keystone_service_list
+		neutron ext-list
+		echo_and_sleep "Printed Neutron Extension List" 2
 elif [ "$1" == "compute" ]
 	then
 		service nova-compute restart

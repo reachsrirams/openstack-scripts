@@ -15,7 +15,7 @@ mysql -u "$2" -p"$3" -e "$mysql_command"
 source $(dirname $0)/admin_openrc.sh
 echo_and_sleep "Called Source Admin OpenRC"
 
-create-user-service glance $6 glance Image image
+create-user-service glance $6 glance OpenStackImage image
 
 openstack endpoint create \
 --publicurl http://$4:9292 \
