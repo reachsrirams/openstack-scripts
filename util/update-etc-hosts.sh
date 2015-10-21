@@ -1,4 +1,4 @@
-function change-ip-etc-host() {
+function change-ip-in-etc-hosts() {
 	if [ $# -lt 2 ]
         	then
                 	echo "Correct syntax: change-ip-etc-host <hostname> <new-ip-address>"
@@ -44,7 +44,7 @@ if [ "$node_type" == "controller" ] || [ "$node_type" = "controller_networknode"
 		if [ $# -eq 1 ]
 			then
 				echo "Adding controller node info to /etc/hosts"
-				change-ip-in-etc-hosts.sh $1 $local_ip_address
+				change-ip-in-etc-hosts $1 $local_ip_address
 		else
 			echo "Correct syntax: $0 <controller-host-name>"
 			exit 1;
@@ -54,10 +54,10 @@ elif [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
 		if [ $# -eq 2 ]
 			then
 				echo "Updating local node IP address to /etc/hosts"
-				change-ip-in-etc-hosts.sh $local_host_name $local_ip_address
+				change-ip-in-etc-hosts $local_host_name $local_ip_address
 	
 				echo "Updating controller IP address to /etc/hosts"
-				change-ip-in-etc-hosts.sh $1 $2
+				change-ip-in-etc-hosts $1 $2
 		else
 			echo "Correct syntax: $0 <controller-host-name> <controller-ip-address>"
 			exit 1;
