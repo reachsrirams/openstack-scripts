@@ -68,6 +68,8 @@ function restart-controller-services() {
 		sleep 5
 		service rabbitmq-server restart
 		sleep 3
+		restart-controller-horizon
+		sleep 2
 		service keystone restart
 		sleep 2
 		restart-controller-glance
@@ -75,8 +77,6 @@ function restart-controller-services() {
 		restart-controller-nova
 		sleep 2
 		restart-controller-neutron
-		sleep 2
-		restart-controller-horizon
 		sleep 2
 		service ceilometer-api restart
 	fi
