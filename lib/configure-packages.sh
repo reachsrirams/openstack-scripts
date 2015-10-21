@@ -67,7 +67,7 @@ if [ "$1" == "controller" ]
 		
 				
 		echo_and_sleep "About to setup KeyStone..."
-		bash $(dirname $0)/configure-keystone-controller.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
+		bash $(dirname $0)/configure-keystone.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
 		
 		echo_and_sleep "About to setup Glance..."
 		bash $(dirname $0)/configure-glance.sh $glance_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password $glance_password
@@ -82,7 +82,7 @@ if [ "$1" == "controller" ]
 		bash $(dirname $0)/configure-neutron.sh controller $controller_host_name $rabbitmq_password $neutron_password $neutron_db_password $mysql_user $mysql_password $service_tenant_id
 		
 		echo_and_sleep "About to setup Horizon-Dashboard"
-		bash $(dirname $0)/configure-horizon-controller.sh $controller_host_name
+		bash $(dirname $0)/configure-horizon.sh $controller_host_name
 		
 		echo_and_sleep "About to setup Ceilometer..."
 		bash $(dirname $0)/configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
