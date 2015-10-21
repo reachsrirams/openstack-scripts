@@ -56,7 +56,7 @@ You can remove all the OpenStack packages using `sudo bash remove.sh`. The **nod
 
 ## Restarting OpenStack services ##
 
-Restarting OpenStack services is needed at times - especially when config file entries are changed. You can execute `sudo bash restart.sh` to do this. The **node type** is detected automatically.
+Restarting OpenStack services is needed at times - especially when config file entries are changed. You can execute `sudo bash manage-services.sh` to do this. The **node type** is detected automatically.
 
 ## Updating /etc/hosts file ##
 
