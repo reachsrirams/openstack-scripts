@@ -1,3 +1,31 @@
+function change-ip-etc-host() {
+	if [ $# -lt 2 ]
+        	then
+                	echo "Correct syntax: change-ip-etc-host <hostname> <new-ip-address>"
+                	exit 1;
+	fi
+	if [ -z "$3" ]
+        	then
+                	hosts_file_name="/etc/hosts"
+        	else
+                	hosts_file_name=$3
+	fi
+	echo "Host File is: $hosts_file_name"
+	grep -w " $1" $hosts_file_name
+	if [ $? -eq 0 ] ;
+        	then
+                	echo "controller found - going to remove it"
+                	sed_command="/ $1/d"
+			echo "SED Command is:: "$sed_command
+                	sed -i "$sed_command" $hosts_file_name
+	fi
+	echo "$2        $1" >> $hosts_file_name
+	echo "After update $hosts_file_name contents..."
+	grep -w " $1" $hosts_file_name
+	sleep 2
+}
+
+
 echo "Running: $0 $@"
 dir_path=$(dirname $0)
 
@@ -16,7 +44,7 @@ if [ "$node_type" == "controller" ] || [ "$node_type" = "controller_networknode"
 		if [ $# -eq 1 ]
 			then
 				echo "Adding controller node info to /etc/hosts"
-				bash $dir_path/change-ip-in-etc-hosts.sh $1 $local_ip_address
+				change-ip-in-etc-hosts.sh $1 $local_ip_address
 		else
 			echo "Correct syntax: $0 <controller-host-name>"
 			exit 1;
@@ -26,10 +54,10 @@ elif [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
 		if [ $# -eq 2 ]
 			then
 				echo "Updating local node IP address to /etc/hosts"
-				bash $dir_path/change-ip-in-etc-hosts.sh $local_host_name $local_ip_address
+				change-ip-in-etc-hosts.sh $local_host_name $local_ip_address
 	
 				echo "Updating controller IP address to /etc/hosts"
-				bash $dir_path/change-ip-in-etc-hosts.sh $1 $2
+				change-ip-in-etc-hosts.sh $1 $2
 		else
 			echo "Correct syntax: $0 <controller-host-name> <controller-ip-address>"
 			exit 1;

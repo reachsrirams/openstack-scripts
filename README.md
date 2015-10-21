@@ -48,7 +48,7 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
 The install scripts use a name for the controller (defined in `config-parameters.sh` script). This name needs to be updated in the /etc/hosts file. Also to view the VNC console of an instance, it is convenient to use IP address in the Nova configuration file. All these changes can be done using `util/update-ip.sh` script. 
 
 Usage: `sudo bash util/update-ip.sh <controller-host-name> <controller-ip>`. 
-The second parameter is used only for compute nodes.
+The second parameter is used for network nodes and compute nodes.
 
 ## Removing OpenStack packages ##
 
