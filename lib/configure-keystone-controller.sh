@@ -52,7 +52,7 @@ echo_and_sleep "Restarting KeyStone Service" 2
 service keystone restart
 
 echo_and_sleep "Restarting Apache Service" 2
-service apache2 restart
+service apache2 reload
 
 echo "Removing KeyStone MySQL-Lite Database..."
 rm -f /var/lib/keystone/keystone.db
