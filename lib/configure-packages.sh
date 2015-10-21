@@ -1,7 +1,8 @@
 function print-configure-bridge-message() {
 	echo "*********************************************************************************"
         echo "If you configured OVS as the Neutron ML2 mechanism driver, do not forget to run the following command:"
-        echo "configure-ovs-bridge.sh <interfacename> <bridgename> <physnetname>"
+        echo "$(dirname $0)/configure-ovs-bridge.sh <interfacename>" 
+	echo "Example: $(dirname $0)/configure-ovs-bridge.sh eth1"
 	echo "*********************************************************************************"
 }
 
