@@ -26,7 +26,6 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
 
 1. Update lib/config-parameters.sh script 
    - Change the hostname to be used for controller. This name will be used in all configuration files. 
-   - You will need to use this name to update the /etc/hosts file for correct lookups. The `util/update-etc-hosts.sh` script can be used for this purpose.
    - Change passwords as necessary 
 
 2. Install common packages
@@ -40,7 +39,11 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
    - If the node is of type allinone, execute `sudo bash install.sh allinone`
    - **Note - during the installation of MariaDB, you will be required to enter DB password manually**
 
-4. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
+4. Add the host name of the controller to /etc/hosts. By default the script uses "controller" as the host name. If you had changed the name in Step 1 above, you need to use that.
+   - Execute `sudo bash util/update-etc-hosts.sh <hostname_of_controller>` if the node type is controller.
+   - Execute `sudo bash util/update-etc-hosts.sh <hostname_of_controller> <ip_ofcontroller>` if the node type is either compute or a network node.
+
+5. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
    - **Note - during the configuration of MariaDB, you will be required to confirm few DB clean up operations manually** 
 
 ## Updating IP Address ##

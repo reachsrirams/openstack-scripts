@@ -36,7 +36,7 @@ if [ "$1" == "controller" ]
                 mysql_conf_file="/etc/mysql/mariadb.conf.d/mysqld.cnf"
                 if [ -f "$mysql_conf_file" ]
                 then
-			echo_and_sleep “Maria DB Conf file found” 2
+			echo_and_sleep "Maria DB Conf file found" 2
                 else
                         mysql_conf_file="/etc/mysql/my.cnf"
                 fi

@@ -49,7 +49,6 @@ function manage-networknode-services() {
 function manage-controller-neutron() {
 	service neutron-server $1
 	sleep 2
-	manage-networknode-services $1
 }
 
 function manage-controller-services() {
