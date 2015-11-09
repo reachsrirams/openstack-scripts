@@ -68,6 +68,8 @@ function manage-controller-services() {
 		sleep 5
 		service rabbitmq-server $2
 		sleep 3
+		manage-controller-horizon $2
+		sleep 2
 		service keystone $2
 		sleep 2
 		manage-controller-glance $2
@@ -75,8 +77,6 @@ function manage-controller-services() {
 		manage-controller-nova $2
 		sleep 2
 		manage-controller-neutron $2
-		sleep 2
-		manage-controller-horizon $2
 		sleep 2
 		service ceilometer-api $2
 	fi
