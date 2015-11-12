@@ -1,14 +1,14 @@
 source $(dirname $0)/config-parameters.sh
 
-glance_image_name="cirros-0.3.3-x86_64"
+glance_image_name="cirros-0.3.4-x86_64"
 if [ ! -z $1 ]
 	then
 		glance_image_name=$1
 fi
 
 echo_and_sleep "About to add cirros image to Glance"
-cirros_image_name="cirros-0.3.3-x86_64-disk.img"
-wget_url_for_cirros="http://cdn.download.cirros-cloud.net/0.3.3/"$cirros_image_name
+cirros_image_name="cirros-0.3.4-x86_64-disk.img"
+wget_url_for_cirros="http://download.cirros-cloud.net/0.3.4/"$cirros_image_name
 echo_and_sleep "Cirros Image URL: $wget_url_for_cirros"
 wget $wget_url_for_cirros
 source $(dirname $0)/admin_openrc.sh
