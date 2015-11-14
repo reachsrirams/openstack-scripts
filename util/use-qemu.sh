@@ -3,7 +3,7 @@ echo "Node Type detected as: $node_type"
 
 if [ "$node_type" == "compute" ] || [ "$node_type" == "allinone" ]
 	then
-		egrep ‘(vmx|svm)’ /proc/cpuinfo
+		egrep '(vmx|svm)' /proc/cpuinfo
 		if [ $? -eq 1 ]
 			then
 				echo "Virtualization Extensions not available - using QEMU" 
