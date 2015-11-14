@@ -31,6 +31,8 @@ if [ "$1" == "compute" ]
 
 		print-configure-bridge-message
 		bash $(dirname $0)/configure-ovs-bridge.sh $data_interface
+
+		bash $(dirname $0)/configure-qemu.sh
 fi
 
 if [ "$1" == "controller" ] 
