@@ -1,4 +1,5 @@
 echo "Running: $0 $@"
+sleep 10
 source $(dirname $0)/config-parameters.sh
 
 echo "Bridge Mapping for OVS: "$neutron_ovs_bridge_mappings

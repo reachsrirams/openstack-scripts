@@ -28,6 +28,9 @@ if [ "$1" == "compute" ]
 		
 		echo_and_sleep "About to configure Ceilometer for Compute" 3
 		bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
+
+		print-configure-bridge-message
+		bash $(dirname $0)/configure-ovs-bridge.sh $data_interface
 fi
 
 if [ "$1" == "controller" ] 
@@ -66,7 +69,6 @@ if [ "$1" == "controller" ]
 		echo_and_sleep "Configured Permissions in Rabbit MQ"
 		service rabbitmq-server restart
 		
-				
 		echo_and_sleep "About to setup KeyStone..."
 		bash $(dirname $0)/configure-keystone.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
 		
@@ -97,5 +99,6 @@ if [ "$1" == "networknode" ]
 		echo_and_sleep "About to configure Neutron for Network Node" 2
 		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password
 
+		print-configure-bridge-message
+		bash $(dirname $0)/configure-ovs-bridge.sh $data_interface
 fi
-print-configure-bridge-message

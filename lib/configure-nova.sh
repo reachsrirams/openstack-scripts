@@ -54,7 +54,7 @@ crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 
 configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
-eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+eth0_ip=`ifconfig $mgmt_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "eth0 IP Address: $eth0_ip"
 sleep 2
 crudini --set /etc/nova/nova.conf DEFAULT my_ip $eth0_ip

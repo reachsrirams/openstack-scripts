@@ -1,5 +1,10 @@
 controller_host_name="controller"
 
+### Start - interface related settings
+readonly mgmt_interface="eth0"
+readonly data_interface="eth1"
+### End - interface related settings
+
 ### Start - Neutron related settings
 
 readonly neutron_ml2_type_drivers="vlan"
@@ -58,7 +63,7 @@ function echo_and_sleep() {
 
 function print_keystone_service_list() {
 	echo_and_sleep "About to print Keystone Service List" 2
-	keystone service-list
+	openstack service list --long
 	echo_and_sleep "Printed Keystone Service List" 5
 }
 
