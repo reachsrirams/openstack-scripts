@@ -13,16 +13,16 @@ fi
 
 
 function update-nova-config-ip() {
-	eth0_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-	echo "Local Node IP: $eth0_ip"
+	mgmg_interface_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+	echo "Local Node IP: $mgmg_interface_ip"
 	sleep 2
 
-	crudini --set /etc/nova/nova.conf DEFAULT my_ip $eth0_ip
-	crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $eth0_ip
+	crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmg_interface_ip
+	crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $mgmg_interface_ip
 
 	if [ "$1" == "controller" ]
 		then
-			crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $eth0_ip
+			crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $mgmg_interface_ip
 			sleep 2
 			service nova-novncproxy restart
 		else
