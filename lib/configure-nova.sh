@@ -54,15 +54,15 @@ crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 
 configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
-eth0_ip=`ifconfig $mgmt_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-echo "eth0 IP Address: $eth0_ip"
+mgmt_interface_ip=`ifconfig $mgmt_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+echo "Mgmt Interface IP Address: $mgmt_interface_ip"
 sleep 2
-crudini --set /etc/nova/nova.conf DEFAULT my_ip $eth0_ip
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $eth0_ip
+crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmt_interface_ip
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $mgmt_interface_ip
 
 if [ "$1" == "controller" ]
 	then
-		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $eth0_ip
+		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $mgmt_interface_ip
 		crudini --set /etc/nova/nova.conf DEFAULT scheduler_default_filters AllHostsFilter
 elif [ "$1" == "compute" ]
 	then
