@@ -102,7 +102,11 @@ if [ "$1" == "compute" -o "$1" == "controller" ]
 		crudini --set /etc/nova/nova.conf neutron admin_tenant_name service
 		crudini --set /etc/nova/nova.conf neutron admin_username neutron
 		crudini --set /etc/nova/nova.conf neutron admin_password $4
-		echo_and_sleep "Configured Nova to use Neutron - neutron section"
+		echo_and_sleep "Configured Nova to use Neutron - neutron section" 1
+		echo_and_sleep "Configuring Metadata info on NOVA " 1
+		crudini --set /etc/nova/nova.conf neutron service_metadata_proxy True
+		crudini --set /etc/nova/nova.conf neutron metadata_proxy_shared_secret password
+
 fi
 
 if [ "$1" == "networknode" ]
@@ -123,9 +127,16 @@ if [ "$1" == "networknode" ]
 		echo_and_sleep "Configured DHCP Agent Information" 2
 
 		echo_and_sleep "Configuring Metadata Agent Information in Network Node" 1
-		configure-keystone-authentication /etc/neutron/metadata_agent.ini $2 neutron $4
 		crudini --set /etc/neutron/metadata_agent.ini DEFAULT nova_metadata_ip $2
 		crudini --set /etc/neutron/metadata_agent.ini DEFAULT metadata_proxy_shared_secret password
+		crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_uri http://$2:5000
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_url http://$2:35357
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_plugin password
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT project_domain_id default
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT user_domain_id default
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT project_name service
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT username neutron
+        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT password $4
 		echo_and_sleep "Configured Metadata Agent Information in Network Node" 2
 fi
 		
