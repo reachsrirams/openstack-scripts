@@ -32,7 +32,7 @@ dir_path=$(dirname $0)
 node_type=`bash $(dirname $0)/detect-nodetype.sh`
 echo "Local host type is: $node_type"
 
-local_ip_address=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+local_ip_address=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 echo "Local host IP is: $local_ip_address"
 
 local_host_name=`hostname`
@@ -41,25 +41,25 @@ sleep 3
 
 if [ "$node_type" == "controller" ] || [ "$node_type" = "controller_networknode" ]
 	then
-		if [ $# -eq 1 ]
+		if [ $# -eq 2 ]
 			then
 				echo "Adding controller node info to /etc/hosts"
-				change-ip-in-etc-hosts $1 $local_ip_address
+				change-ip-in-etc-hosts $2 $local_ip_address
 		else
-			echo "Correct syntax: $0 <controller-host-name>"
+			echo "Correct syntax: $0 <mgmt-interface-name> <controller-host-name>"
 			exit 1;
 		fi
 elif [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
 	then
-		if [ $# -eq 2 ]
+		if [ $# -eq 3 ]
 			then
 				echo "Updating local node IP address to /etc/hosts"
 				change-ip-in-etc-hosts $local_host_name $local_ip_address
 	
 				echo "Updating controller IP address to /etc/hosts"
-				change-ip-in-etc-hosts $1 $2
+				change-ip-in-etc-hosts $2 $3
 		else
-			echo "Correct syntax: $0 <controller-host-name> <controller-ip-address>"
+			echo "Correct syntax: $0 <mgmt-interface-name> <controller-host-name> <controller-ip-address>"
 			exit 1;
 		fi
 else
