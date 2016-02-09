@@ -5,25 +5,27 @@ function install-common-packages() {
 
 	echo "About to install NTP Server"
 	sleep 3
-	apt-get install ntp -y
-	service ntp restart
+	apt-get install chrony -y
+	service chrony restart
 	
-	echo "About to configure APT for Kilo"
+	echo "About to configure APT for Liberty"
 	sleep 3
 	rm -f /etc/apt/sources.list.d/cloudarchive-juno.list
-	apt-get install ubuntu-cloud-keyring -y
-	echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
-  	"trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list
+	rm -f /etc/apt/sources.list.d/cloudarchive-kilo.list
+	apt-get install software-properties-common -y
+	add-apt-repository cloud-archive:liberty
+
 	echo "Doing full system update"
 	sleep 3
 	apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
 	apt-get autoremove -y
+	apt-get install python-openstackclient
 }
 
 function install-controller-packages() {
-	echo "Installing MariaDB..."
-	sleep 3
-	apt-get install mariadb-server python-mysqldb -y
+	echo "Installing MariaDB and MongoDB..."
+	apt-get install mariadb-server python-pymysql -y
+	apt-get install mongodb-server mongodb-clients python-pymongo -y
 	
 	echo "Installing RabbitMQ..." 
 	sleep 3
@@ -32,8 +34,7 @@ function install-controller-packages() {
 	echo "Installing Keystone..."
 	echo "manual" > /etc/init/keystone.override
 	sleep 3
-	apt-get install keystone python-openstackclient python-keystoneclient -y
-	apt-get install apache2 libapache2-mod-wsgi memcached python-memcache -y
+	apt-get install keystone apache2 libapache2-mod-wsgi memcached python-memcache -y
 	
 	echo "Installing Glance..."
 	sleep 2
@@ -46,7 +47,9 @@ function install-controller-packages() {
 	
 	echo "Installing Neutron for Controller"
 	sleep 2
-	apt-get install neutron-server neutron-plugin-ml2 python-neutronclient -y
+	apt-get install neutron-server neutron-plugin-ml2 \
+  		neutron-plugin-linuxbridge-agent neutron-dhcp-agent \
+  		neutron-metadata-agent python-neutronclient conntrack -y
 
 	echo "Installing Cinder for Controller"
 	sleep 2
@@ -63,6 +66,11 @@ function install-controller-packages() {
 	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
 	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
 	python-ceilometerclient -y
+
+	echo "Installing Heat for Controller..."
+	sleep 2
+	apt-get install apt-get install heat-api heat-api-cfn heat-engine \
+  				python-heatclient -y
 
 	apt-get autoremove -y
 }
@@ -82,7 +90,7 @@ function install-compute-packages() {
 
 	echo "About to install Neutron for Compute"
 	sleep 2
-	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
+	apt-get install neutron-plugin-linuxbridge-agent conntrack -y
 	
 	echo "About to install Ceilometer for Compute"
 	sleep 2
