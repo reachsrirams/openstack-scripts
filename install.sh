@@ -19,7 +19,7 @@ function install-common-packages() {
 	sleep 3
 	apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
 	apt-get autoremove -y
-	apt-get install python-openstackclient
+	apt-get install python-openstackclient -y
 }
 
 function install-controller-packages() {
