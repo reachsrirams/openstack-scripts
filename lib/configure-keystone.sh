@@ -18,15 +18,15 @@ sleep 1
 grep "admin_token" /etc/keystone/keystone.conf
 sleep 2
 
-crudini --set /etc/keystone/keystone.conf database connection mysql://keystone:$1@$4/keystone
+crudini --set /etc/keystone/keystone.conf database connection mysql+pymysql://keystone:$1@$4/keystone
 
 crudini --set /etc/keystone/keystone.conf memcache servers localhost:11211
 echo_and_sleep "New in Kilo - Memcache configuration" 2
 
-crudini --set /etc/keystone/keystone.conf token provider keystone.token.providers.uuid.Provider
-crudini --set /etc/keystone/keystone.conf token driver keystone.token.persistence.backends.memcache.Token
+crudini --set /etc/keystone/keystone.conf token provider uuid
+crudini --set /etc/keystone/keystone.conf token driver memcache
 
-crudini --set /etc/keystone/keystone.conf revoke driver keystone.contrib.revoke.backends.sql.Revoke
+crudini --set /etc/keystone/keystone.conf revoke driver sql
 echo_and_sleep "New in Kilo - SQL Revoke configuration" 2
 
 grep "mysql" /etc/keystone/keystone.conf
@@ -39,11 +39,6 @@ ls -al /etc/apache2/sites-available | grep key
 echo_and_sleep "Added Keystone file under Apache" 3
 
 ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled
-mkdir -p /var/www/cgi-bin/keystone
-curl http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=stable/kilo \
-  | tee /var/www/cgi-bin/keystone/main /var/www/cgi-bin/keystone/admin
-chown -R keystone:keystone /var/www/cgi-bin/keystone
-chmod 755 /var/www/cgi-bin/keystone/*
 
 echo_and_sleep "Populate Identity Service Database" 2
 keystone-manage db_sync
@@ -64,34 +59,33 @@ ystone-tokenflush.log 2>&1' >> /var/spool/cron/crontabs/keystone
 echo_and_sleep "Setting environment variables" 1
 export OS_TOKEN=$admin_token_parameter
 export OS_URL=http://$4:35357/v2.0
+export OS_IDENTITY_API_VERSION=3
 echo_and_sleep "Set environment variables" 1
 
 openstack service create --name keystone --description "OpenStackIdentity" identity
 echo_and_sleep "Created Identity Service"
 
-openstack endpoint create \
---publicurl http://$4:5000/v2.0 \
---internalurl http://$4:5000/v2.0 \
---adminurl http://$4:35357/v2.0 \
---region RegionOne \
-identity
+openstack endpoint create --region RegionOne identity public http://$4:5000/v2.0
+openstack endpoint create --region RegionOne identity internal http://$4:5000/v2.0
+openstack endpoint create --region RegionOne identity admin http://$4:35357/v2.0
+
 echo_and_sleep "Added Identity Endpoint and about to restart keystone" 2
 service keystone restart
 echo_and_sleep "Keystone service restarted" 2
 
-openstack project create --description "Admin Project" admin
-openstack user create --password $5 admin
+openstack project create --domain default --description "Admin Project" admin
+openstack user create --domain default --password $5 admin
 echo_and_sleep "Created Admin Project and User" 2
 
 openstack role create admin
 openstack role add --project admin --user admin admin
 echo_and_sleep "Created and added Admin Role" 2
 
-openstack project create --description "Service Project" service
+openstack project create --domain default --description "Service Project" service
 echo_and_sleep "Configured Service Project" 2
 
-openstack project create --description "Demo Project" demo
-openstack user create --password password demo
+openstack project create --domain default --description "Demo Project" demo
+openstack user create --domain default --password password demo
 openstack role create user
 openstack role add --project demo --user demo user
 echo_and_sleep "Configured Demo Tenant and Role" 2
