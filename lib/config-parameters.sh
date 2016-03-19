@@ -91,10 +91,21 @@ function configure-oslo-messaging() {
 function create-user-service() {
 	echo "Called create-user-service with paramters: $@"
 	sleep 5
-	openstack user create --password $2 $1
+	openstack user create --domain default --password $2 $1
 	echo_and_sleep "Created User $1"
 	openstack role add --project service --user $1 admin
 	echo_and_sleep "Created Tenant $1"
 	openstack service create --name $3 --description $4 $5
 	echo_and_sleep "Created Service $4"
+}
+
+function create-api-endpoints() {
+	echo "Called create-api-endpoints with parameters: $@"
+	sleep 5
+	openstack endpoint create --region RegionOne $1 public $2
+	echo_and_sleep "Created public endpoint"
+	openstack endpoint create --region RegionOne $1 internal $2
+	echo_and_sleep "Created admin endpoint"
+	openstack endpoint create --region RegionOne $1 admin $2
+	echo_and_sleep "Created admin endpoint"
 }
