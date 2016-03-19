@@ -30,15 +30,10 @@ if [ "$1" == "controller" ]
 		
 		create-user-service nova $3 nova OpenStackCompute compute
 		
-		openstack endpoint create \
-		--publicurl http://$2:8774/v2/%\(tenant_id\)s \
-		--internalurl http://$2:8774/v2/%\(tenant_id\)s \
-		--adminurl http://$2:8774/v2/%\(tenant_id\)s \
-		--region RegionOne \
-		compute
+		create-api-endpoints compute http://$2:8774/v2/%\(tenant_id\)s
 		echo_and_sleep "Created Endpoint for Nova" 2
 		
-		crudini --set /etc/nova/nova.conf database connection mysql://nova:$5@$2/nova
+		crudini --set /etc/nova/nova.conf database connection mysql+pymysql://nova:$5@$2/nova
 		echo_and_sleep "Configured NOVA DB Connection" 2
 
 fi
@@ -58,26 +53,28 @@ mgmt_interface_ip=`ifconfig $mgmt_interface | grep 'inet addr:' | cut -d: -f2 | 
 echo "Mgmt Interface IP Address: $mgmt_interface_ip"
 sleep 2
 crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmt_interface_ip
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $mgmt_interface_ip
+crudini --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
+crudini --set /etc/nova/nova.conf DEFAULT security_group_api neutron
+crudini --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.NeutronLinuxBridgeInterfaceDriver
+crudini --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
+
+crudini --set /etc/nova/nova.conf vnc vncserver_proxyclient_address $mgmt_interface_ip
 
 if [ "$1" == "controller" ]
 	then
-		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $mgmt_interface_ip
+		crudini --set /etc/nova/nova.conf vnc vncserver_listen $mgmt_interface_ip
 		crudini --set /etc/nova/nova.conf DEFAULT scheduler_default_filters AllHostsFilter
 elif [ "$1" == "compute" ]
 	then
-		crudini --set /etc/nova/nova.conf DEFAULT vnc_enabled True
-		crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 0.0.0.0
-		crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$2:6080/vnc_auto.html
+		crudini --set /etc/nova/nova.conf vnc enabled True
+		crudini --set /etc/nova/nova.conf vnc vncserver_listen 0.0.0.0
+		crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$2:6080/vnc_auto.html
 fi
 
 crudini --set /etc/nova/nova.conf glance host $2
 crudini --set /etc/nova/nova.conf oslo_concurrency lock_path /var/lib/nova/tmp
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
 echo_and_sleep "Updated NOVA Configuration File" 2
-
-echo_and_sleep "Removing Nova MySQL-Lite Database" 3
-rm -f /var/lib/nova/nova.sqlite
 
 if [ "$1" == "controller" ]
 	then
@@ -95,6 +92,9 @@ elif [ "$1" == "compute" ]
 		echo "Restarting Nova Service"
 		service nova-compute restart
 fi
+
+echo_and_sleep "Removing Nova MySQL-Lite Database" 3
+rm -f /var/lib/nova/nova.sqlite
 
 if [ "$1" == "controller" ]
 	then
