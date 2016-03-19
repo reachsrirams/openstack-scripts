@@ -19,20 +19,28 @@ if [ "$1" == "compute" ] && [ $# -ne 5 ]
 		exit 1;
 fi
 		
-function update_mongodb_bind_address() {
+function update_mongodb_config_file() {
 	echo "Updating Bind IP in MongoDB Config File"
 	sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mongodb.conf
 	grep "bind" /etc/mongodb.conf
 	echo_and_sleep "Updated Bind Address" 2
+	echo "smallfiles = true" >> /etc/mongodb.conf
+	grep "smallfiles" /etc/mongodb.conf
+	sleep 2
 }
 
 source $(dirname $0)/admin_openrc.sh
 
 if [ "$1" == "controller" ]
 	then
-		update_mongodb_bind_address
+		update_mongodb_config_file
+		echo_and_sleep "Stopping Mongo DB"
+		service mongodb stop
+		rm -f /var/lib/mongodb/journal/prealloc.*
 		echo_and_sleep "Starting Mongo DB"
-		service mongodb restart
+		service mongodb start
+
+
 		echo_and_sleep "About to create Ceilometer DB in MongoDB" 6
 		mongo --host controller --eval 'db = db.getSiblingDB("ceilometer"); db.addUser({user:"ceilometer", pwd: "CEILOMETER_DBPASS",roles: [ "readWrite", "dbAdmin" ]})'
 		

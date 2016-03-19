@@ -69,7 +69,7 @@ function install-controller-packages() {
 
 	echo "Installing Heat for Controller..."
 	sleep 2
-	apt-get install apt-get install heat-api heat-api-cfn heat-engine \
+	apt-get install heat-api heat-api-cfn heat-engine \
   				python-heatclient -y
 
 	apt-get autoremove -y
