@@ -131,3 +131,6 @@ else
 	exit 1;
 fi
 
+echo "********************************************"
+echo "NEXT: Execute the update-etc-hosts.sh script"
+echo "********************************************"
