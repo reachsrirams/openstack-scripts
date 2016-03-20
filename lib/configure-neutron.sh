@@ -5,13 +5,13 @@ source $(dirname $0)/admin_openrc.sh
 if [ "$1" != "compute" -a "$1" != "networknode" -a "$1" != "controller" ]
 	then
 		echo "Invalid node type: $1"
-		echo "Correct syntax: $0 [ controller | compute | networknode ]  <controller-host-name> <rabbitmq-password> <neutron-password> <neutron-db-password> <mysql-username> <mysql-password> <service-tenant-id>"
+		echo "Correct syntax: $0 [ controller | compute | networknode ]  <controller-host-name> <rabbitmq-password> <neutron-password> <neutron-db-password> <mysql-username> <mysql-password>"
 		exit 1;
 fi
 
-if [ "$1" == "controller" ] && [ $# -ne 8 ]
+if [ "$1" == "controller" ] && [ $# -ne 7 ]
         then
-		echo "Correct syntax: $0 controller  <controller-host-name> <rabbitmq-password> <neutron-password> <neutron-db-password> <mysql-username> <mysql-password> <service-tenant-id>"
+		echo "Correct syntax: $0 controller <controller-host-name> <rabbitmq-password> <neutron-password> <neutron-db-password> <mysql-username> <mysql-password>"
                 exit 1;
 elif [ "$1" == "compute" ] || [ "$1" == "networknode" ] && [ $# -ne 4 ]
 	then

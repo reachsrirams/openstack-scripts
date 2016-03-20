@@ -71,9 +71,7 @@ if [ "$1" == "controller" ]
 		
 		echo_and_sleep "About to setup Neutron..."
 		source $(dirname $0)/admin_openrc.sh
-		service_tenant_id=`keystone tenant-get service | grep id | cut -d '|' -f3 | tr -s ' '`
-		echo_and_sleep "Service Tenant ID is: $service_tenant_id" 7
-		bash $(dirname $0)/configure-neutron.sh controller $controller_host_name $rabbitmq_password $neutron_password $neutron_db_password $mysql_user $mysql_password $service_tenant_id
+		bash $(dirname $0)/configure-neutron.sh controller $controller_host_name $rabbitmq_password $neutron_password $neutron_db_password $mysql_user $mysql_password
 		
 		echo_and_sleep "About to setup Horizon-Dashboard"
 		bash $(dirname $0)/configure-horizon.sh $controller_host_name
