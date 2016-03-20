@@ -9,12 +9,12 @@ if [ "$node_type" == "allinone" ]
 		bash $dir_path/lib/configure-packages.sh controller 
 		bash $dir_path/lib/configure-packages.sh networknode
 		bash $dir_path/lib/configure-packages.sh compute 
-elif [ "$node_type" == "controller" ] || [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
+elif [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
 	then
 		echo "Configuring packages for: "$node_type
 		sleep 5
 		bash $dir_path/lib/configure-packages.sh $node_type 
-elif [ "$node_type" == "controller_networknode" ]
+elif [ "$node_type" == "controller" ] || [ "$node_type" == "controller_networknode" ]
 	then
 		echo "Configuring packages for Controller and Network Node"
 		sleep 5

@@ -72,14 +72,20 @@ function install-controller-packages() {
 	apt-get install heat-api heat-api-cfn heat-engine \
   				python-heatclient -y
 
+	echo "Installing Network Node Components..."
+	sleep 2
+	install-networknode-packages
+
+	echo "Doing autoremove..."
+	sleep 2
 	apt-get autoremove -y
 }
 
 function install-networknode-packages() {
 	echo "About to install Neutron for Network Node..."
 	sleep 2
-	apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent \
-	neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent -y
+	apt-get install neutron-plugin-ml2 neutron-plugin-linuxbridge-agent \
+	neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent python-neutronclient conntrack -y
 	apt-get autoremove -y
 }
 
@@ -101,7 +107,7 @@ function install-compute-packages() {
 
 if [ $# -ne 1 ]
 	then
-		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode ] "
+		echo "Correct Syntax: $0 [ allinone | controller | compute | networknode ] "
 		exit 1;
 fi
 
@@ -119,15 +125,8 @@ elif [ "$1" == "controller" ] || [ "$1" == "compute" ] || [ "$1" == "networknode
 		echo "Installing packages for: "$1
 		sleep 5
 		install-$1-packages
-elif [ "$1" == "controller_networknode" ]
-	then
-		echo "Installing packages for Controller and Network Node"
-		sleep 5
-		install-common-packages
-		install-controller-packages
-		install-networknode-packages
 else
-	echo "Correct Syntax: $0 [ allinone | controller | compute | networknode | controller_networknode | ]"
+	echo "Correct Syntax: $0 [ allinone | controller | compute | networknode ]"
 	exit 1;
 fi
 
