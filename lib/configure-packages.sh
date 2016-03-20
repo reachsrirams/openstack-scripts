@@ -1,11 +1,3 @@
-function print-configure-bridge-message() {
-	echo "*********************************************************************************"
-        echo "If you configured OVS as the Neutron ML2 mechanism driver, do not forget to run the following command:"
-        echo "sudo bash $(dirname $0)/configure-ovs-bridge.sh <interfacename>" 
-	echo "Example: sudo bash $(dirname $0)/configure-ovs-bridge.sh eth1"
-	echo "*********************************************************************************"
-}
-
 source $(dirname $0)/config-parameters.sh
 if [ $# -ne 1 ]
 	then
@@ -28,9 +20,6 @@ if [ "$1" == "compute" ]
 		
 		echo_and_sleep "About to configure Ceilometer for Compute" 3
 		bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
-
-		print-configure-bridge-message
-		bash $(dirname $0)/configure-ovs-bridge.sh $data_interface
 
 		bash $(dirname $0)/configure-qemu.sh
 fi
@@ -101,6 +90,4 @@ if [ "$1" == "networknode" ]
 		echo_and_sleep "About to configure Neutron for Network Node" 2
 		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password
 
-		print-configure-bridge-message
-		bash $(dirname $0)/configure-ovs-bridge.sh $data_interface
 fi
