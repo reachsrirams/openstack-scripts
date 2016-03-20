@@ -132,5 +132,7 @@ else
 fi
 
 echo "********************************************"
-echo "NEXT: Execute the update-etc-hosts.sh script"
+echo "NEXT STEPS:"
+echo "** Execute the update-etc-hosts.sh script"
+echo "** Update Config Parameters with Overlay Interface Name"
 echo "********************************************"
