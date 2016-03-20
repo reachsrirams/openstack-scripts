@@ -1,4 +1,11 @@
+echo "Running: $0 $@"
 source $(dirname $0)/config-parameters.sh
+if [ $# -lt 1 ]
+        then
+                echo "Correct Syntax: $0 <cotroller-host-name>"
+                exit 1
+fi
+
 echo "Edit /etc/openstack-dashboard/local_settings.py as follows:"
 echo "*********"
 echo "OPENSTACK_HOST = \"controller\"" 
