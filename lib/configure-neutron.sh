@@ -53,7 +53,7 @@ if [ "$1" == "networknode" -o "$1" == "controller" ]
 		crudini --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_url http://$2:8774/v2
 
-		crudini --set /etc/neutron/neutron.conf nova auth_url http://$2:35357/v2.0
+		crudini --set /etc/neutron/neutron.conf nova auth_url http://$2:35357/
 		crudini --set /etc/neutron/neutron.conf nova auth_plugin password
 		crudini --set /etc/neutron/neutron.conf nova project_domain_id default
 		crudini --set /etc/neutron/neutron.conf nova user_domain_id default
@@ -123,7 +123,7 @@ fi
 if [ "$1" == "compute" -o "$1" == "controller" ]
 	then
 		crudini --set /etc/nova/nova.conf neutron url http://$2:9696
-		crudini --set /etc/nova/nova.conf neutron auth_url http://$2:35357/v2.0
+		crudini --set /etc/nova/nova.conf neutron auth_url http://$2:35357
 		crudini --set /etc/nova/nova.conf neutron auth_plugin password
 		crudini --set /etc/nova/nova.conf neutron project_domain_id default
 		crudini --set /etc/nova/nova.conf neutron user_domain_id default

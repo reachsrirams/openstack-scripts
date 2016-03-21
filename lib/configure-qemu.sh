@@ -1,4 +1,4 @@
-node_type=`bash $(dirname $0)/detect-nodetype.sh`
+node_type=`bash $(dirname $0)/../util/detect-nodetype.sh`
 echo "Node Type detected as: $node_type"
 
 if [ "$node_type" == "compute" ] || [ "$node_type" == "allinone" ]
