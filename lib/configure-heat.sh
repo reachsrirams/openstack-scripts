@@ -59,7 +59,7 @@ crudini --set /etc/heat/heat.conf stack_user_domain_name heat
 echo_and_sleep "About to populate Orchestration Service Database" 
 heat-manage db_sync
 
-echo_and_sleep "Restarting Glance Service..." 3
+echo_and_sleep "Restarting Heat Service..." 3
 service heat-api restart
 service heat-api-cfn restart
 service heat-engine restart

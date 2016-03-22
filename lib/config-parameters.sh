@@ -97,7 +97,7 @@ function create-api-endpoints() {
 	openstack endpoint create --region RegionOne $1 public $2
 	echo_and_sleep "Created public endpoint"
 	openstack endpoint create --region RegionOne $1 internal $2
-	echo_and_sleep "Created admin endpoint"
+	echo_and_sleep "Created internal endpoint"
 	openstack endpoint create --region RegionOne $1 admin $2
 	echo_and_sleep "Created admin endpoint"
 }

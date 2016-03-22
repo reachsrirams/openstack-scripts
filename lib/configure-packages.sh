@@ -73,7 +73,7 @@ if [ "$1" == "controller" ]
 		source $(dirname $0)/admin_openrc.sh
 		bash $(dirname $0)/configure-neutron.sh controller $controller_host_name $rabbitmq_password $neutron_password $neutron_db_password $mysql_user $mysql_password
 
-		echo_and_sleep "About to configure Forwarding on controller
+		echo_and_sleep "About to configure Forwarding on controller"
 		bash $(dirname $0)/configure-forwarding.sh controller
 		
 		echo_and_sleep "About to setup Horizon-Dashboard"
@@ -83,7 +83,7 @@ if [ "$1" == "controller" ]
 		bash $(dirname $0)/configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
 
 		echo_and_sleep "About to setup Heat..."
-		echo "Correct Syntax: $0 $heat_db_password $mysql_user $mysql_password $controller_host_name $rabbitmq_password $heat_password
+		bash $(dirname $0)/configure-heat.sh $heat_db_password $mysql_user $mysql_password $controller_host_name $rabbitmq_password $heat_password
 fi
 
 if [ "$1" == "networknode" ]
