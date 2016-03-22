@@ -47,7 +47,7 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
    - Execute `sudo bash util/update-etc-hosts.sh <hostname_of_controller> <ip_ofcontroller>` if the node type is either compute or a network node.
 
 5. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
-   - **Note - during the configuration of MariaDB, you will be required to confirm few DB clean up operations manually** 
+   - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
 ## Updating IP Address ##
 
