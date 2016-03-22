@@ -19,7 +19,6 @@ elif [ "$node_type" == "controller" ] || [ "$node_type" == "controller_networkno
 		echo "Configuring packages for Controller and Network Node"
 		sleep 5
 		bash $dir_path/lib/configure-packages.sh controller 
-		bash $dir_path/lib/configure-packages.sh networknode
 else
 	echo "Unsupported Node Type for $0: $node_type"
 	exit 1;
