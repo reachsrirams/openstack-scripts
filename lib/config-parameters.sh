@@ -32,6 +32,9 @@ readonly neutron_db_password="password"
 readonly ceilometer_password="password"
 readonly ceilometer_db_password="password"
 
+readonly heat_password="password"
+readonly heat_db_password="password"
+
 function echo_and_sleep() {
 	if [ -z "$2" ]
 		then
@@ -83,7 +86,7 @@ function create-user-service() {
 	openstack user create --domain default --password $2 $1
 	echo_and_sleep "Created User $1"
 	openstack role add --project service --user $1 admin
-	echo_and_sleep "Created Tenant $1"
+	echo_and_sleep "Created Role $1"
 	openstack service create --name $3 --description $4 $5
 	echo_and_sleep "Created Service $4"
 }

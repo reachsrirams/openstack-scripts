@@ -81,6 +81,9 @@ if [ "$1" == "controller" ]
 		
 		echo_and_sleep "About to setup Ceilometer..."
 		bash $(dirname $0)/configure-ceilometer.sh controller $controller_host_name $rabbitmq_password $neutron_password $metering_secret $ceilometer_db_password
+
+		echo_and_sleep "About to setup Heat..."
+		echo "Correct Syntax: $0 $heat_db_password $mysql_user $mysql_password $controller_host_name $rabbitmq_password $heat_password
 fi
 
 if [ "$1" == "networknode" ]
