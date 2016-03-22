@@ -80,7 +80,7 @@ if [ "$1" == "networknode" -o "$1" == "controller" ]
 		overlay_interface_ip=`ifconfig $neutron_linuxbridge_overlay_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 		echo "Overlay Interface IP Address: $overlay_interface_ip"
 		sleep 10
-		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini local_ip $overlay_interface_ip
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan local_ip $overlay_interface_ip
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini agent prevent_arp_spoofing True
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup enable_security_group True
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
