@@ -47,16 +47,20 @@ if [ "$1" == "controller" ]
 		echo_and_sleep "About to start Ceilometer setup-config"
 
 		create-user-service ceilometer $4 ceilometer OpenStackTelemetry metering
-		
-		openstack endpoint create \
-		--publicurl http://$2:8777 \
-		--internalurl http://$2:8777 \
-		--adminurl http://$2:8777 \
-		--region RegionOne \
-		metering
+		echo_and_sleep "Created Ceilometer User in Keystone. About to create endpoints."
+
+		create-api-endpoints metering http://$2:8777
 		
 		echo_and_sleep "Created Ceilometer Endpoint in Keystone. About to Ceilometer Conf File" 4
 		crudini --set /etc/ceilometer/ceilometer.conf database connection mongodb://ceilometer:$6@$2:27017/ceilometer
+
+		crudini --set /etc/glance/glance-api.conf DEFAULT notification_driver messagingv2
+		crudini --set /etc/glance/glance-registry.conf DEFAULT notification_driver messagingv2
+		configure-oslo-messaging /etc/glance/glance-api.conf $2 openstack $3
+		configure-oslo-messaging /etc/glance/glance-registry.conf $2 openstack $3
+
+		#crudini --set /etc/ceilometer/ceilometer.conf publisher metering_secret $5
+		#crudini --set /etc/ceilometer/ceilometer.conf DEFAULT log_dir /var/log/ceilometer
 fi
 
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT rpc_backend rabbit
@@ -71,9 +75,6 @@ crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_username ce
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_password $4
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_region_name RegionOne
 crudini --set /etc/ceilometer/ceilometer.conf service_credentials os_endpoint_type internalURL
-
-crudini --set /etc/ceilometer/ceilometer.conf publisher metering_secret $5
-crudini --set /etc/ceilometer/ceilometer.conf DEFAULT log_dir /var/log/ceilometer
 
 if [ "$1" == "compute" ]
 	then
@@ -91,6 +92,8 @@ echo_and_sleep "Configured Ceilometer Conf File" 3
 if [ "$1" == "controller" ]
 	then
 		echo_and_sleep "Restarting Ceilometer Compute Service" 2
+		service glance-api restart
+		service glance-registry restart
 		service ceilometer-agent-central restart
 		service ceilometer-agent-notification restart 
 		service ceilometer-api restart
