@@ -3,7 +3,7 @@
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a complete automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
 #### Platform supported - Ubuntu
-#### OpenStack version - Kilo
+#### OpenStack version - Liberty
 #### OpenStack services installed ####
 The following OpenStack services are installed as part these scripts:
 
@@ -13,18 +13,21 @@ The following OpenStack services are installed as part these scripts:
 4. Neutron (Networking)
 5. Horizon (Dashboard)
 6. Ceilometer (Telemetry)
+7. Heat (Orchestration)
 
 #### Prerequisites ####
 Git packages must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server.
 
 #### Important Notes ####
-1. The installation installs only Open vSwitch packages by default. Installing Linux bridge can be done using a utility script provided in `util` directory.
+1. The installation installs only Linux Bridge packages by default. Installing OVS can be done using a utility script provided in `util` directory.
 2. The Nova configuration includes a setting to use `AllHostsFilter` as the default filter for scheduler. If you want the default filters of Nova, remove this entry and restart Nova services on the controller.
 3. Many scripts detect the OpenStack Node Type automatically using `util/detect-nodetype.sh` script.
+4. The node type controller includes network node capabilities. This is new behavior in OpenStack from Liberty release.
 
 ## How to use the scripts step by step ##
 
-1. Update lib/config-parameters.sh script 
+1. Edit the lib/config-parameters.sh file
+   - Important: Make sure that Management and Data plane interface names are accurate
    - Change the hostname to be used for controller. This name will be used in all configuration files. 
    - Change passwords as necessary 
 
