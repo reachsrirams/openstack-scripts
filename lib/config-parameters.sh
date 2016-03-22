@@ -6,7 +6,7 @@ readonly data_interface="eth1"
 ### End - interface related settings
 
 ### Start - Neutron related settings
-readonly neutron_linuxbridge_physical_interface_mappings="physnet1:eth1"
+readonly neutron_linuxbridge_physical_interface_mappings="physnet1:$data_interface"
 readonly neutron_linuxbridge_overlay_interface=$data_interface
 ### End - Neutron related settings
 
