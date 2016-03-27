@@ -33,7 +33,7 @@ openstack role create heat_stack_user
 echo_and_sleep "Created User/Role specific for Heat" 2
 
 echo "Configuring Heat DB Connection." 2
-crudini --set /etc/heat/heat.conf database connection mysql+pymysql://glance:$1@$4/glance
+crudini --set /etc/heat/heat.conf database connection mysql+pymysql://heat:$1@$4/heat
 
 crudini --set /etc/heat/heat.conf DEFAULT rpc_backend rabbit
 configure-oslo-messaging /etc/heat/heat.conf $4 openstack $5
