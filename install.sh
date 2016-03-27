@@ -49,6 +49,7 @@ function install-controller-packages() {
 	sleep 2
 	apt-get install neutron-server neutron-plugin-ml2 \
   		neutron-plugin-linuxbridge-agent neutron-dhcp-agent \
+		neutron-lbaas-agent haproxy \
   		neutron-metadata-agent python-neutronclient conntrack -y
 
 	echo "Installing Cinder for Controller"

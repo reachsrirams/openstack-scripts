@@ -87,7 +87,6 @@ if [ "$1" == "networknode" -o "$1" == "controller" ]
 
 sleep 3
 
-
 		echo_and_sleep "Configuring L3 Agent Information" 2
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
@@ -102,6 +101,11 @@ sleep 3
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT enable_isolated_metadata True
 		echo_and_sleep "Configured DHCP Agent Information" 2
 
+		echo_and_sleep "Configuring Firewall Information" 2
+		crudini --set /etc/neutron/fwaas_driver.ini fwaas enabled True
+		crudini --set /etc/neutron/fwaas_driver.ini fwaas driver neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver
+		echo_and_sleep "Configured Firewall Information" 2
+		
 		echo_and_sleep "Configuring Metadata Agent Information in Network Node" 1
 		crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_uri http://$2:5000
         	crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_url http://$2:35357
