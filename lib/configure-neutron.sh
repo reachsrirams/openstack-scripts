@@ -35,7 +35,7 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 
 		echo_and_sleep "Configuring Neutron Conf File" 2
 		crudini --set /etc/neutron/neutron.conf DEFAULT core_plugin ml2
-		crudini --set /etc/neutron/neutron.conf DEFAULT service_plugins router
+		crudini --set /etc/neutron/neutron.conf DEFAULT service_plugins router,firewall
 		crudini --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
 fi
 
