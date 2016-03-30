@@ -134,5 +134,5 @@ fi
 echo "********************************************"
 echo "NEXT STEPS:"
 echo "** Execute the update-etc-hosts.sh script"
-echo "** Update lib/config-paramters.sh for Interface names
+echo "** Update lib/config-paramters.sh for Interface names"
 echo "********************************************"
