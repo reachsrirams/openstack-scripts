@@ -1,16 +1,16 @@
 if [ $# -lt 1 ]
 	then
-		echo "Correct Syntax: $0 [ compute | networknode | controller ]"
+		echo "Correct Syntax: $0 [ compute | networknode | controller | allinone ]"
 		exit 1;
 fi
 
-if [ "$1" == "networknode"  -o "$1" == "controller" ]
+if [ "$1" == "networknode"  -o "$1" == "controller" -o "$1" == "allinone" ]
 	then
 		sh -c 'echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf'
 		sleep 2
 fi
 
-if [ "$1" == "networknode" ] || [ "$1" == "compute" ]
+if [ "$1" == "networknode" ] || [ "$1" == "compute" || [ "$1" == "allinone" ]
 	then
 		sh -c 'echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.conf'
 		sleep 2
@@ -19,6 +19,6 @@ if [ "$1" == "networknode" ] || [ "$1" == "compute" ]
 		echo "Configured sysctl.conf - applying changes"
 		sysctl -p
 	else
-		echo "Correct Syntax: $0 [ compute | networknode | controller ]"
+		echo "Correct Syntax: $0 [ compute | networknode | controller | allinone ]"
 		exit 1;
 fi
