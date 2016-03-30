@@ -56,11 +56,6 @@ case $node_type in
 		bash $(dirname $0)/update-etc-hosts.sh $1 $2 $3
 		bash $(dirname $0)/manage-services.sh all restart
 		;;
-	controller_networknode)
-		bash $(dirname $0)/update-etc-hosts.sh $1 $2
-		update-nova-config-ip $1 controller
-		bash $(dirname $0)/manage-services.sh all restart
-		;;
 	*)
 		echo "Unsupported node type for $0: $node_type"
 		exit 1

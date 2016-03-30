@@ -100,17 +100,16 @@ if [ $# -ne 2 ]
 fi
 
 case $node_type in 
-	controller) manage-controller-services $1 $2;;
+	controller) 
+		manage-controller-services $1 $2
+		manage-networknode-services $2
+		;;
 	compute) manage-compute-services $2;;
 	networknode) manage-networknode-services $2;;
 	allinone)
 		manage-controller-services $1 $2
 		manage-networknode-services $2
 		manage-compute-services $2
-		;;
-	controller_networknode)
-		manage-controller-services $1 $2
-		manage-networknode-services $2
 		;;
 	*)
 		echo "Invalid node type: $node_type."

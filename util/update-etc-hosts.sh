@@ -39,7 +39,7 @@ local_host_name=`hostname`
 echo "Local host name: $local_host_name"
 sleep 3
 
-if [ "$node_type" == "controller" ] || [ "$node_type" = "controller_networknode" ]
+if [ "$node_type" == "controller" ] 
 	then
 		if [ $# -eq 2 ]
 			then

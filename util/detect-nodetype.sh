@@ -27,9 +27,6 @@ then
 	if [ $nova_compute_installed == "true" ]
 	then
 		node_type="allinone"
-	elif [ $neutron_dhcp_installed == "true" ]
-	then
-		node_type="controller_networknode"
 	fi
 elif [ $nova_compute_installed == "true" ]
 then

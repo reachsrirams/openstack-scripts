@@ -26,31 +26,29 @@ else
 	crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
 fi
 
-if [ "$node_type" == "compute" ] || [ "node_type" == "controller_networknode" ] || [ "node_type" == "allinone" ] || [ "node_type" == "networknode" ]
-	then
-		sleep 1
-		ovs-vsctl add-br $bridge_name
-		sleep 1
-		ovs-vsctl add-port $bridge_name $1
-		sleep 1
-		ovs-vsctl show
-		sleep 1
-		service openvswitch-switch restart
-fi
+sleep 1
+ovs-vsctl add-br $bridge_name
+sleep 1
+ovs-vsctl add-port $bridge_name $1
+sleep 1
+ovs-vsctl show
+sleep 1
+service openvswitch-switch restart
 
-if [ "$node_type" == "controller" ] || [ "node_type" == "controller_networknode" ] || [ "node_type" == "allinone" ]
+if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
 		service neutron-server restart
+		service neutron-plugin-openvswitch-agent restart
 fi
 
 sleep 1
 
-if [ "$node_type" == "networknode" ] || [ "node_type" == "controller_networknode" ] || [ "node_type" == "allinone" ]
+if [ "$node_type" == "networknode" ] || [ "node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
 		service neutron-l3-agent restart
 fi
 
-if [ "$node_type" == "controller" ] || [ "node_type" == "controller_networknode" ] || [ "node_type" == "allinone" ]
+if [ "$node_type" == "compute" ]
 	then
 		service neutron-plugin-openvswitch-agent restart
 fi
