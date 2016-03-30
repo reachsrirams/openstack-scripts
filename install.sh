@@ -8,10 +8,8 @@ function install-common-packages() {
 	apt-get install chrony -y
 	service chrony restart
 	
-	echo "About to configure APT for Liberty"
+	echo "About to configure APT for Mitaka"
 	sleep 3
-	rm -f /etc/apt/sources.list.d/cloudarchive-juno.list
-	rm -f /etc/apt/sources.list.d/cloudarchive-kilo.list
 	apt-get install software-properties-common -y
 	add-apt-repository cloud-archive:mitaka
 
