@@ -124,6 +124,23 @@ sleep 3
 		crudini --set /etc/nova/nova.conf neutron metadata_proxy_shared_secret password
 fi
 
+if [ "$1" == "compute" ]
+	then
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini linux_bridge physical_interface_mappings $neutron_linuxbridge_physical_interface_mappings
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan enable_vxlan True
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan l2_population True
+		overlay_interface_ip=`ifconfig $neutron_linuxbridge_overlay_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+		echo "Overlay Interface IP Address: $overlay_interface_ip"
+		sleep 10
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan local_ip $overlay_interface_ip
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini agent prevent_arp_spoofing True
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup enable_security_group True
+		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+fi
+
+sleep 3
+
+
 if [ "$1" == "compute" -o "$1" == "controller" ]
 	then
 		crudini --set /etc/nova/nova.conf neutron url http://$2:9696
