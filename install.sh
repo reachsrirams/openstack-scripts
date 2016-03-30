@@ -13,7 +13,7 @@ function install-common-packages() {
 	rm -f /etc/apt/sources.list.d/cloudarchive-juno.list
 	rm -f /etc/apt/sources.list.d/cloudarchive-kilo.list
 	apt-get install software-properties-common -y
-	add-apt-repository cloud-archive:liberty
+	add-apt-repository cloud-archive:mitaka
 
 	echo "Doing full system update"
 	sleep 3
