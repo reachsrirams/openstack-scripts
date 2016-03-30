@@ -49,6 +49,9 @@ Git packages must be installed on your Ubuntu server. This is needed to checkout
 5. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
    - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
+6. For installing a Glance image use the `setup-cirros-image.sh` available in the lib folder. 
+   
+
 ## Updating IP Address ##
 
 The install scripts use a name for the controller (defined in `config-parameters.sh` script). This name needs to be updated in the /etc/hosts file. Also to view the VNC console of an instance, it is convenient to use IP address in the Nova configuration file. All these changes can be done using `util/update-ip.sh` script. 
