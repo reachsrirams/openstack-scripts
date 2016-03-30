@@ -4,7 +4,7 @@ if [ $# -lt 1 ]
 		exit 1;
 fi
 
-if [ "$1" == "networknode"  -o "$1" == "controller" ]
+if [ "$1" == "networknode" ] || [ "$1" == "controller" ]
 	then
 		sh -c 'echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf'
 		sleep 2
