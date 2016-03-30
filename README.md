@@ -2,7 +2,7 @@
 
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a complete automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Platform supported - Ubuntu
+#### Platform supported - Ubuntu 15.10
 #### OpenStack version - Liberty
 #### OpenStack services installed ####
 The following OpenStack services are installed as part these scripts:
