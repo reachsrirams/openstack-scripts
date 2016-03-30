@@ -1,9 +1,4 @@
 function change-ip-in-etc-hosts() {
-	if [ $# -lt 2 ]
-        	then
-                	echo "Correct syntax: change-ip-etc-host <hostname> <new-ip-address>"
-                	exit 1;
-	fi
 	if [ -z "$3" ]
         	then
                 	hosts_file_name="/etc/hosts"
@@ -39,7 +34,7 @@ local_host_name=`hostname`
 echo "Local host name: $local_host_name"
 sleep 3
 
-if [ "$node_type" == "controller" ] || [ "$node_type" = "controller_networknode" ]
+if [ "$node_type" == "controller" ] || [ "$node_type" = "allinone" ]
 	then
 		if [ $# -eq 2 ]
 			then
