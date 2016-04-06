@@ -4,6 +4,10 @@ This project aims to covert the steps in the OpenStack Install guide into useful
 
 #### Platform supported - Ubuntu 15.10
 #### OpenStack version - Liberty
+#### Prerequisites ####
+Git packages must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server.
+
+If you are using VirtualBox refer to this blog for Network settings - http://goo.gl/VTJVmv
 #### OpenStack services installed ####
 The following OpenStack services are installed as part these scripts:
 
@@ -14,9 +18,6 @@ The following OpenStack services are installed as part these scripts:
 5. Horizon (Dashboard)
 6. Ceilometer (Telemetry)
 7. Heat (Orchestration)
-
-#### Prerequisites ####
-Git packages must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server.
 
 #### Important Notes ####
 1. The installation installs only Linux Bridge packages by default. Installing OVS can be done using a utility script provided in `util` directory.
