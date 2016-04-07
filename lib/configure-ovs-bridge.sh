@@ -1,5 +1,5 @@
 echo "Running: $0 $@"
-sleep 5
+sleep 4
 source $(dirname $0)/config-parameters.sh
 
 node_type=`bash $(dirname $0)/detect-nodetype.sh`
