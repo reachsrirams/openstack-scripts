@@ -26,6 +26,38 @@ else
 	crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
 fi
 
+if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
+	then
+		echo_and_sleep "Configuring ML2 INI file"
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan,vxlan
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vxlan
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch,l2population
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 extension_drivers port_security
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks public
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vxlan vni_ranges 1:1000
+fi
+
+
+		crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini linux_bridge physical_interface_mappings $neutron_linuxbridge_physical_interface_mappings
+		crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini vxlan enable_vxlan True
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini vxlan l2_population True
+                overlay_interface_ip=`ifconfig $neutron_linuxbridge_overlay_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+                echo "Overlay Interface IP Address: $overlay_interface_ip"
+                sleep 10
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs integration_bridge br-int
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs tunnel_bridge br-tun
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs local_ip $overlay_interface_ip
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini agent prevent_arp_spoofing True
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini agent tunnel_types vxlan
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup enable_security_group True
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup enable_ipset True
+                crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+
+		echo_and_sleep "Configuring L3 and DHCP Agent Information" 2
+                crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
+                crudini --set /etc/neutron/dhcp_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
+
+
 sleep 1
 ovs-vsctl add-br $bridge_name
 sleep 1
