@@ -73,3 +73,4 @@ Restarting OpenStack services is needed at times - especially when config file e
 
 Since all configuration uses the name of the controller host, it is important to update `/etc/hosts` file on all the node to map an IP address to the controller host name. You can use the `util/update-etc-hosts.sh` script for this purpose.
 
+
