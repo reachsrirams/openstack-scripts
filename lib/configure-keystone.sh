@@ -20,15 +20,7 @@ sleep 2
 
 crudini --set /etc/keystone/keystone.conf database connection mysql+pymysql://keystone:$1@$4/keystone
 
-crudini --set /etc/keystone/keystone.conf memcache servers localhost:11211
-echo_and_sleep "New in Kilo - Memcache configuration" 2
-
-crudini --set /etc/keystone/keystone.conf token provider uuid
-crudini --set /etc/keystone/keystone.conf token driver memcache
-
-crudini --set /etc/keystone/keystone.conf revoke driver sql
-echo_and_sleep "New in Kilo - SQL Revoke configuration" 2
-
+crudini --set /etc/keystone/keystone.conf token provider fernet
 grep "mysql" /etc/keystone/keystone.conf
 echo_and_sleep "Configured KeyStone Conf File" 2
 
@@ -42,6 +34,8 @@ ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled
 
 echo_and_sleep "Populate Identity Service Database" 2
 keystone-manage db_sync
+echo_and_sleep "New in Mitaka - Fernet Setup" 2
+keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 
 echo_and_sleep "Restarting Apache Service" 2
 service apache2 restart
