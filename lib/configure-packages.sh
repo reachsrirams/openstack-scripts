@@ -27,32 +27,31 @@ fi
 if [ "$1" == "controller" ] 
 	then
 		echo_and_sleep "About to configure Controller"	
-                mysql_conf_file="/etc/mysql/mariadb.conf.d/mysqld.cnf"
+		mysql_conf_file="/etc/mysql/conf.d/openstack.cnf"
                 if [ -f "$mysql_conf_file" ]
                 then
-			echo_and_sleep "Maria DB Conf file found" 2
+                        echo_and_sleep "Maria DB Conf file found" 2
                 else
-                        mysql_conf_file="/etc/mysql/my.cnf"
+                        echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
+                        touch $mysql_conf_file
+                	echo "Updating MySQL Config File...: $mysql_conf_file"
+                	crudini --set $mysql_conf_file mysqld bind-address 0.0.0.0
+                	echo_and_sleep "Updated Bind Address" 2
+                	grep "bind" $mysql_conf_file
+	
+                	crudini --set $mysql_conf_file mysqld default-storage-engine innodb
+                	echo "innodb_file_per_table" >> $mysql_conf_file
+                	crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
+                	crudini --set $mysql_conf_file mysqld character-set-server utf8
+                	echo_and_sleep "Updated other MySQL Parameters" 2
+                	grep "storage-engine" $mysql_conf_file
                 fi
-                echo "Updating MySQL Config File...: $mysql_conf_file"
-		sed -i "s/127.0.0.1/0.0.0.0/g" $mysql_conf_file
-		echo_and_sleep "Updated Bind Address" 2
-		grep "bind" $mysql_conf_file
-		
-		sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
-				innodb_file_per_table\\
-				collation-server = utf8_general_ci\\
-				init-connect = 'SET NAMES utf8'\\
-				character-set-server = utf8\\
-		" $mysql_conf_file
-		echo_and_sleep "Updated other MySQL Parameters" 2
-		grep "storage-engine" $mysql_conf_file
-		
-		echo_and_sleep "Restarting MySQL and securing installation..."
-		service mysql restart;
-		sleep 5
-		mysql_secure_installation;
-		
+                
+                echo_and_sleep "Restarting MySQL and securing installation..."
+                service mysql restart;
+                sleep 5
+                mysql_secure_installation;
+
 		echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
 		rabbitmqctl add_user $rabbitmq_user $rabbitmq_password
 		echo_and_sleep "Rabbit MQ: User Added. About to set Permissions"
