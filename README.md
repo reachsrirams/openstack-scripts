@@ -36,22 +36,18 @@ The following OpenStack services are installed as part these scripts:
    - Change the hostname to be used for controller. This name will be used in all configuration files. 
    - Change passwords as necessary 
 
-2. Install common packages
-   - Execute `sudo bash install.sh common`
-   - It is a good idea to reboot the system since kernel packages may have been updated.
-
-3. Install OpenStack packages depending upon the type of the node
+2. Install OpenStack packages depending upon the type of the node
    - If the node is of type controller, execute `sudo bash install.sh controller`
    - If the node is of type compute, execute `sudo bash install.sh compute`
    - If the node is of type networknode, execute `sudo bash install.sh networknode`
    - If the node is of type allinone, execute `sudo bash install.sh allinone`
    - **Note - during the installation of MariaDB, you will be required to enter DB password manually**
 
-4. Add the host name of the controller to /etc/hosts. By default the script uses "controller" as the host name. If you had changed the name in Step 1 above, you need to use that.
+3. Add the host name of the controller to /etc/hosts. By default the script uses "controller" as the host name. If you had changed the name in Step 1 above, you need to use that.
    - Execute `sudo bash util/update-etc-hosts.sh <hostname_of_controller>` if the node type is controller.
    - Execute `sudo bash util/update-etc-hosts.sh <hostname_of_controller> <ip_ofcontroller>` if the node type is either compute or a network node.
 
-5. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
+4. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
    - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
 ## Updating IP Address ##
