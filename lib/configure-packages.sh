@@ -26,29 +26,37 @@ fi
 
 if [ "$1" == "controller" ] 
 	then
-		echo_and_sleep "About to configure Controller"	
+		echo_and_sleep "About to configure MySQL on Controller"	
                 if [ -f "/etc/mysql/mariadb.conf.d/mysqld.cnf" ]
 		then
                         echo_and_sleep "Maria DB Conf file found" 2
 			mysql_conf_file="/etc/mysql/conf.d/openstack.cnf"
                 	echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
                 	touch $mysql_conf_file
+               		crudini --set $mysql_conf_file mysqld bind-address 0.0.0.0
+               		echo_and_sleep "Updated Bind Address" 2
+               		crudini --set $mysql_conf_file mysqld default-storage-engine innodb
+               		echo "innodb_file_per_table" >> $mysql_conf_file
+               		crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
+               		crudini --set $mysql_conf_file mysqld character-set-server utf8
 		else
+			echo_and_sleep "Maria DB Conf File Not Found" 2
 			mysql_conf_file="/etc/mysql/my.cnf"
-                fi
-               	echo "Updating MySQL Config File...: $mysql_conf_file"
-               	crudini --set $mysql_conf_file mysqld bind-address 0.0.0.0
-               	echo_and_sleep "Updated Bind Address" 2
-               	grep "bind" $mysql_conf_file
+			sed -i "s/127.0.0.1/0.0.0.0/g" $mysql_conf_file
+                        echo_and_sleep "Updated Bind Address" 2
+                        grep "bind" $mysql_conf_file
 
-               	crudini --set $mysql_conf_file mysqld default-storage-engine innodb
-               	echo "innodb_file_per_table" >> $mysql_conf_file
-               	crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
-               	crudini --set $mysql_conf_file mysqld character-set-server utf8
-               	echo_and_sleep "Updated other MySQL Parameters" 2
+                        sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
+                                innodb_file_per_table\\
+                                collation-server = utf8_general_ci\\
+                                init-connect = 'SET NAMES utf8'\\
+                                character-set-server = utf8\\
+                        " $mysql_conf_file
+                fi
+               	grep "bind" $mysql_conf_file
                	grep "storage-engine" $mysql_conf_file
-                
-                echo_and_sleep "Restarting MySQL and securing installation..." 20
+               	echo_and_sleep "Updated other MySQL Parameters. About to restart and secure MySQL" 3
+
                 service mysql restart;
                 sleep 5
                 mysql_secure_installation;
