@@ -27,27 +27,28 @@ fi
 if [ "$1" == "controller" ] 
 	then
 		echo_and_sleep "About to configure Controller"	
-		mysql_conf_file="/etc/mysql/conf.d/openstack.cnf"
-                if [ -f "$mysql_conf_file" ]
-                then
+                if [ -f "/etc/mysql/mariadb.conf.d/mysqld.cnf" ]
+		then
                         echo_and_sleep "Maria DB Conf file found" 2
-                else
-                        echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
-                        touch $mysql_conf_file
-                	echo "Updating MySQL Config File...: $mysql_conf_file"
-                	crudini --set $mysql_conf_file mysqld bind-address 0.0.0.0
-                	echo_and_sleep "Updated Bind Address" 2
-                	grep "bind" $mysql_conf_file
-	
-                	crudini --set $mysql_conf_file mysqld default-storage-engine innodb
-                	echo "innodb_file_per_table" >> $mysql_conf_file
-                	crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
-                	crudini --set $mysql_conf_file mysqld character-set-server utf8
-                	echo_and_sleep "Updated other MySQL Parameters" 2
-                	grep "storage-engine" $mysql_conf_file
+			mysql_conf_file="/etc/mysql/conf.d/openstack.cnf"
+                	echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
+                	touch $mysql_conf_file
+		else
+			mysql_conf_file="/etc/mysql/my.cnf"
                 fi
+               	echo "Updating MySQL Config File...: $mysql_conf_file"
+               	crudini --set $mysql_conf_file mysqld bind-address 0.0.0.0
+               	echo_and_sleep "Updated Bind Address" 2
+               	grep "bind" $mysql_conf_file
+
+               	crudini --set $mysql_conf_file mysqld default-storage-engine innodb
+               	echo "innodb_file_per_table" >> $mysql_conf_file
+               	crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
+               	crudini --set $mysql_conf_file mysqld character-set-server utf8
+               	echo_and_sleep "Updated other MySQL Parameters" 2
+               	grep "storage-engine" $mysql_conf_file
                 
-                echo_and_sleep "Restarting MySQL and securing installation..."
+                echo_and_sleep "Restarting MySQL and securing installation..." 20
                 service mysql restart;
                 sleep 5
                 mysql_secure_installation;
