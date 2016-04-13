@@ -63,6 +63,9 @@ openstack endpoint create --region RegionOne identity public http://$4:5000/v2.0
 openstack endpoint create --region RegionOne identity internal http://$4:5000/v2.0
 openstack endpoint create --region RegionOne identity admin http://$4:35357/v2.0
 
+openstack domain create --description "Default Domain" default
+echo_and_sleep "Created Domain: default" 2
+
 echo_and_sleep "Added Identity Endpoint and about to restart keystone" 2
 service keystone restart
 echo_and_sleep "Keystone service restarted" 2
