@@ -54,9 +54,9 @@ if [ "$1" == "networknode" -o "$1" == "controller" ]
 		crudini --set /etc/neutron/neutron.conf DEFAULT nova_url http://$2:8774/v2
 
 		crudini --set /etc/neutron/neutron.conf nova auth_url http://$2:35357/
-		crudini --set /etc/neutron/neutron.conf nova auth_plugin password
-		crudini --set /etc/neutron/neutron.conf nova project_domain_id default
-		crudini --set /etc/neutron/neutron.conf nova user_domain_id default
+		crudini --set /etc/neutron/neutron.conf nova auth_type password
+		crudini --set /etc/neutron/neutron.conf nova project_domain_name default
+		crudini --set /etc/neutron/neutron.conf nova user_domain_name default
 		crudini --set /etc/neutron/neutron.conf nova region_name RegionOne
 		crudini --set /etc/neutron/neutron.conf nova project_name service
 		crudini --set /etc/neutron/neutron.conf nova username nova
@@ -67,7 +67,7 @@ if [ "$1" == "networknode" -o "$1" == "controller" ]
 		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vxlan
 		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers linuxbridge,l2population
 		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 extension_drivers port_security
-		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks public
+		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks provider
 		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vxlan vni_ranges 1:1000
 		echo_and_sleep "Configured VNI Range."
 		
@@ -89,16 +89,13 @@ sleep 3
 
 		echo_and_sleep "Configuring L3 Agent Information" 2
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
-		crudini --set /etc/neutron/l3_agent.ini DEFAULT use_namespaces True
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT verbose True
 		echo_and_sleep "Configured L3 Agent Information" 2
 		
 		echo_and_sleep "Configuring DHCP Agent Information" 1
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT interface_driver neutron.agent.linux.interface.BridgeInterfaceDriver
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT dhcp_driver neutron.agent.linux.dhcp.Dnsmasq
-		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT dhcp_delete_namespaces True
 		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT verbose True
-		crudini --set /etc/neutron/dhcp_agent.ini DEFAULT enable_isolated_metadata True
 		echo_and_sleep "Configured DHCP Agent Information" 2
 
 		echo_and_sleep "Configuring Firewall Information" 2
@@ -106,22 +103,10 @@ sleep 3
 		crudini --set /etc/neutron/fwaas_driver.ini fwaas driver neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver
 		echo_and_sleep "Configured Firewall Information" 2
 		
-		echo_and_sleep "Configuring Metadata Agent Information in Network Node" 1
-		crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_uri http://$2:5000
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_url http://$2:35357
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_region RegionOne
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT auth_plugin password
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT project_domain_id default
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT user_domain_id default
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT project_name service
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT username neutron
-        	crudini --set /etc/neutron/metadata_agent.ini DEFAULT password $4
+		echo_and_sleep "Configuring Metadata Agent Information" 1
 		crudini --set /etc/neutron/metadata_agent.ini DEFAULT nova_metadata_ip $2
 		crudini --set /etc/neutron/metadata_agent.ini DEFAULT metadata_proxy_shared_secret password
-		echo_and_sleep "Configured Metadata Agent Information in Network Node" 2
-		echo_and_sleep "Configuring Metadata info on NOVA " 1
-		crudini --set /etc/nova/nova.conf neutron service_metadata_proxy True
-		crudini --set /etc/nova/nova.conf neutron metadata_proxy_shared_secret password
+		echo_and_sleep "Configured Metadata Agent Information" 2
 fi
 
 if [ "$1" == "compute" ]
@@ -145,13 +130,15 @@ if [ "$1" == "compute" -o "$1" == "controller" ]
 	then
 		crudini --set /etc/nova/nova.conf neutron url http://$2:9696
 		crudini --set /etc/nova/nova.conf neutron auth_url http://$2:35357
-		crudini --set /etc/nova/nova.conf neutron auth_plugin password
-		crudini --set /etc/nova/nova.conf neutron project_domain_id default
-		crudini --set /etc/nova/nova.conf neutron user_domain_id default
+		crudini --set /etc/nova/nova.conf neutron auth_type password
+		crudini --set /etc/nova/nova.conf neutron project_domain_name default
+		crudini --set /etc/nova/nova.conf neutron user_domain_name default
 		crudini --set /etc/nova/nova.conf neutron region_name RegionOne
 		crudini --set /etc/nova/nova.conf neutron project_name service
 		crudini --set /etc/nova/nova.conf neutron username neutron
 		crudini --set /etc/nova/nova.conf neutron password $4
+		crudini --set /etc/nova/nova.conf neutron service_metadata_proxy True
+		crudini --set /etc/nova/nova.conf neutron metadata_proxy_shared_secret password
 		echo_and_sleep "Configured Nova to use Neutron - neutron section" 2
 
 fi
@@ -174,12 +161,13 @@ if [ "$1" == "controller" ]
 		echo_and_sleep "Printed Neutron Extension List" 2
 		neutron agent-list
 		echo_and_sleep "Printed Neutron Agent List" 2
+		rm -f /var/lib/neutron/neutron.sqlite
 elif [ "$1" == "compute" ]
 	then
 		service nova-compute restart
 elif [ "$1" == "networknode" ]
 	then
-		service neutron-plugin-openvswitch-agent restart 
+		service neutron-plugin-linuxbridge-agent restart
 		service neutron-l3-agent restart
 		service neutron-dhcp-agent restart
 		service neutron-metadata-agent restart
