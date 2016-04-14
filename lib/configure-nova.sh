@@ -23,6 +23,11 @@ source $(dirname $0)/admin_openrc.sh
 
 if [ "$1" == "controller" ]
 	then
+		echo "Configuring MySQL for Nova API..."
+		mysql_command="CREATE DATABASE IF NOT EXISTS nova_api; GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY '$5'; GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' IDENTIFIED BY '$5';"
+		echo "MySQL Command is:: "$mysql_command
+		mysql -u "$6" -p"$7" -e "$mysql_command"
+		
 		echo "Configuring MySQL for Nova..."
 		mysql_command="CREATE DATABASE IF NOT EXISTS nova; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY '$5'; GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY '$5';"
 		echo "MySQL Command is:: "$mysql_command
@@ -33,6 +38,7 @@ if [ "$1" == "controller" ]
 		create-api-endpoints compute http://$2:8774/v2/%\(tenant_id\)s
 		echo_and_sleep "Created Endpoint for Nova" 2
 		
+		crudini --set /etc/nova/nova.conf api_database connection mysql+pymysql://nova:$5@$2/nova_api
 		crudini --set /etc/nova/nova.conf database connection mysql+pymysql://nova:$5@$2/nova
 		echo_and_sleep "Configured NOVA DB Connection" 2
 
@@ -53,9 +59,7 @@ mgmt_interface_ip=`ifconfig $mgmt_interface | grep 'inet addr:' | cut -d: -f2 | 
 echo "Mgmt Interface IP Address: $mgmt_interface_ip"
 sleep 2
 crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmt_interface_ip
-crudini --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
-crudini --set /etc/nova/nova.conf DEFAULT security_group_api neutron
-crudini --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.NeutronLinuxBridgeInterfaceDriver
+crudini --set /etc/nova/nova.conf DEFAULT use_neutron True
 crudini --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
 
 crudini --set /etc/nova/nova.conf vnc vncserver_proxyclient_address $mgmt_interface_ip

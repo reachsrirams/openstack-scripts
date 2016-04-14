@@ -64,9 +64,10 @@ function configure-keystone-authentication() {
 	sleep 5
 	crudini --set $1 keystone_authtoken auth_uri http://$2:5000
 	crudini --set $1 keystone_authtoken auth_url http://$2:35357
-	crudini --set $1 keystone_authtoken auth_plugin password
-	crudini --set $1 keystone_authtoken project_domain_id default
-	crudini --set $1 keystone_authtoken user_domain_id default
+	crudini --set $1 keystone_authtoken memcached_servers $2:11211
+	crudini --set $1 keystone_authtoken auth_type password
+	crudini --set $1 keystone_authtoken project_domain_name default
+	crudini --set $1 keystone_authtoken user_domain_name default
 	crudini --set $1 keystone_authtoken project_name service
 	crudini --set $1 keystone_authtoken username $3
 	crudini --set $1 keystone_authtoken password $4
