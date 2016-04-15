@@ -32,7 +32,7 @@ function remove-controller-packages() {
 	apt-get purge glance python-glanceclient -y
 	apt-get purge nova-api nova-cert nova-conductor nova-consoleauth \
 	nova-novncproxy nova-scheduler python-novaclient -y
-	apt-get purge neutron-server neutron-plugin-ml2 python-neutronclient -y
+	apt-get purge neutron-server neutron-plugin-ml2 python-neutronclient neutron-linuxbridge-agent neutron-dhcp-agent -y
 	apt-get purge cinder-api cinder-scheduler python-cinderclient -y
 	apt-get purge openstack-dashboard apache2 libapache2-mod-wsgi \
 	memcached python-memcache -y
