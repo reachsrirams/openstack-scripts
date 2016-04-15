@@ -52,6 +52,7 @@ crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 configure-oslo-messaging /etc/nova/nova.conf $2 openstack $4
 
 crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
+crudini --set /etc/nova/nova.conf DEFAULT enabled_apis osapi_compute,metadata
 
 configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
@@ -75,7 +76,7 @@ elif [ "$1" == "compute" ]
 		crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$2:6080/vnc_auto.html
 fi
 
-crudini --set /etc/nova/nova.conf glance host $2
+crudini --set /etc/nova/nova.conf glance api_servers http://controller:9292
 crudini --set /etc/nova/nova.conf oslo_concurrency lock_path /var/lib/nova/tmp
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
 echo_and_sleep "Updated NOVA Configuration File" 2
