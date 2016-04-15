@@ -150,7 +150,7 @@ if [ "$1" == "controller" ]
 		echo_and_sleep "Restarting Services..."
 		service nova-api restart
 		service neutron-server restart
-		service neutron-plugin-linuxbridge-agent restart
+		service neutron-linuxbridge-agent restart
 		service neutron-l3-agent restart
 		service neutron-dhcp-agent restart
 		service neutron-metadata-agent restart
@@ -167,7 +167,7 @@ elif [ "$1" == "compute" ]
 		service nova-compute restart
 elif [ "$1" == "networknode" ]
 	then
-		service neutron-plugin-linuxbridge-agent restart
+		service neutron-linuxbridge-agent restart
 		service neutron-l3-agent restart
 		service neutron-dhcp-agent restart
 		service neutron-metadata-agent restart

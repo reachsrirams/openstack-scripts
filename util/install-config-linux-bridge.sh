@@ -51,7 +51,7 @@ crudini --set /etc/neutron/l3_agent.ini DEFAULT interface_driver neutron.agent.l
 sleep 3
 service neutron-server restart 
 sleep 3
-service neutron-plugin-linuxbridge-agent restart
+service neutron-linuxbridge-agent restart
 sleep 3
 service neutron-dhcp-agent restart
 sleep 3

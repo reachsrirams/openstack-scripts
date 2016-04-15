@@ -35,7 +35,7 @@ if [ "$1" == "controller" ]
 		
 		create-user-service nova $3 nova OpenStackCompute compute
 		
-		create-api-endpoints compute http://$2:8774/v2/%\(tenant_id\)s
+		create-api-endpoints compute http://$2:8774/v2.1/%\(tenant_id\)s
 		echo_and_sleep "Created Endpoint for Nova" 2
 		
 		crudini --set /etc/nova/nova.conf api_database connection mysql+pymysql://nova:$5@$2/nova_api

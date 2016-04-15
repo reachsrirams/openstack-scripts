@@ -42,7 +42,7 @@ function manage-networknode-services() {
 	sleep 2
 	service neutron-metadata-agent $1
 	sleep 2
-	service neutron-plugin-linuxbridge-agent $1
+	service neutron-linuxbridge-agent $1
 	sleep 2
 }
 
