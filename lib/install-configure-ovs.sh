@@ -21,18 +21,16 @@ if [ "$2" == external ]
 	then
 		echo "Setting L3 Agent for external bridge"
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT external_network_bridge $3
-else
-	echo "Setting OVS Bridge Mapping"
-	crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
 fi
 
+echo_and_sleep "About to remove Linux Bridge and install OVS in Controller" 5
+apt-get purge -y neutron-linuxbridge-agent
+apt-get install -y neutron-openvswitch-agent
+apt-get autoremove -y
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
-		echo_and_sleep "About to remove Linux Bridge and install OVS in Controller" 5
-		apt-get purge -y neutron-linuxbridge-agent
-		apt-get install -y neutron-openvswitch-agent
-		apt-get autoremove -y
 		echo_and_sleep "Configuring ML2 INI file" 5
+		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan,vxlan
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vxlan
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch,l2population
