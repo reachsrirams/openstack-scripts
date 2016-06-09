@@ -15,6 +15,8 @@ if [ $# -lt 1 ]
 		exit 1;
 fi
 
+node_type=$1
+
 if [ "$2" == external ]
 	then
 		echo "Setting L3 Agent for external bridge"
