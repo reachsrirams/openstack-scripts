@@ -84,6 +84,7 @@ echo_and_sleep "Updated NOVA Configuration File" 2
 if [ "$1" == "controller" ]
 	then
 		echo_and_sleep "Populate Image Nova Database" 
+		nova-manage api_db sync
 		nova-manage db sync
 		echo_and_sleep "Restarting Nova Service"
 		service nova-api restart

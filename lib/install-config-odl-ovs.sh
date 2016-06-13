@@ -69,7 +69,6 @@ service openvswitch-switch restart
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
 		service neutron-server restart
-		service neutron-openvswitch-agent restart
 fi
 
 sleep 1
@@ -82,5 +81,4 @@ fi
 
 if [ "$node_type" == "compute" ]
 	then
-		service neutron-openvswitch-agent restart
 fi
