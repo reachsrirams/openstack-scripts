@@ -46,3 +46,7 @@ else
 	exit 1;
 fi
 
+echo "************************************"
+echo "** Execute post-config-actions.sh **
+echo "************************************"
+

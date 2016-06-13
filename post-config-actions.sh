@@ -5,9 +5,22 @@ echo "Node Type detected as: $node_type"
 
 if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ] 
 	then
-		echo "Setting Up Cirros Image..."
-		sleep 5
-		bash $dir_path/lib/setup-cirros-image.sh Cirros
+		echo "Do you want to enable Web based access to Logs? [y/n]"
+		read enable_web_log_view
+		if [ "$enable_web_log_view" == "y" ]
+		then
+			chmod a+rx /var/log/nova
+			chmod a+rx /var/log/neutron
+			ln -s /var/log/nova /var/www/html/oslogs/nova
+			ln -s /var/log/neutron /var/www/html/oslogs/neutron
+		fi
+		echo "Do you want to setup Cirros Image? [y/n]"
+		read setup_cirros_image
+		if [ "$setup_cirros_image" == "y" ]
+		then
+			sleep 2
+			bash $dir_path/lib/setup-cirros-image.sh Cirros
+		fi
 		sleep 3
 		bash $dir_path/lib/admin_openrc.sh
 		echo "About to execute OpenStack commands for some basic Network/Subnet etc"
