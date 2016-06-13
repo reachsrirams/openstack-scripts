@@ -21,6 +21,7 @@ else
 		echo "Executing Update /etc/hosts for Other Nodes"
 		sleep 10
 		bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name $1
+	fi
 fi
 
 if [ "$node_type" == "allinone" ]
