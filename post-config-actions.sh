@@ -5,7 +5,7 @@ echo "Node Type detected as: $node_type"
 
 if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ] 
 	then
-		echo "Do you want to enable Web based access to Logs? [y/n]"
+		echo -n "Do you want to enable Web based access to Logs? [y/n]: "
 		read enable_web_log_view
 		if [ "$enable_web_log_view" == "y" ]
 		then
@@ -14,7 +14,7 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 			ln -s /var/log/nova /var/www/html/oslogs/nova
 			ln -s /var/log/neutron /var/www/html/oslogs/neutron
 		fi
-		echo "Do you want to setup Cirros Image? [y/n]"
+		echo -n "Do you want to setup Cirros Image? [y/n]: "
 		read setup_cirros_image
 		if [ "$setup_cirros_image" == "y" ]
 		then
