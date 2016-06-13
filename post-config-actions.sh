@@ -9,6 +9,7 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 		read enable_web_log_view
 		if [ "$enable_web_log_view" == "y" ]
 		then
+			mkdir /var/www/html/oslogs
 			chmod a+rx /var/log/nova
 			chmod a+rx /var/log/neutron
 			ln -s /var/log/nova /var/www/html/oslogs/nova
@@ -22,13 +23,15 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 			bash $dir_path/lib/setup-cirros-image.sh Cirros
 		fi
 		sleep 3
-		bash $dir_path/lib/admin_openrc.sh
+		source $dir_path/lib/admin_openrc.sh
 		echo "About to execute OpenStack commands for some basic Network/Subnet etc"
 		neutron net-create network1
-		neutron subnet-create network1 20.20.20.0/24 -name subnet1
-		sleep 3
+		sleep 2
+		neutron subnet-create network1 20.20.20.0/24 --name subnet1
+		sleep 2
 		neutron net-create network2
-		neutron subnet-create network2 192.168.150.0/24 -name subnet2
+		sleep 2
+		neutron subnet-create network2 192.168.150.0/24 --name subnet2
 else
         echo "This command works only on the controller"
 	exit 1
