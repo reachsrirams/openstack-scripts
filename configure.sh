@@ -1,6 +1,27 @@
 dir_path=$(dirname $0)
 node_type=`bash $dir_path/util/detect-nodetype.sh`
 echo "Node Type detected as: $node_type"
+echo "Sourcing config-parameters..."
+source $dir_path/lib/config-parameters.sh
+echo "Management interface: "$mgmt_interface
+echo "Data Path interface: "$data_interface
+echo "Controller Host Name: "$controller_host_name
+
+if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ] 
+	then
+		echo "Executing Update /etc/hosts for Controller"
+		sleep 10
+		bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name
+else
+	if [ $# -ne 1 ]
+        then
+                echo "Correct Syntax for $node_type Nodes $0 <controller_ip_address>"
+		exit 1
+	else
+		echo "Executing Update /etc/hosts for Other Nodes"
+		sleep 10
+		bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name $1
+fi
 
 if [ "$node_type" == "allinone" ]
 	then

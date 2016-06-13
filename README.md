@@ -43,11 +43,9 @@ The following OpenStack services are installed as part these scripts:
    - If the node is of type allinone, execute `sudo bash install.sh allinone`
    - **Note - during the installation of MariaDB, you will be required to enter DB password manually**
 
-3. Add the host name of the controller to /etc/hosts. By default the script uses "controller" as the host name. If you had changed the name in Step 1 above, you need to use that.
-   - Execute `sudo bash util/update-etc-hosts.sh <management_interface_name> <hostname_of_controller>` if the node type is controller.
-   - Execute `sudo bash util/update-etc-hosts.sh <management_interface_name> <hostname_of_controller> <ip_of_controller>` if the node type is either compute or a network node.
-
-4. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically
+3. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically.
+   - If the node is of type controller, execute `sudo bash configure.sh`
+   - If the node is of type compute etc, execute `sudo bash configure.sh <controller_ip_address>`
    - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
 ## Updating IP Address ##

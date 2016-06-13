@@ -22,6 +22,8 @@ function change-ip-in-etc-hosts() {
 
 
 echo "Running: $0 $@"
+echo ""
+sleep 3
 dir_path=$(dirname $0)
 
 node_type=`bash $(dirname $0)/detect-nodetype.sh`
