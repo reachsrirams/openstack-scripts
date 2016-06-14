@@ -47,6 +47,6 @@ else
 fi
 
 echo "************************************"
-echo "** Execute post-config-actions.sh **
+echo "** Execute post-config-actions.sh **"
 echo "************************************"
 
