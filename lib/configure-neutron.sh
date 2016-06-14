@@ -154,6 +154,7 @@ if [ "$1" == "controller" ]
 		service neutron-l3-agent restart
 		service neutron-dhcp-agent restart
 		service neutron-metadata-agent restart
+		service neutron-lbaas-agent stop
 		service nova-scheduler restart
 		service nova-conductor restart
 		print_keystone_service_list
