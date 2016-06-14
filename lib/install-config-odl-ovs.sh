@@ -44,7 +44,7 @@ if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver iptables_hybrid
 
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_odl username admin
-                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_odl password password
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_odl password admin
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_odl url http://$2:8080/controller/nb/v2/neutron
 
 		echo_and_sleep "Configuring L3 and DHCP Agent Information" 2
@@ -77,8 +77,4 @@ if [ "$node_type" == "networknode" ] || [ "node_type" == "controller" ] || [ "no
 	then
 		service neutron-l3-agent restart
 		service neutron-dhcp-agent restart
-fi
-
-if [ "$node_type" == "compute" ]
-	then
 fi
