@@ -71,9 +71,12 @@ if [ "$1" == "controller" ]
 		crudini --set /etc/nova/nova.conf DEFAULT scheduler_default_filters AllHostsFilter
 elif [ "$1" == "compute" ]
 	then
+		controller_ip=`getent host $2`
+		echo "Controller IP is: $controller_ip"
+		sleep 5
 		crudini --set /etc/nova/nova.conf vnc enabled True
 		crudini --set /etc/nova/nova.conf vnc vncserver_listen 0.0.0.0
-		crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$2:6080/vnc_auto.html
+		crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$controller_ip:6080/vnc_auto.html
 fi
 
 crudini --set /etc/nova/nova.conf glance api_servers http://controller:9292
