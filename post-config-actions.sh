@@ -23,15 +23,20 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 			bash $dir_path/lib/setup-cirros-image.sh Cirros
 		fi
 		sleep 3
-		source $dir_path/lib/admin_openrc.sh
-		echo "About to execute OpenStack commands for some basic Network/Subnet etc"
-		neutron net-create network1
-		sleep 2
-		neutron subnet-create network1 20.20.20.0/24 --name subnet1
-		sleep 2
-		neutron net-create network2
-		sleep 2
-		neutron subnet-create network2 192.168.150.0/24 --name subnet2
+		echo -n "Do you want to setup OpenStack Network and Subnet? [y/n]: "
+		read setup_openstack_network
+		if [ "$setup_openstack_network" == "y" ]
+		then
+			source $dir_path/lib/admin_openrc.sh
+			echo "About to execute OpenStack commands for some basic Network/Subnet etc"
+			neutron net-create network1
+			sleep 2
+			neutron subnet-create network1 20.20.20.0/24 --name subnet1
+			sleep 2
+			neutron net-create network2
+			sleep 2
+			neutron subnet-create network2 192.168.150.0/24 --name subnet2
+		fi
 else
         echo "This command works only on the controller"
 	exit 1
