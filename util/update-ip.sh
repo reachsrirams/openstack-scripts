@@ -22,7 +22,7 @@ function update-nova-config-ip() {
 
 	if [ "$2" == "controller" ]
 		then
-			crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $mgmg_interface_ip
+			crudini --set /etc/nova/nova.conf vnc vncserver_listen $mgmg_interface_ip
 			sleep 2
 			service nova-novncproxy restart
 		else
