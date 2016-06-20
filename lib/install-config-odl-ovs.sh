@@ -19,9 +19,16 @@ fi
 echo_and_sleep "About to remove Linux Bridge and install OVS in Controller" 5
 apt-get purge -y neutron-linuxbridge-agent neutron-openvswitch-agent
 apt-get autoremove -y
+apt-get install -y openvswitch-switch
+
+service openvswitch-switch stop
+echo_and_sleep "About to delete OVS Config DB" 3
 rm -rf /var/log/openvswitch/*
 rm -rf /etc/openvswitch/conf.db
-apt-get install -y openvswitch-switch
+echo_and_sleep "About to start OVS" 2
+service openvswitch-switch start
+ovs-vsctl show
+echo_and_sleep "Executed OVS VSCTL Show" 3
 
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
@@ -53,10 +60,11 @@ uuid_ovs=`ovs-vsctl get Open_vSwitch . _uuid`
 echo "UUID of OVS: $uuid_ovs"
 sleep 5
 ovs-vsctl set Open_vSwitch $uuid_ovs other_config={local_ip=$overlay_interface_ip}
-sleep 1
+sleep 3
 ovs-vsctl set-manager tcp:$2:6640
-echo_and_sleep "Set the manager for OVS" 5
-service openvswitch-switch restart
+echo_and_sleep "Set the manager for OVS" 7
+ovs-vsctl show
+echo_and_sleep "Executed OVS VSCTL Show" 5
 
 if [ "$node_type" == "networknode" ] || [ "node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
