@@ -18,7 +18,7 @@ function update-nova-config-ip() {
 	sleep 2
 
 	crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmg_interface_ip
-	crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $mgmg_interface_ip
+	crudini --set /etc/nova/nova.conf vnc vncserver_proxyclient_address $mgmg_interface_ip
 
 	if [ "$2" == "controller" ]
 		then
@@ -31,8 +31,8 @@ function update-nova-config-ip() {
 					echo "Correct syntax for Compute Node: $0 <mgmt-interface> compute <controller-ip-address>"
 					exit 1;
 				else
-					crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 0.0.0.0
-					crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$3:6080/vnc_auto.html
+					crudini --set /etc/nova/nova.conf vnc vncserver_listen 0.0.0.0
+					crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$3:6080/vnc_auto.html
 					sleep 2
 					service nova-compute restart
 			fi

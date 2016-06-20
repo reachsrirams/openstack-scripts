@@ -2,23 +2,15 @@ echo "Running: $0 $@"
 sleep 4
 source $(dirname $0)/config-parameters.sh
 
-echo "Bridge Mapping for OVS: "$neutron_ovs_bridge_mappings
-bridge_name=`echo $neutron_ovs_bridge_mappings|cut -d: -f2`
-sleep 2
-
-echo "Data path interface: "$data_interface
-sleep 2
-
-if [ $# -lt 2 ]
+if [ $# -lt 1 ]
 	then
-		echo "Correct syntax: $0 <controller | compute | allinone> <vxlan | vlan> [ external ] [ external_bridge_name ]"
+		echo "Correct syntax: $0 <controller | compute | allinone> [ external ] [ external_bridge_name ]"
 		exit 1;
 fi
 
 node_type=$1
-network_type=$2
 
-if [ "$3" == external ]
+if [ "$2" == external ]
 	then
 		echo "Setting L3 Agent for external bridge"
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT external_network_bridge $3
@@ -31,14 +23,8 @@ apt-get autoremove -y
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
 		echo_and_sleep "Configuring ML2 INI file" 5
-		if [ "$network_type" == "vlan" ]
-			then
-				crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
-                		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
-	
-		fi
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan,vxlan
-                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types $network_type
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vlan
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch,l2population
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 extension_drivers port_security
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks public
@@ -65,18 +51,7 @@ crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini agent prevent_arp_s
 
 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup firewall_driver iptables_hybrid
 
-
-if [ "$network_type" == "vlan" ]
-	then
-		echo_and_sleep "Configuring Bridge and Data Interface for VLAN" 5 
-		ovs-vsctl add-br $bridge_name
-		sleep 1
-		ovs-vsctl add-port $bridge_name $data_interface
-		sleep 1
-		ovs-vsctl show
-		sleep 1
-fi
-
+echo_and_sleep "About to restart OVS" 3
 service openvswitch-switch restart
 
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
