@@ -9,15 +9,16 @@ sleep 2
 echo "Data path interface: "$data_interface
 sleep 2
 
-if [ $# -lt 1 ]
+if [ $# -lt 2 ]
 	then
-		echo "Correct syntax: $0 <controller | compute | allinone> [ external ] [ external_bridge_name ]"
+		echo "Correct syntax: $0 <controller | compute | allinone> <vxlan | vlan> [ external ] [ external_bridge_name ]"
 		exit 1;
 fi
 
 node_type=$1
+network_type=$2
 
-if [ "$2" == external ]
+if [ "$3" == external ]
 	then
 		echo "Setting L3 Agent for external bridge"
 		crudini --set /etc/neutron/l3_agent.ini DEFAULT external_network_bridge $3
@@ -30,9 +31,14 @@ apt-get autoremove -y
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
 		echo_and_sleep "Configuring ML2 INI file" 5
-		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
+		if [ "$network_type" == "vlan" ]
+			then
+				crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
+                		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch
+	
+		fi
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vlan,vxlan
-                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vxlan
+                crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types $network_type
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers openvswitch,l2population
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 extension_drivers port_security
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks public
@@ -59,20 +65,18 @@ crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini agent prevent_arp_s
 
 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup firewall_driver iptables_hybrid
 
-#crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini vxlan enable_vxlan True
-#crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini vxlan l2_population True
-#crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup enable_security_group True
-#crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup enable_ipset True
-#crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
+if [ "$network_type" == "vlan" ]
+	then
+		echo_and_sleep "Configuring Bridge and Data Interface for VLAN" 5 
+		ovs-vsctl add-br $bridge_name
+		sleep 1
+		ovs-vsctl add-port $bridge_name $data_interface
+		sleep 1
+		ovs-vsctl show
+		sleep 1
+fi
 
-sleep 1
-ovs-vsctl add-br $bridge_name
-sleep 1
-ovs-vsctl add-port $bridge_name $data_interface
-sleep 1
-ovs-vsctl show
-sleep 1
 service openvswitch-switch restart
 
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]

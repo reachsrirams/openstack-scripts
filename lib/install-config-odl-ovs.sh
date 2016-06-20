@@ -2,13 +2,6 @@ echo "Running: $0 $@"
 sleep 4
 source $(dirname $0)/config-parameters.sh
 
-echo "Bridge Mapping for OVS: "$neutron_ovs_bridge_mappings
-bridge_name=`echo $neutron_ovs_bridge_mappings|cut -d: -f2`
-sleep 2
-
-echo "Data path interface: "$data_interface
-sleep 2
-
 if [ $# -lt 2 ]
 	then
 		echo "Correct syntax: $0 <controller | compute | allinone> <ODL IP Address> [external] [external-bridge-name]"
@@ -34,7 +27,6 @@ if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
 		apt-get install -y python-networking-odl
 		echo_and_sleep "Configuring ML2 INI file" 5
-		crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings $neutron_ovs_bridge_mappings
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers flat,vxlan
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types vxlan
                 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers opendaylight
@@ -57,13 +49,7 @@ fi
 
 sleep 1
 ovs-vsctl set-manager tcp:$2:6640
-echo_and_sleep "Set the manager for OVS" 2
-ovs-vsctl add-br $bridge_name
-sleep 1
-ovs-vsctl add-port $bridge_name $data_interface
-sleep 1
-ovs-vsctl show
-sleep 1
+echo_and_sleep "Set the manager for OVS" 5
 service openvswitch-switch restart
 
 if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
