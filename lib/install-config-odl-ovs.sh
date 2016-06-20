@@ -46,21 +46,21 @@ if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
                 crudini --set /etc/neutron/metadata_agent.ini DEFAULT nova_metadata_ip controller
                 crudini --set /etc/neutron/metadata_agent.ini DEFAULT metadata_proxy_shared_secret password
 fi
-
+overlay_interface_ip=`ifconfig $data_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+echo "Overlay Interface IP Address: $overlay_interface_ip"
+sleep 5
+uuid_ovs=`ovs-vsctl get Open_vSwitch . _uuid`
+echo "UUID of OVS: $uuid_ovs"
+sleep 5
+ovs-vsctl set Open_vSwitch $uuid_ovs other_config={local_ip=$overlay_interface_ip}
 sleep 1
 ovs-vsctl set-manager tcp:$2:6640
 echo_and_sleep "Set the manager for OVS" 5
 service openvswitch-switch restart
 
-if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
-	then
-		service neutron-server restart
-fi
-
-sleep 1
-
 if [ "$node_type" == "networknode" ] || [ "node_type" == "controller" ] || [ "node_type" == "allinone" ]
 	then
+		service neutron-server restart
 		service neutron-l3-agent restart
 		service neutron-dhcp-agent restart
 fi
