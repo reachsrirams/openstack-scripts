@@ -22,10 +22,11 @@ The following OpenStack services are installed as part these scripts:
 5. Horizon (Dashboard)
 
 #### Important Notes ####
-1. The installation installs only Linux Bridge packages by default. Installing OVS can be done using a utility script provided in `util` directory.
+1. The script installs Linux Bridge packages by default. Installing OVS can be done using a utility script provided in the `lib` directory.
 2. The Nova configuration includes a setting to use `AllHostsFilter` as the default filter for scheduler. If you want the default filters of Nova, remove this entry and restart Nova services on the controller.
 3. Many scripts detect the OpenStack Node Type automatically using `util/detect-nodetype.sh` script.
-4. The node type controller includes network node capabilities. This is new behavior in OpenStack from Liberty release.
+4. The node type controller includes network node capabilities. This is new behavior in OpenStack since Liberty release.
+5. VXLAN is the default tenant network type used.
 
 ## How to use the scripts step by step ##
 
@@ -39,7 +40,7 @@ The following OpenStack services are installed as part these scripts:
    - If the node is of type compute, execute `sudo bash install.sh compute`
    - If the node is of type networknode, execute `sudo bash install.sh networknode`
    - If the node is of type allinone, execute `sudo bash install.sh allinone`
-   - **Note - during the installation of MariaDB, you will be required to enter DB password manually**
+   - **Note - during the installation of MariaDB, you will be required to setup DB password first time manually (for Ubunutu 14.04)**
 
 3. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically.
    - If the node is of type controller, execute `sudo bash configure.sh`
@@ -52,9 +53,6 @@ The following OpenStack services are installed as part these scripts:
    - Creates two OpenStack networks and their subnets
    - **Note - each step is optional and can be skipped as required**
 
-## Updating IP Address ##
-
-The install scripts use a name for the controller (defined in `config-parameters.sh` script). 
 
 ## Useful scripts - Updating IP Address ##
 
