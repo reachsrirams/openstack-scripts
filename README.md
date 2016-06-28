@@ -4,7 +4,7 @@
 
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a complete automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Platform supported - Ubuntu 16.04
+#### Platform supported - Ubuntu 14.04
 #### OpenStack version - Mitaka
 
 #### Prerequisites ####
@@ -20,8 +20,6 @@ The following OpenStack services are installed as part these scripts:
 3. Nova (Compute)
 4. Neutron (Networking)
 5. Horizon (Dashboard)
-6. Ceilometer (Telemetry)
-7. Heat (Orchestration)
 
 #### Important Notes ####
 1. The installation installs only Linux Bridge packages by default. Installing OVS can be done using a utility script provided in `util` directory.
@@ -48,12 +46,22 @@ The following OpenStack services are installed as part these scripts:
    - If the node is of type compute etc, execute `sudo bash configure.sh <controller_ip_address>`
    - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
+4. Post Config Actions can be triggered using `sudo bash post-config-actions.sh` script on the controller node only. This interactive script does the following:
+   - Enables web browser based view of Nova and Neutron log files.
+   - Downloads and creates a Cirros Glance Image for booting up VMs.
+   - Creates two OpenStack networks and their subnets
+   - **Note - each step is optional and can be skipped as required**
+
 ## Updating IP Address ##
 
-The install scripts use a name for the controller (defined in `config-parameters.sh` script). This name needs to be updated in the /etc/hosts file. Also to view the VNC console of an instance, it is convenient to use IP address in the Nova configuration file. All these changes can be done using `util/update-ip.sh` script. 
+The install scripts use a name for the controller (defined in `config-parameters.sh` script). 
 
-Usage: `sudo bash util/update-ip.sh <controller-host-name> <controller-ip>`. 
-The second parameter is used for network nodes and compute nodes.
+## Useful scripts - Updating IP Address ##
+
+If there is a change in the IP address of the controller, then use the `util/update-ip.sh` script to ensure that all config settings are updated. This command needs to be run on controller as well as the compute nodes.
+
+Usage: `sudo bash util/update-ip.sh <management-interface-name> <controller-host-name> <controller-ip>`. 
+The second and third parameter is used for network nodes and compute nodes.
 
 ## Removing OpenStack packages ##
 
