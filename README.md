@@ -1,4 +1,3 @@
-### Work in Progress ###
 
 # Welcome to the OpenStack Install Scripts project on GitHub
 
