@@ -1,13 +1,13 @@
 
 # Welcome to the OpenStack Install Scripts project on GitHub
 
-This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a complete automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
+This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a _perfect_ automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Platform supported - Ubuntu 14.04
+#### Platform supported - Ubuntu server 14.04
 #### OpenStack version - Mitaka
 
 #### Prerequisites ####
-Git packages must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server. 
+_git_ binaries must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server. 
 
 If you are using VirtualBox, refer to this blog for Network settings - http://goo.gl/VTJVmv
 
@@ -32,9 +32,9 @@ The following OpenStack services are installed as part these scripts:
 ## How to use the scripts step by step ##
 
 1. Edit the lib/config-parameters.sh file
-   - Important: Make sure that Management and Data plane interface names are accurate
-   - Change the hostname to be used for controller. This name will be used in all configuration files. 
-   - Change passwords as necessary 
+   - Important: Make sure that Management and Data plane interface names are accurate. *Mandatory for Ubuntu 14.04*
+   - Optional: Change the hostname to be used for controller. This name will be used in all configuration files. 
+   - Optional: Change passwords as necessary 
 
 2. Install OpenStack packages depending upon the type of the node
    - If the node is of type controller, execute `sudo bash install.sh controller`
