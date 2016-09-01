@@ -69,8 +69,6 @@ function manage-controller-services() {
 		sleep 3
 		manage-controller-horizon $2
 		sleep 2
-		service keystone $2
-		sleep 2
 		manage-controller-glance $2
 		sleep 2
 		manage-controller-nova $2
