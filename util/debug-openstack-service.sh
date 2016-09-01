@@ -35,7 +35,7 @@ function debug-keystone() {
 	crudini --set /etc/keystone/keystone.conf DEFAULT debug $debug_flag
 	if [ "$1" == "controller" ]
 		then
-			service keystone restart
+			service apache2 restart
 	else
 		echo "Invalid node type: $1. Only the following node types are supported: compute, controller"
 		exit 1;
