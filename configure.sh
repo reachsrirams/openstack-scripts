@@ -7,28 +7,28 @@ echo "Management interface: "$mgmt_interface
 echo "Data Path interface: "$data_interface
 echo "Controller Host Name: "$controller_host_name
 
+if [ $# -ne 1 ]
+then
+       	echo "Correct Syntax: $0 <controller_ip_address>"
+	exit 1
+fi
+
 if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ] 
-	then
-		echo "Executing Update /etc/hosts for Controller"
-		sleep 10
-		bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name
+then
+	echo "Executing Update /etc/hosts for Controller"
+	sleep 10
+	bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name
 else
-	if [ $# -ne 1 ]
-        then
-                echo "Correct Syntax for $node_type Nodes $0 <controller_ip_address>"
-		exit 1
-	else
-		echo "Executing Update /etc/hosts for Other Nodes"
-		sleep 10
-		bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name $1
-	fi
+	echo "Executing Update /etc/hosts for Other Nodes"
+	sleep 10
+	bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name $1
 fi
 
 if [ "$node_type" == "allinone" ]
 	then
 		echo "Configuring packages for All-in-one"
 		sleep 5
-		bash $dir_path/lib/configure-packages.sh controller 
+		bash $dir_path/lib/configure-packages.sh controller $1
 		bash $dir_path/lib/configure-packages.sh networknode
 		bash $dir_path/lib/configure-packages.sh compute 
 elif [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
@@ -40,7 +40,7 @@ elif [ "$node_type" == "controller" ] || [ "$node_type" == "controller_networkno
 	then
 		echo "Configuring packages for Controller and Network Node"
 		sleep 5
-		bash $dir_path/lib/configure-packages.sh controller 
+		bash $dir_path/lib/configure-packages.sh controller $1
 else
 	echo "Unsupported Node Type for $0: $node_type"
 	exit 1;

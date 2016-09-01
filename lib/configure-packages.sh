@@ -1,10 +1,11 @@
 source $(dirname $0)/config-parameters.sh
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 	then
-		echo "Correct syntax: $0 [ controller | compute | networknode ]"
+		echo "Correct syntax: $0 [ controller | compute | networknode ] <controller_ip_address>"
 		exit 1;
 fi
 
+controller_ip_address=$2
 metering_secret="password"
 
 if [ "$1" == "compute" ]
@@ -27,22 +28,23 @@ fi
 if [ "$1" == "controller" ] 
 	then
 		echo_and_sleep "About to configure MySQL on Controller"	
-                if [ -f "/etc/mysql/mariadb.conf.d/mysqld.cnf" ]
+                if [ -d "/etc/mysql/mariadb.conf.d/" ]
 		then
                         echo_and_sleep "Maria DB Conf file found" 2
 			mysql_conf_file="/etc/mysql/conf.d/openstack.cnf"
                 	echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
                 	touch $mysql_conf_file
-               		crudini --set $mysql_conf_file mysqld bind-address 0.0.0.0
+               		crudini --set $mysql_conf_file mysqld bind-address $controller_ip_address
                		echo_and_sleep "Updated Bind Address" 2
                		crudini --set $mysql_conf_file mysqld default-storage-engine innodb
-               		echo "innodb_file_per_table" >> $mysql_conf_file
                		crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
                		crudini --set $mysql_conf_file mysqld character-set-server utf8
+               		crudini --set $mysql_conf_file mysqld max_connections 4096
+               		echo "innodb_file_per_table" >> $mysql_conf_file
 		else
 			echo_and_sleep "Maria DB Conf File Not Found" 2
 			mysql_conf_file="/etc/mysql/my.cnf"
-			sed -i "s/127.0.0.1/0.0.0.0/g" $mysql_conf_file
+			sed -i "s/127.0.0.1/$controller_ip_address/g" $mysql_conf_file
                         echo_and_sleep "Updated Bind Address" 2
                         grep "bind" $mysql_conf_file
 
@@ -67,6 +69,9 @@ if [ "$1" == "controller" ]
 		rabbitmqctl set_permissions $rabbitmq_user ".*" ".*" ".*"
 		echo_and_sleep "Configured Permissions in Rabbit MQ"
 		service rabbitmq-server restart
+
+		sed -i "s/127.0.0.1/$1/g" /etc/memcached.conf
+		service memcached restart
 		
 		echo_and_sleep "About to setup KeyStone..."
 		bash $(dirname $0)/configure-keystone.sh $keystone_db_password $mysql_user $mysql_password $controller_host_name $admin_tenant_password
