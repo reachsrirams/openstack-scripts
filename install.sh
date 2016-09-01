@@ -11,7 +11,13 @@ function install-common-packages() {
 	echo "About to configure APT for Mitaka"
 	sleep 3
 	apt-get install software-properties-common -y
-	add-apt-repository cloud-archive:mitaka
+	ubuntu_version=`lsb_release -sr`
+	if [ "$ubuntu_version" == "14.04" ]
+	then
+		add-apt-repository cloud-archive:mitaka
+	else
+		echo "Cloud Archive setting not needed for $ubuntu_version. Skipping it."
+	fi
 
 	echo "Doing full system update"
 	sleep 3
