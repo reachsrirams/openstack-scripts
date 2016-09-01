@@ -43,9 +43,7 @@ The following OpenStack services are installed as part these scripts:
    - If the node is of type allinone, execute `sudo bash install.sh allinone`
    - **Note - during the installation of MariaDB, you will be required to setup DB password first time manually (for Ubunutu 14.04)**
 
-3. Configure OpenStack packages using `sudo bash configure.sh`. The **node type** is detected automatically.
-   - If the node is of type controller, execute `sudo bash configure.sh`
-   - If the node is of type compute etc, execute `sudo bash configure.sh <controller_ip_address>`
+3. Configure OpenStack packages using `sudo bash configure.sh <controller_ip_address>`. The **node type** is detected automatically.
    - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
 4. Post Config Actions can be triggered using `sudo bash post-config-actions.sh` script on the controller node only. This interactive script does the following:
