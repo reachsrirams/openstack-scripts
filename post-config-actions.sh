@@ -12,8 +12,13 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 			mkdir /var/www/html/oslogs
 			chmod a+rx /var/log/nova
 			chmod a+rx /var/log/neutron
+			chmod a+rx /var/log/apache2
+			chmod a+rx /var/log/keystone
 			ln -s /var/log/nova /var/www/html/oslogs/nova
 			ln -s /var/log/neutron /var/www/html/oslogs/neutron
+			ln -s /var/log/apache2 /var/www/html/oslogs/apache2
+			ln -s /var/log/keystone /var/www/html/oslogs/keystone
+			echo "Visit http://<controller_ip>/oslogs"
 		fi
 		echo -n "Do you want to setup Cirros Image? [y/n]: "
 		read setup_cirros_image
