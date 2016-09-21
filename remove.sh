@@ -3,11 +3,18 @@ function stop-controller-services() {
 }
 
 function remove-common-packages() {
-	echo "About to remove Common packages (only APT sources list will be removed)"
-	sleep 2
-	rm -f /etc/apt/sources.list.d/cloudarchive-kilo.list
+	apt-get purge chrony -y
+	apt-get purge python-openstackclient -y
+	ubuntu_version=`lsb_release -sr`
+        if [ "$ubuntu_version" == "14.04" ]
+        then
+		echo "About to remove cloud-archive:mitaka"
+		sleep 2
+		add-apt-repository --remove cloud-archive:mitaka
+		sleep 2
+	fi
 	echo "Doing full system update"
-        sleep 3
+        sleep 2
         apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
         apt-get autoremove -y
 	
@@ -17,7 +24,7 @@ function remove-compute-packages() {
 	echo "About to remove packages for Compute Node"
 	sleep 2
 	apt-get purge nova-compute sysfsutils -y
-	apt-get purge neutron-plugin-ml2 neutron-plugin-openvswitch-agent -y
+	apt-get purge neutron-plugin-linuxbridge-agent conntrack -y
 	apt-get purge ceilometer-agent-compute -y
 	apt-get autoremove -y
 }
