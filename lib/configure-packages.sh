@@ -1,11 +1,5 @@
 source $(dirname $0)/config-parameters.sh
-if [ $# -ne 2 ]
-	then
-		echo "Correct syntax: $0 [ controller | compute | networknode ] <controller_ip_address>"
-		exit 1;
-fi
 
-controller_ip_address=$2
 metering_secret="password"
 
 if [ "$1" == "compute" ]
@@ -23,10 +17,14 @@ if [ "$1" == "compute" ]
 		#bash $(dirname $0)/configure-ceilometer.sh compute $controller_host_name $rabbitmq_password $neutron_password $metering_secret
 
 		bash $(dirname $0)/configure-qemu.sh
-fi
-
-if [ "$1" == "controller" ] 
+elif [ "$1" == "controller" ] 
 	then
+		if [ $# -ne 2 ]
+		then
+			echo "Correct syntax: $0 controller <controller_ip_address>"
+			exit 1;
+		fi
+		controller_ip_address=$2
 		echo_and_sleep "About to configure MySQL on Controller"	
                 if [ -d "/etc/mysql/mariadb.conf.d/" ]
 		then
@@ -98,14 +96,16 @@ if [ "$1" == "controller" ]
 
 		#echo_and_sleep "About to setup Heat..."
 		#bash $(dirname $0)/configure-heat.sh $heat_db_password $mysql_user $mysql_password $controller_host_name $rabbitmq_password $heat_password
-fi
-
-if [ "$1" == "networknode" ]
+elif [ "$1" == "networknode" ]
 	then
 		echo_and_sleep "About to configure Network Node"
 		bash $(dirname $0)/configure-forwarding.sh networknode
 
 		echo_and_sleep "About to configure Neutron for Network Node" 2
 		bash $(dirname $0)/configure-neutron.sh networknode $controller_host_name $rabbitmq_password $neutron_password
+else
+        echo "Correct syntax 1: $0 controller <controller_ip_address>"
+        echo "Correct syntax 2: $0 [ compute | networknode ]"
+        exit 1;
 
 fi
