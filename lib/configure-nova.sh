@@ -71,7 +71,7 @@ if [ "$1" == "controller" ]
 		crudini --set /etc/nova/nova.conf DEFAULT scheduler_default_filters AllHostsFilter
 elif [ "$1" == "compute" ]
 	then
-		controller_ip=`getent host $2`
+		controller_ip=`getent hosts $2 | awk '{ print $1 }'`
 		echo "Controller IP is: $controller_ip"
 		sleep 5
 		crudini --set /etc/nova/nova.conf vnc enabled True
