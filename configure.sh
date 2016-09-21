@@ -46,7 +46,9 @@ else
 	exit 1;
 fi
 
-echo "************************************"
-echo "** Execute post-config-actions.sh **"
-echo "************************************"
-
+if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
+	then
+		echo "************************************"
+		echo "** Execute post-config-actions.sh **"
+		echo "************************************"
+fi
