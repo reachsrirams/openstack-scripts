@@ -3,7 +3,7 @@
 
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a _perfect_ automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Platform supported - Ubuntu server 14.04
+#### Platform supported - Ubuntu server 16.04 and 14.04
 #### OpenStack version - Mitaka
 
 #### Prerequisites ####
