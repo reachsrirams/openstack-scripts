@@ -58,8 +58,9 @@ elif [ "$1" == "controller" ]
                	echo_and_sleep "Updated other MySQL Parameters. About to restart and secure MySQL" 3
 
                 service mysql restart;
-                sleep 5
-                mysql_secure_installation;
+                sleep 2
+		bash $(dirname $0)/mysql-secure-installation.sh $mysql_user $mysql_password
+		echo_and_sleep "Completed MySQL Config and Secure Installation" 2
 
 		echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
 		rabbitmqctl add_user $rabbitmq_user $rabbitmq_password
