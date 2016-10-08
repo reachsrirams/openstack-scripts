@@ -59,7 +59,7 @@ elif [ "$1" == "controller" ]
 
                 service mysql restart;
                 sleep 2
-		mysql-secure-installation.sh $mysql_user $mysql_password
+		bash $(dirname $0)/mysql-secure-installation.sh $mysql_user $mysql_password
 		echo_and_sleep "Completed MySQL Config and Secure Installation" 2
 
 		echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
