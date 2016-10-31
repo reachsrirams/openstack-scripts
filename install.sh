@@ -8,17 +8,10 @@ function install-common-packages() {
 	apt-get install chrony -y
 	service chrony restart
 	
-	echo "About to configure APT for Mitaka"
+	echo "About to configure APT for Newton"
 	sleep 3
 	apt-get install software-properties-common -y
-	ubuntu_version=`lsb_release -sr`
-	if [ "$ubuntu_version" == "14.04" ]
-	then
-		add-apt-repository cloud-archive:mitaka
-	else
-		echo "Cloud Archive setting not needed for $ubuntu_version. Skipping it."
-	fi
-
+    add-apt-repository cloud-archive:newton
 	echo "Doing full system update"
 	sleep 3
 	apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y

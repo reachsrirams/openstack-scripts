@@ -5,18 +5,14 @@ function stop-controller-services() {
 function remove-common-packages() {
 	apt-get purge chrony -y
 	apt-get purge python-openstackclient -y
-	ubuntu_version=`lsb_release -sr`
-        if [ "$ubuntu_version" == "14.04" ]
-        then
-		echo "About to remove cloud-archive:mitaka"
-		sleep 2
-		add-apt-repository --remove cloud-archive:mitaka
-		sleep 2
-	fi
+	echo "About to remove cloud-archive:mitaka"
+	sleep 2
+	add-apt-repository --remove cloud-archive:mitaka
+	sleep 2
 	echo "Doing full system update"
-        sleep 2
-        apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
-        apt-get autoremove -y
+    sleep 2
+    apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y
+    apt-get autoremove -y
 	
 }
 
