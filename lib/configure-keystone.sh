@@ -54,9 +54,9 @@ echo_and_sleep "Set environment variables" 1
 openstack service create --name keystone --description "OpenStackIdentity" identity
 echo_and_sleep "Created Identity Service"
 
-openstack endpoint create --region RegionOne identity public http://$4:5000/v2.0
-openstack endpoint create --region RegionOne identity internal http://$4:5000/v2.0
-openstack endpoint create --region RegionOne identity admin http://$4:35357/v2.0
+openstack endpoint create --region RegionOne identity public http://$4:5000/v3
+openstack endpoint create --region RegionOne identity internal http://$4:5000/v3
+openstack endpoint create --region RegionOne identity admin http://$4:35357/v3
 
 openstack domain create --description "Default Domain" default
 echo_and_sleep "Created Domain: default" 1
