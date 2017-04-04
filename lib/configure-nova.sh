@@ -79,7 +79,7 @@ elif [ "$1" == "compute" ]
 		crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$controller_ip:6080/vnc_auto.html
 fi
 
-crudini --set /etc/nova/nova.conf glance api_servers http://controller:9292
+crudini --set /etc/nova/nova.conf glance api_servers http://$2:9292
 crudini --set /etc/nova/nova.conf oslo_concurrency lock_path /var/lib/nova/tmp
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
 echo_and_sleep "Updated NOVA Configuration File" 2
