@@ -30,8 +30,7 @@ function install-common-packages() {
 function install-controller-packages() {
 	echo "Installing MariaDB and MongoDB..."
 	apt-get install mariadb-server python-pymysql -y
-	apt-get install mongodb-server mongodb-clients python-pymongo -y
-	
+
 	echo "Installing RabbitMQ..." 
 	sleep 3
 	apt-get install rabbitmq-server -y
@@ -57,26 +56,15 @@ function install-controller-packages() {
 		haproxy \
   		neutron-metadata-agent python-neutronclient conntrack -y
 
-	echo "Installing Cinder for Controller"
-	sleep 2
-	apt-get install cinder-api cinder-scheduler python-cinderclient -y
-	
 	echo "Installing Horizon..."
 	sleep 2
 	apt-get install openstack-dashboard -y
 	
-	echo "Installing Ceilometer for Controller"
-	sleep 2
-	apt-get install mongodb-server mongodb-clients python-pymongo -y
-	sleep 2
-	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
-	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
-	python-ceilometerclient -y
+	install-cinder-packages 
 
-	echo "Installing Heat for Controller..."
-	sleep 2
-	apt-get install heat-api heat-api-cfn heat-engine \
-  				python-heatclient -y
+	install-ceilometer-pacakges
+
+	install-heat-pacakges
 
 	echo "Installing Network Node Components..."
 	sleep 2
@@ -85,6 +73,29 @@ function install-controller-packages() {
 	echo "Doing autoremove..."
 	sleep 2
 	apt-get autoremove -y
+}
+
+function install-cinder-packages() {
+	echo "Installing Cinder for Controller"
+	sleep 2
+	apt-get install cinder-api cinder-scheduler python-cinderclient -y
+}
+	
+function install-ceilometer-packages() {
+	echo "Installing Ceilometer for Controller"
+	sleep 2
+	apt-get install mongodb-server mongodb-clients python-pymongo -y
+	sleep 2
+	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
+	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
+	python-ceilometerclient -y
+}
+
+function install-heat-packages() {
+	echo "Installing Heat for Controller..."
+	sleep 2
+	apt-get install heat-api heat-api-cfn heat-engine \
+  				python-heatclient -y
 }
 
 function install-networknode-packages() {
