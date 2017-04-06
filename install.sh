@@ -1,3 +1,35 @@
+function install-neutron-packages-controller() {
+	echo "Installing Neutron for Controller"
+	sleep 2
+	apt-get install neutron-server neutron-plugin-ml2 \
+  		neutron-linuxbridge-agent neutron-dhcp-agent \
+		haproxy \
+  		neutron-metadata-agent python-neutronclient conntrack -y
+}
+
+function install-cinder-packages-controller() {
+	echo "Installing Cinder for Controller"
+	sleep 2
+	apt-get install cinder-api cinder-scheduler python-cinderclient -y
+}
+	
+function install-ceilometer-packages-controller() {
+	echo "Installing Ceilometer for Controller"
+	sleep 2
+	apt-get install mongodb-server mongodb-clients python-pymongo -y
+	sleep 2
+	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
+	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
+	python-ceilometerclient -y
+}
+
+function install-heat-packages-controller() {
+	echo "Installing Heat for Controller..."
+	sleep 2
+	apt-get install heat-api heat-api-cfn heat-engine \
+  				python-heatclient -y
+}
+
 function install-common-packages() {
 	echo "About to install crudini"
 	apt-get install crudini -y
@@ -27,6 +59,7 @@ function install-common-packages() {
 	apt-get install python-openstackclient -y
 }
 
+
 function install-controller-packages() {
 	echo "Installing MariaDB and MongoDB..."
 	apt-get install mariadb-server python-pymysql -y
@@ -48,23 +81,18 @@ function install-controller-packages() {
 	sleep 2
 	apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy \
 	nova-scheduler python-novaclient -y
-	
-	echo "Installing Neutron for Controller"
-	sleep 2
-	apt-get install neutron-server neutron-plugin-ml2 \
-  		neutron-linuxbridge-agent neutron-dhcp-agent \
-		haproxy \
-  		neutron-metadata-agent python-neutronclient conntrack -y
 
+	install-neutron-packages-controller
+	
 	echo "Installing Horizon..."
 	sleep 2
 	apt-get install openstack-dashboard -y
 	
-	install-cinder-packages 
+	#install-cinder-packages-controller 
 
-	install-ceilometer-pacakges
+	#install-ceilometer-pacakges-controller
 
-	install-heat-pacakges
+	#install-heat-pacakges-controller
 
 	echo "Installing Network Node Components..."
 	sleep 2
@@ -73,29 +101,6 @@ function install-controller-packages() {
 	echo "Doing autoremove..."
 	sleep 2
 	apt-get autoremove -y
-}
-
-function install-cinder-packages() {
-	echo "Installing Cinder for Controller"
-	sleep 2
-	apt-get install cinder-api cinder-scheduler python-cinderclient -y
-}
-	
-function install-ceilometer-packages() {
-	echo "Installing Ceilometer for Controller"
-	sleep 2
-	apt-get install mongodb-server mongodb-clients python-pymongo -y
-	sleep 2
-	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
-	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
-	python-ceilometerclient -y
-}
-
-function install-heat-packages() {
-	echo "Installing Heat for Controller..."
-	sleep 2
-	apt-get install heat-api heat-api-cfn heat-engine \
-  				python-heatclient -y
 }
 
 function install-networknode-packages() {
