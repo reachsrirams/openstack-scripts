@@ -16,11 +16,11 @@ fi
 if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ] 
 then
 	echo "Executing Update /etc/hosts for Controller"
-	sleep 10
+	sleep 5
 	bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name
 else
 	echo "Executing Update /etc/hosts for Other Nodes"
-	sleep 10
+	sleep 5
 	bash $dir_path/util/update-etc-hosts.sh $mgmt_interface $controller_host_name $1
 fi
 

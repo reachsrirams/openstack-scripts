@@ -12,11 +12,12 @@ function install-common-packages() {
 	sleep 3
 	apt-get install software-properties-common -y
 	ubuntu_version=`lsb_release -sr`
-	if [ "$ubuntu_version" == "14.04" ]
+	if [ "$ubuntu_version" == "16.04" ]
 	then
-		add-apt-repository cloud-archive:mitaka
+		add-apt-repository cloud-archive:newton
 	else
-		echo "Cloud Archive setting not needed for $ubuntu_version. Skipping it."
+		echo "Newton release supported only on Xenial (16.04)"
+		exit 1;
 	fi
 
 	echo "Doing full system update"
