@@ -3,8 +3,8 @@
 
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a _perfect_ automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Platform supported - Ubuntu server 16.04 and 14.04
-#### OpenStack version - Mitaka
+#### Platform supported - Ubuntu server 16.04
+#### OpenStack version - Newton
 
 #### Prerequisites ####
 _git_ binaries must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server. 
@@ -19,8 +19,6 @@ The following OpenStack services are installed as part these scripts:
 3. Nova (Compute)
 4. Neutron (Networking)
 5. Horizon (Dashboard)
-6. Heat (Orchestration) - work in progress
-7. Ceilometer (Telemetry) - work in progress
 
 #### Important Notes ####
 1. The script installs Linux Bridge packages by default. Installing OVS can be done using a utility script provided in the `lib` directory.
