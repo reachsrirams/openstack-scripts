@@ -8,7 +8,7 @@ function install-common-packages() {
 	apt-get install chrony -y
 	service chrony restart
 	
-	echo "About to configure APT for Mitaka"
+	echo "About to configure APT for Newton"
 	sleep 3
 	apt-get install software-properties-common -y
 	ubuntu_version=`lsb_release -sr`
