@@ -1,3 +1,35 @@
+function install-neutron-packages-controller() {
+	echo "Installing Neutron for Controller"
+	sleep 2
+	apt-get install neutron-server neutron-plugin-ml2 \
+  		neutron-linuxbridge-agent neutron-dhcp-agent \
+		haproxy \
+  		neutron-metadata-agent python-neutronclient conntrack -y
+}
+
+function install-cinder-packages-controller() {
+	echo "Installing Cinder for Controller"
+	sleep 2
+	apt-get install cinder-api cinder-scheduler python-cinderclient -y
+}
+	
+function install-ceilometer-packages-controller() {
+	echo "Installing Ceilometer for Controller"
+	sleep 2
+	apt-get install mongodb-server mongodb-clients python-pymongo -y
+	sleep 2
+	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
+	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
+	python-ceilometerclient -y
+}
+
+function install-heat-packages-controller() {
+	echo "Installing Heat for Controller..."
+	sleep 2
+	apt-get install heat-api heat-api-cfn heat-engine \
+  				python-heatclient -y
+}
+
 function install-common-packages() {
 	echo "About to install crudini"
 	apt-get install crudini -y
@@ -8,15 +40,16 @@ function install-common-packages() {
 	apt-get install chrony -y
 	service chrony restart
 	
-	echo "About to configure APT for Mitaka"
+	echo "About to configure APT for Newton"
 	sleep 3
 	apt-get install software-properties-common -y
 	ubuntu_version=`lsb_release -sr`
-	if [ "$ubuntu_version" == "14.04" ]
+	if [ "$ubuntu_version" == "16.04" ]
 	then
-		add-apt-repository cloud-archive:mitaka
+		add-apt-repository cloud-archive:newton
 	else
-		echo "Cloud Archive setting not needed for $ubuntu_version. Skipping it."
+		echo "Newton release supported only on Xenial (16.04)"
+		exit 1;
 	fi
 
 	echo "Doing full system update"
@@ -26,11 +59,11 @@ function install-common-packages() {
 	apt-get install python-openstackclient -y
 }
 
+
 function install-controller-packages() {
 	echo "Installing MariaDB and MongoDB..."
 	apt-get install mariadb-server python-pymysql -y
-	apt-get install mongodb-server mongodb-clients python-pymongo -y
-	
+
 	echo "Installing RabbitMQ..." 
 	sleep 3
 	apt-get install rabbitmq-server -y
@@ -48,34 +81,18 @@ function install-controller-packages() {
 	sleep 2
 	apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy \
 	nova-scheduler python-novaclient -y
-	
-	echo "Installing Neutron for Controller"
-	sleep 2
-	apt-get install neutron-server neutron-plugin-ml2 \
-  		neutron-linuxbridge-agent neutron-dhcp-agent \
-		haproxy \
-  		neutron-metadata-agent python-neutronclient conntrack -y
 
-	echo "Installing Cinder for Controller"
-	sleep 2
-	apt-get install cinder-api cinder-scheduler python-cinderclient -y
+	install-neutron-packages-controller
 	
 	echo "Installing Horizon..."
 	sleep 2
 	apt-get install openstack-dashboard -y
 	
-	echo "Installing Ceilometer for Controller"
-	sleep 2
-	apt-get install mongodb-server mongodb-clients python-pymongo -y
-	sleep 2
-	apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
-	ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
-	python-ceilometerclient -y
+	#install-cinder-packages-controller 
 
-	echo "Installing Heat for Controller..."
-	sleep 2
-	apt-get install heat-api heat-api-cfn heat-engine \
-  				python-heatclient -y
+	#install-ceilometer-pacakges-controller
+
+	#install-heat-pacakges-controller
 
 	echo "Installing Network Node Components..."
 	sleep 2
