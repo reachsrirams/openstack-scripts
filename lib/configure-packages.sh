@@ -63,7 +63,7 @@ elif [ "$1" == "controller" ]
 			exit 1;
 		fi
 		configure-mysql-controller $2
-		dirname $0)/mysql-secure-installation.sh $mysql_user $mysql_password
+		bash $(dirname $0)/mysql-secure-installation.sh $mysql_user $mysql_password
 		echo_and_sleep "Completed MySQL Config and Secure Installation" 2
 
 		echo_and_sleep "Rabbit MQ: Updating password: $rabbitmq_password"
