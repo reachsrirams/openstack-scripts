@@ -39,8 +39,8 @@ mysql_command="CREATE DATABASE IF NOT EXISTS neutron; GRANT ALL PRIVILEGES ON ne
 		crudini --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
 fi
 
-crudini --set /etc/neutron/neutron.conf DEFAULT rpc_backend rabbit
-configure-oslo-messaging /etc/neutron/neutron.conf $2 openstack $3
+echo_and_sleep "RabbitMQ config changed for Newton" 1
+crudini --set /etc/neutron/neutron.conf DEFAULT transport_url rabbit://openstack:$3@$2
 
 crudini --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
 configure-keystone-authentication /etc/neutron/neutron.conf $2 neutron $4
