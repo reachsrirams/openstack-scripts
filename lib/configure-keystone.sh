@@ -8,20 +8,17 @@ fi
 echo "Configuring MySQL for Keystone..."
 mysql_command="CREATE DATABASE IF NOT EXISTS keystone; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '$1'; GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY '$1';"
 echo "MySQL DB Command is: "$mysql_command 
-sleep 5
+sleep 3
 mysql -u "$2" -p"$3" -e "$mysql_command"
 
-service keystone stop
-
-echo "Configuring Keystone..."
-sleep 2
+echo_and_sleep "Configuring Keystone..." 2
 
 crudini --set /etc/keystone/keystone.conf database connection mysql+pymysql://keystone:$1@$4/keystone
 crudini --set /etc/keystone/keystone.conf token provider fernet
 grep "mysql" /etc/keystone/keystone.conf
 echo_and_sleep "Configured KeyStone Conf File" 2
 
-echo_and_sleep "Populate Identity Service Database" 2
+echo_and_sleep "Executing Keystone DB Sync" 2
 keystone-manage db_sync
 echo_and_sleep "Setup Fernet" 2
 keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
@@ -32,6 +29,7 @@ keystone-manage bootstrap --bootstrap-password $5 \
   --bootstrap-internal-url http://$4:35357/v3/ \
   --bootstrap-public-url http://$4:5000/v3/ \
   --bootstrap-region-id RegionOne
+echo_and_sleep "Executed Keystone Bootstrap" 2
 
 grep -q '^ServerName' /etc/apache2/apache2.conf && sed 's/^ServerName.*/ServerName controller/' -i /etc/apache2/apache2.conf || echo "ServerName controller" >> /etc/apache2/apache2.conf 
 
