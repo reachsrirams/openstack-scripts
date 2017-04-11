@@ -25,15 +25,14 @@ crudini --set /etc/glance/glance-api.conf database connection mysql+pymysql://gl
 
 configure-keystone-authentication /etc/glance/glance-api.conf $4 glance $6
 crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
+crudini --set /etc/glance/glance-api.conf glance_store stores file,http
 crudini --set /etc/glance/glance-api.conf glance_store default_store file
 crudini --set /etc/glance/glance-api.conf glance_store filesystem_store_datadir /var/lib/glance/images
-crudini --set /etc/glance/glance-api.conf DEFAULT notification_driver noop
 
 crudini --set /etc/glance/glance-registry.conf database connection mysql+pymysql://glance:$1@$4/glance
 
 configure-keystone-authentication /etc/glance/glance-registry.conf $4 glance $6
 crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
-crudini --set /etc/glance/glance-registry.conf DEFAULT notification_driver noop
 
 echo_and_sleep "About to populate Image Service Database" 
 glance-manage db_sync

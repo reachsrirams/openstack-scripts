@@ -1,5 +1,43 @@
 source $(dirname $0)/config-parameters.sh
 
+function configure-mysql-controller() {
+	echo_and_sleep "About to configure MySQL on Controller"	
+        if [ -d "/etc/mysql/mariadb.conf.d/" ]
+	then
+                echo_and_sleep "Maria DB Conf file found" 2
+		mysql_conf_file="/etc/mysql/mariadb.conf.d/openstack.cnf"
+               	echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
+               	touch $mysql_conf_file
+           	crudini --set $mysql_conf_file mysqld bind-address $1
+               	echo_and_sleep "Updated Bind Address" 2
+               	crudini --set $mysql_conf_file mysqld default-storage-engine innodb
+               	crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
+               	crudini --set $mysql_conf_file mysqld character-set-server utf8
+               	crudini --set $mysql_conf_file mysqld max_connections 4096
+               	echo "innodb_file_per_table" >> $mysql_conf_file
+	else
+		echo_and_sleep "Maria DB Conf File Not Found" 2
+		mysql_conf_file="/etc/mysql/my.cnf"
+		sed -i "s/127.0.0.1/$1/g" $mysql_conf_file
+                echo_and_sleep "Updated Bind Address" 2
+                grep "bind" $mysql_conf_file
+
+                sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
+                	innodb_file_per_table\\
+                        collation-server = utf8_general_ci\\
+                        init-connect = 'SET NAMES utf8'\\
+                        character-set-server = utf8\\
+                " $mysql_conf_file
+        fi
+        grep "bind" $mysql_conf_file
+        grep "storage-engine" $mysql_conf_file
+        echo_and_sleep "Updated other MySQL Parameters. About to restart and secure MySQL" 3
+
+        service mysql restart;
+        sleep 2
+
+}
+
 metering_secret="password"
 
 if [ "$1" == "compute" ]
@@ -24,41 +62,7 @@ elif [ "$1" == "controller" ]
 			echo "Correct syntax: $0 controller <controller_ip_address>"
 			exit 1;
 		fi
-		controller_ip_address=$2
-		echo_and_sleep "About to configure MySQL on Controller"	
-                if [ -d "/etc/mysql/mariadb.conf.d/" ]
-		then
-                        echo_and_sleep "Maria DB Conf file found" 2
-			mysql_conf_file="/etc/mysql/mariadb.conf.d/openstack.cnf"
-                	echo_and_sleep "Creating new DB Conf File: $mysql_conf_file"
-                	touch $mysql_conf_file
-               		crudini --set $mysql_conf_file mysqld bind-address $controller_ip_address
-               		echo_and_sleep "Updated Bind Address" 2
-               		crudini --set $mysql_conf_file mysqld default-storage-engine innodb
-               		crudini --set $mysql_conf_file mysqld collation-server utf8_general_ci
-               		crudini --set $mysql_conf_file mysqld character-set-server utf8
-               		crudini --set $mysql_conf_file mysqld max_connections 4096
-               		echo "innodb_file_per_table" >> $mysql_conf_file
-		else
-			echo_and_sleep "Maria DB Conf File Not Found" 2
-			mysql_conf_file="/etc/mysql/my.cnf"
-			sed -i "s/127.0.0.1/$controller_ip_address/g" $mysql_conf_file
-                        echo_and_sleep "Updated Bind Address" 2
-                        grep "bind" $mysql_conf_file
-
-                        sed -i "/\[mysqld\]/a default-storage-engine = innodb\\
-                                innodb_file_per_table\\
-                                collation-server = utf8_general_ci\\
-                                init-connect = 'SET NAMES utf8'\\
-                                character-set-server = utf8\\
-                        " $mysql_conf_file
-                fi
-               	grep "bind" $mysql_conf_file
-               	grep "storage-engine" $mysql_conf_file
-               	echo_and_sleep "Updated other MySQL Parameters. About to restart and secure MySQL" 3
-
-                service mysql restart;
-                sleep 2
+		configure-mysql-controller $2
 		bash $(dirname $0)/mysql-secure-installation.sh $mysql_user $mysql_password
 		echo_and_sleep "Completed MySQL Config and Secure Installation" 2
 
