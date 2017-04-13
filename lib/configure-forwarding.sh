@@ -10,7 +10,7 @@ if [ "$1" == "networknode" ] || [ "$1" == "controller" ]
 		sleep 2
 fi
 
-if [ "$1" == "networknode" ] || [ "$1" == "compute" ]
+if [ "$1" == "networknode" ] || [ "$1" == "compute" ] || [ "$1" == "controller" ] 
 	then
 		sh -c 'echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.conf'
 		sleep 2
