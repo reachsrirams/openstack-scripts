@@ -7,10 +7,10 @@ readonly data_interface="enp0s8"
 
 ### Start - Neutron related settings
 readonly neutron_ovs_tenant_network_type="vlan"
-readonly neutron_ovs_bridge_mappings="physnet1:br-$data_interface"
+readonly neutron_ovs_bridge_mappings="provider:br-$data_interface"
 
 readonly neutron_linuxbridge_tenant_network_type="vlan"
-readonly neutron_linuxbridge_physical_interface_mappings="physnet1:$data_interface"
+readonly neutron_linuxbridge_physical_interface_mappings="provider:$data_interface"
 readonly neutron_linuxbridge_overlay_interface=$data_interface
 ### End - Neutron related settings
 
