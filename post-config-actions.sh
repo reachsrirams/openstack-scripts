@@ -26,8 +26,19 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 		then
 			sleep 2
 			bash $dir_path/lib/setup-cirros-image.sh Cirros
+			sleep 2
 		fi
-		sleep 3
+		echo -n "Do you want to setup a Flavor to start instances? [y/n]: "
+		read setup_flavor
+		if [ "$setup_flavor" == "y" ]
+		then
+			source $dir_path/lib/admin_openrc.sh
+			echo "Setting up Flavor called 'myflavor' with 1 vCPU, 256MB RAM and 500MB disk"
+			sleep 1
+			openstack flavor create --public myflavor --id auto --ram 256 --disk 1 --vcpus 1 --rxtx-factor 1
+			sleep 1
+
+		fi
 		echo -n "Do you want to setup OpenStack Network and Subnet? [y/n]: "
 		read setup_openstack_network
 		if [ "$setup_openstack_network" == "y" ]
