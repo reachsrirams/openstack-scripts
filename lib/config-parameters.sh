@@ -7,10 +7,10 @@ readonly data_interface="enp0s8"
 
 ### Start - Neutron related settings
 readonly neutron_ovs_tenant_network_type="vlan"
-readonly neutron_ovs_bridge_mappings="physnet1:br-$data_interface"
+readonly neutron_ovs_bridge_mappings="provider:br-$data_interface"
 
 readonly neutron_linuxbridge_tenant_network_type="vlan"
-readonly neutron_linuxbridge_physical_interface_mappings="physnet1:$data_interface"
+readonly neutron_linuxbridge_physical_interface_mappings="provider:$data_interface"
 readonly neutron_linuxbridge_overlay_interface=$data_interface
 ### End - Neutron related settings
 
@@ -60,12 +60,12 @@ function echo_and_sleep() {
 function print_keystone_service_list() {
 	echo_and_sleep "About to print Keystone Service List" 2
 	openstack service list --long
-	echo_and_sleep "Printed Keystone Service List" 5
+	echo_and_sleep "Printed Keystone Service List" 3
 }
 
 function configure-keystone-authentication() {
 	echo "Called configure-keystone-authentication with paramters: $@"
-	sleep 5
+	sleep 3
 	crudini --set $1 keystone_authtoken auth_uri http://$2:5000
 	crudini --set $1 keystone_authtoken auth_url http://$2:35357
 	crudini --set $1 keystone_authtoken memcached_servers $2:11211
@@ -79,7 +79,7 @@ function configure-keystone-authentication() {
 
 function configure-oslo-messaging() {
 	echo "Called configure-oslo-messaging with paramters: $@"
-	sleep 5
+	sleep 3
 	crudini --set $1 oslo_messaging_rabbit rabbit_host $2
 	crudini --set $1 oslo_messaging_rabbit rabbit_userid $3
 	crudini --set $1 oslo_messaging_rabbit rabbit_password $4
@@ -87,22 +87,22 @@ function configure-oslo-messaging() {
 
 function create-user-service() {
 	echo "Called create-user-service with paramters: $@"
-	sleep 5
+	sleep 3
 	openstack user create --domain default --password $2 $1
-	echo_and_sleep "Created User $1"
+	echo_and_sleep "Created User $1" 2
 	openstack role add --project service --user $1 admin
-	echo_and_sleep "Created Role $1"
+	echo_and_sleep "Created Role $1" 2
 	openstack service create --name $3 --description $4 $5
-	echo_and_sleep "Created Service $4"
+	echo_and_sleep "Created Service $4" 2
 }
 
 function create-api-endpoints() {
 	echo "Called create-api-endpoints with parameters: $@"
 	sleep 5
 	openstack endpoint create --region RegionOne $1 public $2
-	echo_and_sleep "Created public endpoint"
+	echo_and_sleep "Created public endpoint" 2
 	openstack endpoint create --region RegionOne $1 internal $2
-	echo_and_sleep "Created internal endpoint"
+	echo_and_sleep "Created internal endpoint" 2
 	openstack endpoint create --region RegionOne $1 admin $2
-	echo_and_sleep "Created admin endpoint"
+	echo_and_sleep "Created admin endpoint" 2
 }

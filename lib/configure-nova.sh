@@ -82,10 +82,10 @@ echo_and_sleep "Updated NOVA Configuration File" 2
 
 if [ "$1" == "controller" ]
 	then
-		echo_and_sleep "Populate Image Nova Database" 
+		echo_and_sleep "Populate Image Nova Database" 1
 		nova-manage api_db sync
 		nova-manage db sync
-		echo_and_sleep "Restarting Nova Service"
+		echo_and_sleep "Restarting Nova Service" 2
 		service nova-api restart
 		service nova-cert restart
 		service nova-consoleauth restart
@@ -98,12 +98,12 @@ elif [ "$1" == "compute" ]
 		service nova-compute restart
 fi
 
-echo_and_sleep "Removing Nova MySQL-Lite Database" 3
+echo_and_sleep "Removing Nova MySQL-Lite Database" 2
 rm -f /var/lib/nova/nova.sqlite
 
 if [ "$1" == "controller" ]
 	then
 		print_keystone_service_list
 		nova service-list
-		echo_and_sleep "Verify Nova Service List" 5
+		echo_and_sleep "Verify Nova Service List"
 fi
