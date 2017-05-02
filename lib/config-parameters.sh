@@ -60,7 +60,9 @@ function echo_and_sleep() {
 function print_keystone_service_list() {
 	echo_and_sleep "About to print Keystone Service List" 2
 	openstack service list --long
-	echo_and_sleep "Printed Keystone Service List" 3
+	echo_and_sleep "About to print OpenStack Catalog List" 2
+	openstack catalog list
+	echo_and_sleep "Catalog list printed" 2
 }
 
 function configure-keystone-authentication() {
