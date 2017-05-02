@@ -30,25 +30,21 @@ The following OpenStack services are installed as part these scripts:
 ## How to use the scripts step by step ##
 
 1. Edit the lib/config-parameters.sh file
-   - Important: Make sure that Management and Data plane interface names are accurate. *Mandatory for Ubuntu 14.04*
+   - Important: Make sure that Management and Data plane interface names are accurate. 
    - Optional: Change the hostname to be used for controller. This name will be used in all configuration files. 
    - Optional: Change passwords as necessary 
 
 2. Install OpenStack packages depending upon the type of the node
    - If the node is of type controller, execute `sudo bash install.sh controller`
    - If the node is of type compute, execute `sudo bash install.sh compute`
-   - If the node is of type networknode, execute `sudo bash install.sh networknode`
-   - If the node is of type allinone, execute `sudo bash install.sh allinone`
-   - **Note - during the installation of MariaDB, you will be required to setup DB password first time manually (for Ubunutu 14.04)**
 
 3. Configure OpenStack packages using `sudo bash configure.sh <controller_ip_address>`. The **node type** is detected automatically.
-   - **Note - during the configuration of MariaDB, you will be required to enter DB password manually and confirm few DB clean up operations** 
 
 4. Post Config Actions can be triggered using `sudo bash post-config-actions.sh` script on the controller node only. This interactive script does the following:
+   - New in Newton: create Flavors for instances. **Newton does not ship with any default Flavors**
    - Enables web browser based view of Nova and Neutron log files.
    - Downloads and creates a Cirros Glance Image for booting up VMs.
    - Creates two OpenStack networks and their subnets
-   - **Note - each step is optional and can be skipped as required**
 
 
 ## Useful scripts - Updating IP Address ##
