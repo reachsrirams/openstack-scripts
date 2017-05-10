@@ -35,7 +35,7 @@ if [ "$1" == "controller" ]
 		
 		echo_and_sleep "Configuring MySQL for Nova Cells..." 2
 		mysql_command="CREATE DATABASE IF NOT EXISTS nova_cell0; GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY '$5'; GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY '$5';"
-		echo_and_sleep "MySQL Command is:: "$mysql_command 2
+		echo "MySQL Command is:: "$mysql_command 
 		mysql -u "$6" -p"$7" -e "$mysql_command"
 
 		create-user-service nova $3 nova OpenStackCompute compute
@@ -62,7 +62,7 @@ crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 
 configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
-mgmt_interface_ip=`ifconfig $mgmt_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+mgmt_interface_ip=`ifconfig $mgmt_interface | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
 echo "Mgmt Interface IP Address: $mgmt_interface_ip"
 sleep 2
 crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmt_interface_ip
@@ -98,7 +98,6 @@ fi
 
 crudini --set /etc/nova/nova.conf glance api_servers http://$2:9292
 crudini --set /etc/nova/nova.conf oslo_concurrency lock_path /var/lib/nova/tmp
-crudini --set /etc/nova/nova.conf DEFAULT verbose True
 echo_and_sleep "Updated NOVA Configuration File" 2
 
 if [ "$1" == "controller" ]
