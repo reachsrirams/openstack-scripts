@@ -45,13 +45,13 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 		then
 			source $dir_path/lib/admin_openrc.sh
 			echo "About to execute OpenStack commands for some basic Network/Subnet etc"
-			neutron net-create network1
+			openstack network create network1
 			sleep 2
-			neutron subnet-create network1 20.20.20.0/24 --name subnet1
+			openstack subnet create network1 20.20.20.0/24 --name subnet1
 			sleep 2
-			neutron net-create network2
+			openstack network create network2
 			sleep 2
-			neutron subnet-create network2 192.168.150.0/24 --name subnet2
+			openstack subnet create network2 192.168.150.0/24 --name subnet2
 		fi
 else
         echo "This command works only on the controller"
