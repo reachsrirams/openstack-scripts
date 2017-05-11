@@ -158,9 +158,7 @@ if [ "$1" == "controller" ]
 		service nova-scheduler restart
 		service nova-conductor restart
 		print_keystone_service_list
-		neutron ext-list
-		echo_and_sleep "Printed Neutron Extension List" 2
-		neutron agent-list
+		openstack network agent list
 		echo_and_sleep "Printed Neutron Agent List" 2
 		rm -f /var/lib/neutron/neutron.sqlite
 elif [ "$1" == "compute" ]

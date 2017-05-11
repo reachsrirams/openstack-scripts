@@ -93,7 +93,7 @@ elif [ "$1" == "compute" ]
 		crudini --set /etc/nova/nova.conf vnc novncproxy_base_url http://$controller_ip:6080/vnc_auto.html
 
 		echo_and_sleep "OCATA: Setting cell autodisovery time interval" 2
-		crudini --set /etc/nova/nova/conf scheduler discover_hosts_in_cells_interval 10
+		crudini --set /etc/nova/nova.conf scheduler discover_hosts_in_cells_interval 10
 fi
 
 crudini --set /etc/nova/nova.conf glance api_servers http://$2:9292
