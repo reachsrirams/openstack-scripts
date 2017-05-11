@@ -41,9 +41,9 @@ fi
 		crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini linux_bridge physical_interface_mappings $neutron_linuxbridge_physical_interface_mappings
 		crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini vxlan enable_vxlan True
                 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini vxlan l2_population True
-                overlay_interface_ip=`ifconfig $neutron_linuxbridge_overlay_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+                overlay_interface_ip=$(get-ip-address $neutron_linuxbridge_overlay_interface)
                 echo "Overlay Interface IP Address: $overlay_interface_ip"
-                sleep 10
+                sleep 5
                 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs integration_bridge br-int
                 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs tunnel_bridge br-tun
                 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs local_ip $overlay_interface_ip

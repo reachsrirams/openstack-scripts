@@ -77,9 +77,9 @@ if [ "$1" == "networknode" -o "$1" == "controller" ]
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini linux_bridge physical_interface_mappings $neutron_linuxbridge_physical_interface_mappings
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan enable_vxlan True
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan l2_population True
-		overlay_interface_ip=`ifconfig $neutron_linuxbridge_overlay_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+		overlay_interface_ip=$(get-ip-address $neutron_linuxbridge_overlay_interface)
 		echo "Overlay Interface IP Address: $overlay_interface_ip"
-		sleep 10
+		sleep 5
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan local_ip $overlay_interface_ip
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini agent prevent_arp_spoofing True
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup enable_security_group True
@@ -114,9 +114,9 @@ if [ "$1" == "compute" ]
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini linux_bridge physical_interface_mappings $neutron_linuxbridge_physical_interface_mappings
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan enable_vxlan True
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan l2_population True
-		overlay_interface_ip=`ifconfig $neutron_linuxbridge_overlay_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+		overlay_interface_ip=$(get-ip-address $neutron_linuxbridge_overlay_interface)
 		echo "Overlay Interface IP Address: $overlay_interface_ip"
-		sleep 10
+		sleep 5
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan local_ip $overlay_interface_ip
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini agent prevent_arp_spoofing True
 		crudini --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup enable_security_group True

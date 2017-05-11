@@ -20,6 +20,21 @@ function change-ip-in-etc-hosts() {
 	sleep 2
 }
 
+function get-ip-address() {
+        ip_address_val=''
+        ubuntu_version=`lsb_release -sr`
+        if [ "$ubuntu_version" == "17.04" ]
+        then
+                ip_address_val=`ifconfig $1 | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
+        elif [ "$ubuntu_version" == "16.04" ]
+        then
+                ip_address_val=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+        else
+                echo "This release is supported only on Zesty (17.04) or Xenial (16.04)"
+                exit 1;
+        fi
+        echo $ip_address_val
+}
 
 echo "Running: $0 $@"
 echo ""
@@ -29,7 +44,7 @@ dir_path=$(dirname $0)
 node_type=`bash $(dirname $0)/detect-nodetype.sh`
 echo "Local host type is: $node_type"
 
-local_ip_address=`ifconfig $1 | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
+local_ip_address=$(get-ip-address $1)
 echo "Local host IP is: $local_ip_address"
 
 local_host_name=`hostname`

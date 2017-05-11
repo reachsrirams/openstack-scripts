@@ -62,9 +62,9 @@ crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 
 configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
-mgmt_interface_ip=`ifconfig $mgmt_interface | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
+mgmt_interface_ip=$(get-ip-address $mgmt_interface)
 echo "Mgmt Interface IP Address: $mgmt_interface_ip"
-sleep 2
+sleep 5
 crudini --set /etc/nova/nova.conf DEFAULT my_ip $mgmt_interface_ip
 crudini --set /etc/nova/nova.conf DEFAULT use_neutron True
 crudini --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver

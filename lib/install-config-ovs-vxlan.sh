@@ -38,7 +38,7 @@ if [ "$node_type" == "controller" ] || [ "node_type" == "allinone" ]
                 crudini --set /etc/neutron/metadata_agent.ini DEFAULT nova_metadata_ip controller
                 crudini --set /etc/neutron/metadata_agent.ini DEFAULT metadata_proxy_shared_secret METADATA_SECRET
 fi
-overlay_interface_ip=`ifconfig $data_interface | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+overlay_interface_ip=$(get-ip-address $data_interface)
 echo "Overlay Interface IP Address: $overlay_interface_ip"
 sleep 7
 crudini --set /etc/neutron/plugins/ml2/openvswitch_agent.ini ovs local_ip $overlay_interface_ip
