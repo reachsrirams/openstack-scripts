@@ -164,6 +164,7 @@ if [ "$1" == "controller" ]
 elif [ "$1" == "compute" ]
 	then
 		service nova-compute restart
+		service neutron-linuxbridge-agent restart
 elif [ "$1" == "networknode" ]
 	then
 		service neutron-linuxbridge-agent restart
