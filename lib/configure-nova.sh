@@ -40,12 +40,12 @@ if [ "$1" == "controller" ]
 
 		create-user-service nova $3 nova OpenStackCompute compute
 		
-		create-api-endpoints compute http://$2:8774/v2.1/%\(tenant_id\)s
+		create-api-endpoints compute http://$2:8774/v2.1
 		echo_and_sleep "Created Endpoint for Nova" 2
 
 		echo_and_sleep "OCATA: Creating Placement User and Service" 2
 		create-user-service placement placement placement OpenStackPlacementAPI placement
-		create-api-endpoints placement http://$2/placement
+		create-api-endpoints placement http://$2:8778
 		echo_and_sleep "Created Endpoint for Nova Placement API" 2
 		
 		crudini --set /etc/nova/nova.conf api_database connection mysql+pymysql://nova:$5@$2/nova_api
@@ -58,7 +58,7 @@ echo_and_sleep "Updating NOVA Configuration File" 1
 echo_and_sleep "RabbitMQ config changed for Newton" 1
 crudini --set /etc/nova/nova.conf DEFAULT transport_url rabbit://openstack:$4@$2
 
-crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
+crudini --set /etc/nova/nova.conf api auth_strategy keystone
 
 configure-keystone-authentication /etc/nova/nova.conf $2 nova $3
 
@@ -76,14 +76,13 @@ crudini --set /etc/nova/nova.conf placement project_domain_name Default
 crudini --set /etc/nova/nova.conf placement project_name service
 crudini --set /etc/nova/nova.conf placement auth_type password
 crudini --set /etc/nova/nova.conf placement user_domain_name Default
-crudini --set /etc/nova/nova.conf placement auth_url http://$2:35337/v3
+crudini --set /etc/nova/nova.conf placement auth_url http://$2:35357/v3
 crudini --set /etc/nova/nova.conf placement username placement
 crudini --set /etc/nova/nova.conf placement password placement
 
 if [ "$1" == "controller" ]
 	then
 		crudini --set /etc/nova/nova.conf vnc vncserver_listen $mgmt_interface_ip
-		crudini --set /etc/nova/nova.conf DEFAULT scheduler_default_filters AllHostsFilter
 elif [ "$1" == "compute" ]
 	then
 		controller_ip=`getent hosts $2 | awk '{ print $1 }'`
