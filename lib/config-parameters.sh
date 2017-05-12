@@ -60,7 +60,9 @@ function echo_and_sleep() {
 function print_keystone_service_list() {
 	echo_and_sleep "About to print Keystone Service List" 2
 	openstack service list --long
-	echo_and_sleep "Printed Keystone Service List" 3
+	echo_and_sleep "About to print OpenStack Catalog List" 2
+	openstack catalog list
+	echo_and_sleep "Catalog list printed" 2
 }
 
 function configure-keystone-authentication() {
@@ -106,3 +108,20 @@ function create-api-endpoints() {
 	openstack endpoint create --region RegionOne $1 admin $2
 	echo_and_sleep "Created admin endpoint" 2
 }
+
+function get-ip-address() {
+        ip_address_val=''
+        ubuntu_version=`lsb_release -sr`
+        if [ "$ubuntu_version" == "17.04" ]
+        then
+                ip_address_val=`ifconfig $1 | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
+        elif [ "$ubuntu_version" == "16.04" ]
+        then
+                ip_address_val=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+        else
+                echo "This release is supported only on Zesty (17.04) or Xenial (16.04)"
+                exit 1;
+        fi
+        echo $ip_address_val
+}
+

@@ -40,15 +40,15 @@ function install-common-packages() {
 	apt-get install chrony -y
 	service chrony restart
 	
-	echo "About to configure APT for Newton"
+	echo "About to configure APT for Ocata"
 	sleep 3
 	apt-get install software-properties-common -y
 	ubuntu_version=`lsb_release -sr`
-	if [ "$ubuntu_version" == "16.04" ]
+	if [ "$ubuntu_version" == "17.04" ]
 	then
-		add-apt-repository cloud-archive:newton
+		add-apt-repository cloud-archive:ocata
 	else
-		echo "Newton release supported only on Xenial (16.04)"
+		echo "Ocata release supported only on Zesty (17.04)"
 		exit 1;
 	fi
 
@@ -80,7 +80,7 @@ function install-controller-packages() {
 	echo "Installing Nova for Controller"
 	sleep 2
 	apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy \
-	nova-scheduler python-novaclient -y
+	nova-scheduler nova-placement-api python-novaclient -y
 
 	install-neutron-packages-controller
 	

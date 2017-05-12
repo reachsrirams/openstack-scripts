@@ -13,6 +13,7 @@ readonly horizon_local_settings_path="/etc/openstack-dashboard/"
 readonly horizon_local_settings_file="local_settings.py"
 
 function backup() {
+	mkdir $1
 	echo "Copying config files to: "$1
 	sleep 3
 	cp -f $keystone_config_path$keystone_config_file $1

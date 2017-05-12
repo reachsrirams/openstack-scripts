@@ -11,9 +11,24 @@ if [ $# -lt 2 ]
 		exit 1;
 fi
 
+function get-ip-address() {
+        ip_address_val=''
+        ubuntu_version=`lsb_release -sr`
+        if [ "$ubuntu_version" == "17.04" ]
+        then
+                ip_address_val=`ifconfig $1 | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
+        elif [ "$ubuntu_version" == "16.04" ]
+        then
+                ip_address_val=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+        else
+                echo "This release is supported only on Zesty (17.04) or Xenial (16.04)"
+                exit 1;
+        fi
+        echo $ip_address_val
+}
 
 function update-nova-config-ip() {
-	mgmg_interface_ip=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+	mgmg_interface_ip=$(get-ip-address $1)
 	echo "Local Node IP: $mgmg_interface_ip"
 	sleep 2
 
