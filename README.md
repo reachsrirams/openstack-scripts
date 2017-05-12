@@ -22,11 +22,10 @@ The following OpenStack services are installed as part these scripts:
 
 #### Important Notes ####
 1. The script installs Linux Bridge packages by default. Installing OVS can be done using a utility script provided in the `lib` directory.
-2. The Nova configuration includes a setting to use `AllHostsFilter` as the default filter for scheduler. If you want the default filters of Nova, remove this entry and restart Nova services on the controller.
-3. Many scripts detect the OpenStack Node Type automatically using `util/detect-nodetype.sh` script.
-4. The node type controller includes network node capabilities. This is new behavior in OpenStack since Liberty release.
-5. VXLAN is the default tenant network type used.
-6. In Ocata Nova has default support for Cells. To add compute nodes for scheduling you may need to execute `nova-manage cells_v2 discover_hosts --verbose` command on the controller.
+2. Many scripts detect the OpenStack Node Type automatically using `util/detect-nodetype.sh` script.
+3. The node type controller includes network node capabilities. This is new behavior in OpenStack since Liberty release.
+4. VXLAN is the default tenant network type used.
+5. In Ocata Nova has default support for Cells. To add compute nodes for scheduling you may need to execute `nova-manage cells_v2 discover_hosts --verbose` command on the controller.
 
 ## How to use the scripts step by step ##
 
@@ -42,7 +41,7 @@ The following OpenStack services are installed as part these scripts:
 3. Configure OpenStack packages using `sudo bash configure.sh <controller_ip_address>`. The **node type** is detected automatically.
 
 4. Post Config Actions can be triggered using `sudo bash post-config-actions.sh` script on the controller node only. This interactive script does the following:
-   - New in Newton: create Flavors for instances. **Newton does not ship with any default Flavors**
+   - New in Newton/Ocata: create Flavors for instances. **Newton/Ocata does not ship with any default Flavors**
    - Enables web browser based view of Nova and Neutron log files.
    - Downloads and creates a Cirros Glance Image for booting up VMs.
    - Creates two OpenStack networks and their subnets
