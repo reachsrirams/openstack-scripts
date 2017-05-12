@@ -3,8 +3,8 @@
 
 This project aims to covert the steps in the OpenStack Install guide into useful/simple scripts. The goal is not to provide a _perfect_ automation solution. But the idea is to have simple building blocks which can help developers and enthusiasts experiment with OpenStack in a much simpler fashion.
 
-#### Platform supported - Ubuntu server 16.04
-#### OpenStack version - Newton
+#### Platform supported - Ubuntu server 17.04 (16.04 not tested yet)
+#### OpenStack version - Ocata
 
 #### Prerequisites ####
 _git_ binaries must be installed on your Ubuntu server. This is needed to checkout the scripts to your Ubuntu server. 
@@ -26,6 +26,7 @@ The following OpenStack services are installed as part these scripts:
 3. Many scripts detect the OpenStack Node Type automatically using `util/detect-nodetype.sh` script.
 4. The node type controller includes network node capabilities. This is new behavior in OpenStack since Liberty release.
 5. VXLAN is the default tenant network type used.
+6. In Ocata Nova has default support for Cells. To add compute nodes for scheduling you may need to execute `nova-manage cells_v2 discover_hosts --verbose` command on the controller.
 
 ## How to use the scripts step by step ##
 
