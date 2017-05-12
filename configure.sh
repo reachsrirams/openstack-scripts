@@ -7,6 +7,10 @@ echo "Management interface: "$mgmt_interface
 echo "Data Path interface: "$data_interface
 echo "Controller Host Name: "$controller_host_name
 
+bash $dir_path/util/backup-restore-config-files.sh backup $dir_path/config_file_backup/
+echo "Backed up Config files"
+sleep 5
+
 if [ $# -ne 1 ]
 then
        	echo "Correct Syntax: $0 <controller_ip_address>"
