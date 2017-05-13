@@ -39,19 +39,26 @@ if [ "$node_type" == "allinone" ] || [ "$node_type" == "controller" ]
 			sleep 1
 
 		fi
-		echo -n "Do you want to setup OpenStack Network and Subnet? [y/n]: "
+		echo -n "Do you want to setup OpenStack Network, Subnet and Router? [y/n]: "
 		read setup_openstack_network
 		if [ "$setup_openstack_network" == "y" ]
 		then
 			source $dir_path/lib/admin_openrc.sh
-			echo "About to execute OpenStack commands for some basic Network/Subnet etc"
+			echo "About to execute OpenStack commands for some basic Network/Subnet/Router etc"
 			openstack network create network1
 			sleep 2
-			openstack subnet create network1 20.20.20.0/24 --name subnet1
+			openstack subnet create --network network1 --subnet-range 20.20.20.0/24 subnet1
 			sleep 2
 			openstack network create network2
 			sleep 2
-			openstack subnet create network2 192.168.150.0/24 --name subnet2
+			openstack subnet create --network network2 --subnet-range 192.168.150.0/24 subnet2
+			echo "About to create Router and Add Subnets"
+			sleep 2
+			openstack router create router1
+			sleep 2
+			openstack router add subnet router1 subnet1
+			sleep 2
+			openstack router add subnet router1 subnet2
 		fi
 else
         echo "This command works only on the controller"
