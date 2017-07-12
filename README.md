@@ -25,7 +25,7 @@ The following OpenStack services are installed as part these scripts:
 2. Many scripts detect the OpenStack Node Type automatically using `util/detect-nodetype.sh` script.
 3. The node type controller includes network node capabilities. This is new behavior in OpenStack since Liberty release.
 4. VXLAN is the default tenant network type used.
-5. In Ocata Nova has default support for Cells. To add compute nodes for scheduling you may need to execute `nova-manage cells_v2 discover_hosts --verbose` command on the controller.
+5. In Ocata Nova has default support for Cells. To add compute nodes for scheduling you may need to execute `nova-manage cell_v2 discover_hosts --verbose` command on the controller.
 
 ## How to use the scripts step by step ##
 
