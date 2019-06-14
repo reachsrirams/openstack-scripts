@@ -1,8 +1,8 @@
 controller_host_name="controller"
 
 ### Start - interface related settings
-readonly mgmt_interface="enp0s3"
-readonly data_interface="enp0s8"
+readonly mgmt_interface="ens3"
+readonly data_interface="ens3"
 ### End - interface related settings
 
 ### Start - Neutron related settings
@@ -69,7 +69,7 @@ function configure-keystone-authentication() {
 	echo "Called configure-keystone-authentication with paramters: $@"
 	sleep 3
 	crudini --set $1 keystone_authtoken auth_uri http://$2:5000
-	crudini --set $1 keystone_authtoken auth_url http://$2:35357
+	crudini --set $1 keystone_authtoken auth_url http://$2:5000
 	crudini --set $1 keystone_authtoken memcached_servers $2:11211
 	crudini --set $1 keystone_authtoken auth_type password
 	crudini --set $1 keystone_authtoken project_domain_name default
@@ -112,14 +112,14 @@ function create-api-endpoints() {
 function get-ip-address() {
         ip_address_val=''
         ubuntu_version=`lsb_release -sr`
-        if [ "$ubuntu_version" == "17.04" ]
+        if [ "$ubuntu_version" == "18.04" ] || [ "$ubuntu_version" == "17.04" ]
         then
                 ip_address_val=`ifconfig $1 | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
         elif [ "$ubuntu_version" == "16.04" ]
         then
                 ip_address_val=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
         else
-                echo "This release is supported only on Zesty (17.04) or Xenial (16.04)"
+                echo "This release is supported only on Bionic (18.04), Zesty (17.04) or Xenial (16.04)"
                 exit 1;
         fi
         echo $ip_address_val

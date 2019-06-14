@@ -33,8 +33,8 @@ if [ "$node_type" == "allinone" ]
 		echo "Configuring packages for All-in-one"
 		sleep 5
 		bash $dir_path/lib/configure-packages.sh controller $1
-		bash $dir_path/lib/configure-packages.sh networknode
-		bash $dir_path/lib/configure-packages.sh compute 
+		#bash $dir_path/lib/configure-packages.sh networknode
+		#bash $dir_path/lib/configure-packages.sh compute 
 elif [ "$node_type" == "compute" ] || [ "$node_type" == "networknode" ]
 	then
 		echo "Configuring packages for: "$node_type

@@ -25,8 +25,8 @@ keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 
 keystone-manage bootstrap --bootstrap-password $5 \
-  --bootstrap-admin-url http://$4:35357/v3/ \
-  --bootstrap-internal-url http://$4:35357/v3/ \
+  --bootstrap-admin-url http://$4:5000/v3/ \
+  --bootstrap-internal-url http://$4:5000/v3/ \
   --bootstrap-public-url http://$4:5000/v3/ \
   --bootstrap-region-id RegionOne
 echo_and_sleep "Executed Keystone Bootstrap" 2
@@ -45,7 +45,7 @@ export OS_PASSWORD=$5
 export OS_PROJECT_NAME=admin
 export OS_USER_DOMAIN_NAME=Default
 export OS_PROJECT_DOMAIN_NAME=Default
-export OS_AUTH_URL=http://$4:35357/v3
+export OS_AUTH_URL=http://$4:5000/v3
 export OS_IDENTITY_API_VERSION=3
 echo_and_sleep "Set environment variables" 1
 
