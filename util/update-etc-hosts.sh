@@ -23,14 +23,14 @@ function change-ip-in-etc-hosts() {
 function get-ip-address() {
         ip_address_val=''
         ubuntu_version=`lsb_release -sr`
-        if [ "$ubuntu_version" == "17.04" ]
+        if [ "$ubuntu_version" == "18.04" ] || [ "$ubuntu_version" == "17.04" ]
         then
                 ip_address_val=`ifconfig $1 | grep 'inet ' | cut -d' ' -f10 | awk '{ print $1}'`
         elif [ "$ubuntu_version" == "16.04" ]
         then
                 ip_address_val=`ifconfig $1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
         else
-                echo "This release is supported only on Zesty (17.04) or Xenial (16.04)"
+                echo "This release is supported only on Bionic (18.04), Zesty (17.04) or Xenial (16.04)"
                 exit 1;
         fi
         echo $ip_address_val

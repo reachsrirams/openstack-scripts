@@ -40,17 +40,17 @@ function install-common-packages() {
 	apt-get install chrony -y
 	service chrony restart
 	
-	echo "About to configure APT for Ocata"
-	sleep 3
-	apt-get install software-properties-common -y
-	ubuntu_version=`lsb_release -sr`
-	if [ "$ubuntu_version" == "17.04" ] || [ "$ubuntu_version" == "16.04" ]
-	then
-		add-apt-repository cloud-archive:ocata
-	else
-		echo "Ocata release supported only on Zesty (17.04) and Xenial (16.04)"
-		exit 1;
-	fi
+	#echo "About to configure APT for Ocata"
+	#sleep 3
+	#apt-get install software-properties-common -y
+	#ubuntu_version=`lsb_release -sr`
+	#if [ "$ubuntu_version" == "17.04" ] || [ "$ubuntu_version" == "16.04" ]
+	#then
+	#	add-apt-repository cloud-archive:ocata
+	#else
+	#	echo "Ocata release supported only on Zesty (17.04) and Xenial (16.04)"
+	#	exit 1;
+	#fi
 
 	echo "Doing full system update"
 	sleep 3
@@ -63,6 +63,14 @@ function install-common-packages() {
 function install-controller-packages() {
 	echo "Installing MariaDB and MongoDB..."
 	apt-get install mariadb-server python-pymysql -y
+	ubuntu_version=`lsb_release -sr`
+	if [ "$ubuntu_version" == "18.04" ]
+	then
+		# Change apparmor security settings for mysql to start without errors on Ubuntu 18.04
+		echo "/usr/sbin/mysqld { }" | sudo tee /etc/apparmor.d/usr.sbin.mysqld
+		apparmor_parser -v -R  /etc/apparmor.d/usr.sbin.mysqld
+		service mariadb restart
+	fi
 
 	echo "Installing RabbitMQ..." 
 	sleep 3
@@ -79,7 +87,8 @@ function install-controller-packages() {
 	
 	echo "Installing Nova for Controller"
 	sleep 2
-	apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy \
+	# Removed nova-cert package, it's deprecated & not available in Ubuntu 18.04 repository
+	apt-get install nova-api nova-conductor nova-consoleauth nova-novncproxy \
 	nova-scheduler nova-placement-api python-novaclient -y
 
 	install-neutron-packages-controller
