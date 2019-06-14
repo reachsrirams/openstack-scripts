@@ -66,6 +66,7 @@ function install-controller-packages() {
 	ubuntu_version=`lsb_release -sr`
 	if [ "$ubuntu_version" == "18.04" ]
 	then
+		# Change apparmor security settings for mysql to start without errors on Ubuntu 18.04
 		echo "/usr/sbin/mysqld { }" | sudo tee /etc/apparmor.d/usr.sbin.mysqld
 		apparmor_parser -v -R  /etc/apparmor.d/usr.sbin.mysqld
 		service mariadb restart
@@ -86,6 +87,7 @@ function install-controller-packages() {
 	
 	echo "Installing Nova for Controller"
 	sleep 2
+	# Removed nova-cert package, it's deprecated & not available in Ubuntu 18.04 repository
 	apt-get install nova-api nova-conductor nova-consoleauth nova-novncproxy \
 	nova-scheduler nova-placement-api python-novaclient -y
 
