@@ -1,6 +1,8 @@
 controller_host_name="controller"
 
 ### Start - interface related settings
+#readonly mgmt_interface="enp0s3"
+#readonly data_interface="enp0s8"
 readonly mgmt_interface="ens3"
 readonly data_interface="ens3"
 ### End - interface related settings
