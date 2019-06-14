@@ -6,7 +6,6 @@ if [ $# -lt 2 ]
 		exit 1
 fi
 echo_and_sleep "Changing MySQL password for $1" 2
-echo "username, password - " $1 "," $2
 mysqladmin -u $1 password $2
 echo_and_sleep "Updating other security settings for MySQL"
 #Credit for the block below goes to http://bertvv.github.io/notes-to-self/2015/11/16/automating-mysql_secure_installation/
